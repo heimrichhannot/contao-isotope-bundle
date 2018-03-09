@@ -22,7 +22,7 @@ class Plugin implements BundlePluginInterface
     public function getBundles(ParserInterface $parser)
     {
         return [
-            BundleConfig::create(HeimrichHannotContaoIsotopeBundle::class)->setLoadAfter([ContaoCoreBundle::class, 'isotope']),
+            BundleConfig::create(HeimrichHannotContaoIsotopeBundle::class)->setLoadAfter([ContaoCoreBundle::class, 'isotope', 'isotope_core', 'isotope-core']),
         ];
     }
 }
