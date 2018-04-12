@@ -9,13 +9,13 @@
 namespace HeimrichHannot\IsotopeBundle\Module;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Module;
 use Contao\PageModel;
 use Contao\System;
-use Isotope\Module\Module;
 
 class CartLink extends Module
 {
-    protected $strTemplate = 'mod_iso_cart_link';
+    protected $template = 'mod_iso_cart_link';
 
     /**
      * @var PageModel
@@ -29,7 +29,7 @@ class CartLink extends Module
 
     public function generate()
     {
-        if (TL_MODE == 'BE') {
+        if (System::getContainer()->get('huh.utils.container')->isBackend()) {
             $objTemplate = new \BackendTemplate('be_wildcard');
 
             $objTemplate->wildcard = '### ISOTOPE ECOMMERCE: CART LINK ###';

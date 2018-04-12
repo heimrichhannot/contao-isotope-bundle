@@ -1,0 +1,4 @@
+huh:
+    encore:
+        entries:
+            - { name: contao-isotope-bundle, file: "vendor/heimrichhannot/contao-isotope-bundle/src/Resources/assets/js/contao-isotope-bundle.js", requiresCss: true }

@@ -1,0 +1,21 @@
+<?php $this->extend('block_slick'); ?>
+
+<?php $this->block('content'); ?>
+
+<?php if ($this->message): ?>
+    <p class="<?php echo $this->type; ?> message"><?php echo $this->message; ?></p>
+<?php endif; ?>
+<?php if (!empty($this->products)): ?>
+
+    <div class="product_list slick-container">
+
+        <?php foreach ($this->products as $product): ?>
+            <div<?php echo $product['cssID']; ?> class="<?php echo $product['class']; ?>">
+                <?php echo $product['html']; ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
+    <?php echo $this->pagination; ?>
+<?php endif; ?>
+
+<?php $this->endblock(); ?>

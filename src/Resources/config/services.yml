@@ -1,0 +1,16 @@
+services:
+  huh.isotope.model.product:
+    class: HeimrichHannot\IsotopeBundle\Model\ProductModel
+    public: true
+  huh.isotope.model.requestCacheOrFilter:
+    class: HeimrichHannot\IsotopeBundle\Model\RequestCacheOrFilter
+    public: true
+  huh.isotope.helper.download:
+    class: HeimrichHannot\IsotopeBundle\Helper\DownloadHelper
+    public: true
+  huh.isotope.helper.product:
+    class: HeimrichHannot\IsotopeBundle\Helper\ProductHelper
+    public: true
+  huh.isotope.manager:
+    class: HeimrichHannot\IsotopeBundle\Manager\IsotopeManager
+    public: true
