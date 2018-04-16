@@ -20,27 +20,33 @@ class DownloadHelper
 {
     public function addDownloadsFromProductDownloadsToTemplate($objTemplate)
     {
+        $objTemplate->downloads = $this->getDownloadsFromProductDownloads($objTemplate->id);
+    }
+
+    /**
+     * @param $id
+     *
+     * @return array
+     */
+    public function getDownloadsFromProductDownloads($id)
+    {
         $container = System::getContainer();
         $framework = $container->get('contao.framework');
 
-        $arrDownloads = [];        // array for downloadfiles from db
-        $arrFiles = [];            // contains queryresults from db
-        $strTable = 'tl_iso_download';    // name of download table
+        $downloads = [];        // array for downloadfiles from db
 
         global $objPage;
 
-        $arrOptions = ['order' => 'sorting ASC'];
-
-        $arrFiles = $framework->getAdapter(\Isotope\Model\Download::class)->findBy('pid', $objTemplate->id, $arrOptions);
-        if (null === $arrFiles) {
-            return $arrDownloads;
+        $downloadFiles = $framework->getAdapter(\Isotope\Model\Download::class)->findBy('pid', $id, ['order' => 'sorting ASC']);
+        if (null === $downloadFiles) {
+            return $downloads;
         }
 
-        while ($arrFiles->next()) {
-            $objModel = $framework->getAdapter(\FilesModel::class)->findByUuid($arrFiles->singleSRC);
+        foreach ($downloadFiles as $downloadFile) {
+            $objModel = $framework->getAdapter(\FilesModel::class)->findByUuid($downloadFile->singleSRC);
             if (null === $objModel) {
-                if (!\Validator::isUuid($arrFiles->singleSRC)) {
-                    $objTemplate->text = '<p class="error">'.$GLOBALS['TL_LANG']['ERR']['version2format'].'</p>';
+                if (!\Validator::isUuid($downloadFile->singleSRC)) {
+                    return ['<p class="error">'.$GLOBALS['TL_LANG']['ERR']['version2format'].'</p>'];
                 }
             } elseif (is_file(TL_ROOT.'/'.$objModel->path)) {
                 $objFile = new File($objModel->path);
@@ -82,7 +88,7 @@ class DownloadHelper
 
                 // add thumbnail
                 $thumbnails = [];
-                foreach (StringUtil::deserialize($arrFiles->download_thumbnail, true) as $thumbnail) {
+                foreach (StringUtil::deserialize($downloadFile->download_thumbnail, true) as $thumbnail) {
                     $thumbnails[] = $framework->getAdapter(FilesModel::class)->findByUuid($thumbnail);
                 }
                 $objDownload->thumbnail = $thumbnails;
@@ -97,15 +103,16 @@ class DownloadHelper
                     $objDownload->size = sprintf($GLOBALS['TL_LANG']['MSC']['downloadSizePdf'], $objDownload->name, $objDownload->filesize);
                 }
 
-                $objDownload->downloadTitle = $arrFiles->title;
+                $objDownload->downloadTitle = $downloadFile->title;
 
                 $objT = new \FrontendTemplate('isotope_download_from_attribute');
                 $objT->setData((array) $objDownload);
                 $objDownload->output = $objT->parse();
 
-                $arrDownloads[] = $objDownload;
+                $downloads[] = $objDownload;
             }
         }
-        $objTemplate->downloads = $arrDownloads;
+
+        return $downloads;
     }
 }

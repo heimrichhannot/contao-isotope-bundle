@@ -15,7 +15,7 @@ $GLOBALS['ISO_HOOKS']['preOrderStatusUpdate']['updateStock']                    
 
 $GLOBALS['TL_HOOKS']['replaceDynamicScriptTags'][]             = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'hookReplaceDynamicScriptTags'];
 $GLOBALS['TL_HOOKS']['postDownload']['downloadCounter']        = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'updateDownloadCounter'];
-$GLOBALS['TL_HOOKS']['parseItems']['addPdfViewerToTemplate']   = ['HeimrichHannot\IsotopeBundle\Backend\ProductHelper', 'addPdfViewerToTemplate'];
+//$GLOBALS['TL_HOOKS']['parseItems']['addPdfViewerToTemplate']   = ['HeimrichHannot\IsotopeBundle\Helper\ProductHelper', 'addPdfViewerToTemplate'];
 $GLOBALS['ISO_HOOKS']['generateProduct']['updateTemplateData'] = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'updateTemplateData'];
 
 
