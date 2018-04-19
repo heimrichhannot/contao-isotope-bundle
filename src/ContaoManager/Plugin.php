@@ -14,6 +14,7 @@ use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ContainerBuilder;
 use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
+use HeimrichHannot\EncoreBundle\HeimrichHannotContaoEncoreBundle;
 use HeimrichHannot\IsotopeBundle\HeimrichHannotContaoIsotopeBundle;
 use HeimrichHannot\SlickBundle\HeimrichHannotContaoSlickBundle;
 use HeimrichHannot\UtilsBundle\Container\ContainerUtil;
@@ -26,7 +27,12 @@ class Plugin implements BundlePluginInterface, ExtensionPluginInterface
     public function getBundles(ParserInterface $parser)
     {
         return [
-            BundleConfig::create(HeimrichHannotContaoIsotopeBundle::class)->setLoadAfter([ContaoCoreBundle::class, 'isotope', HeimrichHannotContaoSlickBundle::class]),
+            BundleConfig::create(HeimrichHannotContaoIsotopeBundle::class)->setLoadAfter([
+                ContaoCoreBundle::class,
+                HeimrichHannotContaoEncoreBundle::class,
+                'isotope',
+                HeimrichHannotContaoSlickBundle::class,
+            ]),
         ];
     }
 
@@ -39,6 +45,11 @@ class Plugin implements BundlePluginInterface, ExtensionPluginInterface
      */
     public function getExtensionConfig($extensionName, array $extensionConfigs, ContainerBuilder $container)
     {
-        return ContainerUtil::mergeConfigFile('huh_encore', $extensionName, $extensionConfigs, $container->getParameter('kernel.project_dir').'/vendor/heimrichhannot/contao-project-bundle/src/Resources/config/config_encore.yml');
+        return ContainerUtil::mergeConfigFile(
+            'huh_encore',
+            $extensionName,
+            $extensionConfigs,
+            $container->getParameter('kernel.project_dir').'/vendor/heimrichhannot/contao-isotope-bundle/src/Resources/config/config_encore.yml'
+        );
     }
 }

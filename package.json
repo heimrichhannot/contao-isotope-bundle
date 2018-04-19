@@ -1,0 +1,10 @@
+{
+  "name": "contao-isotope-bundle",
+  "version": "0.1.0",
+  "description": "Extends isotope core.",
+  "main": "src/Resources/assets/js/contao-isotope-bundle.js",
+  "repository": "git@github.com:heimrichhannot/contao-isotope-bundle.git",
+  "author": "Heimrich & Hannot GmbH <digitales@heimrich-hannot.de>",
+  "license": "MIT",
+  "private": true
+}
