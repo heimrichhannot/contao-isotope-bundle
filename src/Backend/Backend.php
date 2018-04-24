@@ -12,6 +12,7 @@ use Contao\FilesModel;
 use Contao\StringUtil;
 use Contao\System;
 use Haste\Util\Format;
+use HeimrichHannot\IsotopeBundle\Model\ProductModel;
 use Isotope\Model\Product;
 use Isotope\Model\ProductPrice;
 use Isotope\Model\ProductType;
@@ -95,5 +96,33 @@ class Backend
         }
 
         return $args;
+    }
+
+    /**
+     * increase stock after deleting an order.
+     *
+     * @param \DataContainer $objDc
+     */
+    public function increaseStock(\DataContainer $objDc)
+    {
+        /** @var ProductModel $order */
+        $order = System::getContainer()->get('contao.framework')->getAdapter(ProductModel::class)->findByPk($objDc->activeRecord->id);
+        if (null !== $order) {
+            $config = $order->getRelated('config_id');
+
+            // if the order had already been set to a stock increasing state, the stock doesn't need to be increased again
+            if (in_array($order->order_status, StringUtil::deserialize($config->stockIncreaseOrderStates, true), true)) {
+                return;
+            }
+
+            foreach ($order as $product) {
+                $totalStockQuantity = System::getContainer()->get('huh.isotope.manager')->getTotalStockQuantity($product->quantity, $product, null, $product->setQuantity, $config);
+
+                if ($totalStockQuantity) {
+                    $product->stock += $totalStockQuantity;
+                    $product->save();
+                }
+            }
+        }
     }
 }

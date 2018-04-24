@@ -229,11 +229,6 @@ $arrDca['fields']['skipStockEdit']['attributes']                           = ['l
 $arrDca['fields']['skipExemptionFromShippingWhenStockEmpty']               = $GLOBALS['TL_DCA']['tl_iso_config']['fields']['skipExemptionFromShippingWhenStockEmpty'];
 $arrDca['fields']['skipExemptionFromShippingWhenStockEmpty']['attributes'] = ['legend' => 'shipping_legend'];
 
-if (TL_MODE == 'FE') {
+if (\Contao\System::getContainer()->get('huh.utils.container')->isFrontend()) {
     $arrDca['fields']['type']['options_callback'] = ['\HeimrichHannot\IsotopeBundle\Helper\ProductHelper', 'getEditableCategories'];
 }
-
-
-
-
-

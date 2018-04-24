@@ -1,0 +1,46 @@
+<div class="wrapper" id="{{ wrapperId }}"{{ dataAttributes|default()|raw }}>
+    {% if showInitialResults or submitted %}
+        {% if showItemCount %}
+            <p class="count">{{ itemsFoundText|raw }}</p>
+        {% endif %}
+        {% if items is not empty %}
+            <div class="items">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>
+                            {{ 'huh.isotope.collection.table.label.orderDate'|trans }}
+                        </th>
+                        <th>
+                            {{ 'huh.isotope.collection.table.label.customer'|trans }}
+                        </th>
+                        <th>
+                            {{ 'huh.isotope.collection.table.label.orderNumber'|trans }}
+                        </th>
+                        <th>
+                            {{ 'huh.isotope.collection.table.label.total'|trans }}
+                        </th>
+                        <th>
+                            {{ 'huh.isotope.collection.table.label.status'|trans }}
+                        </th>
+                        <th>
+
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    {% for item in items %}
+                        {{ item|raw }}
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+            {{ pagination|default()|raw }}
+        {% elseif showNoItemsText %}
+            <p class="no-items">{{ noItemsText|raw }}</p>
+        {% endif %}
+    {% endif %}
+</div>

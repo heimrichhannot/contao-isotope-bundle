@@ -9,6 +9,7 @@
 namespace HeimrichHannot\IsotopeBundle\Manager;
 
 use Contao\System;
+use Isotope\Interfaces\IsotopeProduct;
 use Isotope\Isotope;
 use Isotope\Model\Product;
 use Isotope\Model\ProductType;
@@ -128,15 +129,15 @@ class IsotopeManager
     /**
      * watch out: also in backend the current set quantity is used.
      *
-     * @param int     $quantity
-     * @param Product $product
-     * @param null    $objCartItem
-     * @param null    $intSetQuantity
-     * @param null    $config
+     * @param int            $quantity
+     * @param IsotopeProduct $product
+     * @param null           $objCartItem
+     * @param null           $intSetQuantity
+     * @param null           $config
      *
      * @return int|null
      */
-    public function getTotalStockQuantity(int $quantity, Product $product, $objCartItem = null, $intSetQuantity = null, $config = null)
+    public function getTotalStockQuantity(int $quantity, IsotopeProduct $product, $objCartItem = null, $intSetQuantity = null, $config = null)
     {
         $intFinalSetQuantity = 1;
 

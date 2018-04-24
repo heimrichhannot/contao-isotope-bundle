@@ -13,8 +13,8 @@ $GLOBALS['ISO_HOOKS']['updateItemInCollection']['validateStockCollectionUpdate']
 $GLOBALS['ISO_HOOKS']['buttons'][]                                               = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'addDownloadSingleProductButton'];
 $GLOBALS['ISO_HOOKS']['preOrderStatusUpdate']['updateStock']                     = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'updateStock'];
 
-$GLOBALS['TL_HOOKS']['replaceDynamicScriptTags'][]             = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'hookReplaceDynamicScriptTags'];
-$GLOBALS['TL_HOOKS']['postDownload']['downloadCounter']        = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'updateDownloadCounter'];
+$GLOBALS['TL_HOOKS']['replaceDynamicScriptTags'][]      = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'hookReplaceDynamicScriptTags'];
+$GLOBALS['TL_HOOKS']['postDownload']['downloadCounter'] = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'updateDownloadCounter'];
 //$GLOBALS['TL_HOOKS']['parseItems']['addPdfViewerToTemplate']   = ['HeimrichHannot\IsotopeBundle\Helper\ProductHelper', 'addPdfViewerToTemplate'];
 $GLOBALS['ISO_HOOKS']['generateProduct']['updateTemplateData'] = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'updateTemplateData'];
 
@@ -25,7 +25,6 @@ $GLOBALS['ISO_HOOKS']['generateProduct']['updateTemplateData'] = ['HeimrichHanno
 $GLOBALS['FE_MOD']['isotopeBundle'] = [
     'iso_cart_link'               => 'HeimrichHannot\IsotopeBundle\Module\CartLink',
     'iso_product_ranking'         => 'HeimrichHannot\IsotopeBundle\Module\ProductRanking',
-    'iso_orderhistory_plus'       => 'HeimrichHannot\IsotopeBundle\Module\OrderHistoryPlus',
     'iso_orderdetails_plus'       => 'HeimrichHannot\IsotopeBundle\Module\OrderDetailsPlus',
     'iso_productlistplus'         => 'HeimrichHannot\IsotopeBundle\Module\ProductListPlus',
     'iso_product_frontend_editor' => 'HeimrichHannot\IsotopeBundle\Module\ProductFrontendEditor',

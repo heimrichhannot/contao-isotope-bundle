@@ -39,6 +39,8 @@ class Plugin implements BundlePluginInterface, ExtensionPluginInterface
      */
     public function getExtensionConfig($extensionName, array $extensionConfigs, ContainerBuilder $container)
     {
+        $extensionConfigs = ContainerUtil::mergeConfigFile('huh_list', $extensionName, $extensionConfigs, $container->getParameter('kernel.project_dir').'/vendor/heimrichhannot/contao-isotope-bundle/src/Resources/config/config_list.yml');
+
         return ContainerUtil::mergeConfigFile('huh_encore', $extensionName, $extensionConfigs, $container->getParameter('kernel.project_dir').'/vendor/heimrichhannot/contao-project-bundle/src/Resources/config/config_encore.yml');
     }
 }

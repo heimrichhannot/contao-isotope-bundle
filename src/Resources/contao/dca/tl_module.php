@@ -39,7 +39,6 @@ $arrDca['palettes']['iso_direct_checkout'] =
 
 $arrDca['palettes']['iso_product_ranking'] = '{title_legend},name,headline,type;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
 
-$arrDca['palettes']['iso_orderhistory_plus'] = str_replace('iso_config_ids', 'iso_config_ids,iso_show_all_orders', $arrDca['palettes']['iso_orderhistory']);
 $arrDca['palettes']['iso_orderdetails_plus'] = str_replace('iso_loginRequired', 'iso_loginRequired,iso_show_all_orders', $arrDca['palettes']['iso_orderdetails']);
 
 $arrDca['palettes']['iso_product_frontend_editor'] = '{title_legend},name,headline,type;' . '{creator_legend},formHybridDataContainer,formHybridForcePaletteRelation,formHybridEditable,formHybridAddEditableRequired,formHybridAddReadOnly,formHybridAddPermanentFields;'

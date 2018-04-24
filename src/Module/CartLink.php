@@ -15,7 +15,7 @@ use Contao\System;
 
 class CartLink extends Module
 {
-    protected $template = 'mod_iso_cart_link';
+    protected $strTemplate = 'mod_iso_cart_link';
 
     /**
      * @var PageModel

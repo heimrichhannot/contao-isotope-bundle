@@ -1,0 +1,9 @@
+huh:
+    list:
+        items:
+            - { name: isotopeCollectionItem, class: HeimrichHannot\IsotopeBundle\ListItem\IsotopeCollectionItem }
+        templates:
+            item:
+                - { name: isotopeCollectionItem, template: "@HeimrichHannotContaoIsotope/item/list_item_isotope_collection_table.html.twig" }
+            list:
+                - { name: isotopeCollectionTable, template: "@HeimrichHannotContaoIsotope/list/list_isotope_collection_table.html.twig" }

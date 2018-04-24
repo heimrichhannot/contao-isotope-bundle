@@ -1,0 +1,7 @@
+# messages
+huh.isotope.collection.table.label:
+  orderDate: Bestelldatum
+  customer: Kunde
+  orderNumber: Bestellnummer
+  total: Gesamt
+  status: Status

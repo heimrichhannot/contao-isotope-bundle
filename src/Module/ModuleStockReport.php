@@ -8,7 +8,10 @@
 
 namespace HeimrichHannot\IsotopeBundle\Module;
 
+use Contao\Database;
 use Contao\Module;
+use Contao\System;
+use Patchwork\Utf8;
 
 class ModuleStockReport extends Module
 {
@@ -18,7 +21,7 @@ class ModuleStockReport extends Module
     {
         if (TL_MODE == 'BE') {
             $objTemplate = new \BackendTemplate('be_wildcard');
-            $objTemplate->wildcard = '### '.utf8_strtoupper($GLOBALS['TL_LANG']['FMD']['iso_stockreport'][0]).' ###';
+            $objTemplate->wildcard = '### '.Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['iso_stockreport'][0]).' ###';
             $objTemplate->title = $this->headline;
             $objTemplate->id = $this->id;
             $objTemplate->link = $this->name;
@@ -33,9 +36,9 @@ class ModuleStockReport extends Module
     protected function compile()
     {
         $arrProducts = [];
-        $objProducts = \Database::getInstance()->prepare('SELECT p.*, t.name as type FROM tl_iso_product p INNER JOIN tl_iso_producttype t ON t.id = p.type WHERE p.published=1 AND p.shipping_exempt="" AND p.initialStock!="" AND stock IS NOT NULL ORDER BY category ASC')->execute();
+        $objProducts = Database::getInstance()->prepare('SELECT p.*, t.name as type FROM tl_iso_product p INNER JOIN tl_iso_producttype t ON t.id = p.type WHERE p.published=1 AND p.shipping_exempt="" AND p.initialStock!="" AND stock IS NOT NULL ORDER BY iso_category ASC')->execute();
 
-        \System::loadLanguageFile('tl_reports');
+        System::loadLanguageFile('tl_reports');
 
         if ($objProducts->numRows < 1) {
             return false;
