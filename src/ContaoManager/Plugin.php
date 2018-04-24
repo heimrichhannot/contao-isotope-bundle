@@ -14,6 +14,7 @@ use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ContainerBuilder;
 use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
+use HeimrichHannot\EncoreBundle\HeimrichHannotContaoEncoreBundle;
 use HeimrichHannot\IsotopeBundle\HeimrichHannotContaoIsotopeBundle;
 use HeimrichHannot\SlickBundle\HeimrichHannotContaoSlickBundle;
 use HeimrichHannot\UtilsBundle\Container\ContainerUtil;
@@ -26,7 +27,12 @@ class Plugin implements BundlePluginInterface, ExtensionPluginInterface
     public function getBundles(ParserInterface $parser)
     {
         return [
-            BundleConfig::create(HeimrichHannotContaoIsotopeBundle::class)->setLoadAfter([ContaoCoreBundle::class, 'isotope', HeimrichHannotContaoSlickBundle::class]),
+            BundleConfig::create(HeimrichHannotContaoIsotopeBundle::class)->setLoadAfter([
+                ContaoCoreBundle::class,
+                HeimrichHannotContaoEncoreBundle::class,
+                'isotope',
+                HeimrichHannotContaoSlickBundle::class,
+            ]),
         ];
     }
 
