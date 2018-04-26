@@ -84,7 +84,7 @@ $arrDca['fields']['addedBy'] = [
     'inputType'  => 'select',
     'exclude'    => true,
     'search'     => true,
-    'default'    => FE_USER_LOGGED_IN ? FrontendUser::getInstance()->id : \Config::get('iso_creatorFallbackMember'),
+    'default'    => FE_USER_LOGGED_IN ? \Contao\FrontendUser::getInstance()->id : \Contao\BackendUser::getInstance()->id,
     'foreignKey' => 'tl_member.username',
     'eval'       => ['doNotCopy' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50'],
     'relation'   => ['type' => 'hasOne', 'load' => 'eager'],
@@ -219,6 +219,22 @@ $arrDca['fields']['copyright'] = [
     ],
     'sql'              => "blob NULL",
     'attributes'       => ['legend' => 'general_legend'],
+];
+
+$arrDca['fields']['bookingStart'] = [
+    'label'      => &$GLOBALS['TL_LANG']['tl_iso_product']['bookingStart'],
+    'inputType'  => 'text',
+    'eval'       => ['tl_class' => 'w50', 'rgxp' => 'date','datepicker' => true],
+    'attributes' => ['legend' => 'inventory_legend'],
+    'sql'        => "varchar(255) NOT NULL default ''",
+];
+
+$arrDca['fields']['bookingStop'] = [
+    'label'     => &$GLOBALS['TL_LANG']['tl_iso_product']['bookingStop'],
+    'inputType' => 'text',
+    'eval'      => ['tl_class' => 'w50', 'rgxp' => 'date','datepicker' => true],
+    'attributes' => ['legend' => 'inventory_legend'],
+    'sql'        => "varchar(255) NOT NULL default ''",
 ];
 
 // arrays are always copied by value (not by reference) in php

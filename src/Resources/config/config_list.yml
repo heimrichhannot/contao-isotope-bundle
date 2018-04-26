@@ -5,5 +5,6 @@ huh:
         templates:
             item:
                 - { name: isotopeCollectionItem, template: "@HeimrichHannotContaoIsotope/item/list_item_isotope_collection_table.html.twig" }
+                - { name: isotopeListItem, template: "@HeimrichHannotContaoIsotope/item/list_item_isotope.html.twig" }
             list:
                 - { name: isotopeCollectionTable, template: "@HeimrichHannotContaoIsotope/list/list_isotope_collection_table.html.twig" }

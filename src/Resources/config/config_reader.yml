@@ -1,0 +1,7 @@
+huh:
+    reader:
+        items:
+            - { name: isotopReaderItem, class: HeimrichHannot\IsotopeBundle\Item\IsotopeReaderItem }
+        templates:
+            item:
+                - { name: isotopeReaderItem, template: "@HeimrichHannotContaoIsotope/item/reader_item_isotope.html.twig" }
