@@ -15,7 +15,7 @@
     "heimrichhannot/contao-request": ">=1.1.3",
     "alchemy/ghostscript": ">=0.4.0",
     "miljar/php-exif": "^v0.6",
-    "heimrichhannot/contao-slick-bundle": "^1.0.0-beta2"
+    "heimrichhannot/contao-slick-bundle": "dev-master"
   },
   "require-dev": {
     "contao/test-case": "^1.1",

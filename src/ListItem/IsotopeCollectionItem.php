@@ -12,6 +12,7 @@ use Contao\MemberModel;
 use Contao\System;
 use HeimrichHannot\ListBundle\Item\DefaultItem;
 use Isotope\Isotope;
+use Isotope\Model\Config;
 use Isotope\Model\OrderStatus;
 use Isotope\Model\ProductCollection\Order;
 
@@ -31,7 +32,13 @@ class IsotopeCollectionItem extends DefaultItem
     public function getCustomer()
     {
         if ('0' === $this->_raw['member']) {
-            return $GLOBALS['TL_LANG']['tl_module']['guestOrder'];
+            $config = System::getContainer()->get('contao.framework')->getAdapter(Config::class)->findById($this->_raw['config_id']);
+
+            if (null === $config) {
+                return $GLOBALS['TL_LANG']['tl_module']['guestOrder'];
+            }
+
+            return $config->name;
         }
 
         $customer = System::getContainer()->get('contao.framework')->getAdapter(MemberModel::class)->findByPk($this->_raw['member']);
