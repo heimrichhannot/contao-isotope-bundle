@@ -1,0 +1,41 @@
+<div class="item">
+        {{ dump(addToCartAction) }}
+
+        <input id="dayCreate" type="text">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script>
+            (function ($) {
+                $(document).ready(function(){
+
+                    function getComparableString(str) {
+                        str = str.toString().substring(0,10);
+                        str = parseInt(str);
+                        return str+7200;
+                    }
+
+
+                    flatpickr("#dayCreate", {
+                        dateFormat: "d.m.Y",
+                        minDate: "today",
+                        mode:"range",
+                        onDayCreate: function(dObj, dStr, fp, dayElem) {
+                            var date = dayElem.dateObj,
+                                locked = {{ bookingCalendar|raw }};
+
+                            var dateString = getComparableString(date.getTime());
+                            $.each(locked,function(key,value){
+                                if(value == dateString) {
+                                    dayElem.className += ' disabled blocked';
+                                }
+                            });
+                        }
+                    });
+                });
+            })(jQuery);
+
+
+        </script>
+</div>
