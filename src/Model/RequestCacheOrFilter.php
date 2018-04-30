@@ -9,7 +9,6 @@
 namespace HeimrichHannot\IsotopeBundle\Model;
 
 use Isotope\Model\Product;
-use Isotope\Model\RequestCache;
 
 /**
  * Isotope\Model\RequestCache represents an Isotope request cache model.
@@ -17,7 +16,7 @@ use Isotope\Model\RequestCache;
  * @copyright  Isotope eCommerce Workgroup 2009-2012
  * @author     Andreas Schempp <andreas.schempp@terminal42.ch>
  */
-class RequestCacheOrFilter extends RequestCache
+class RequestCacheOrFilter
 {
     /**
      * Generate query string for native filters.
@@ -26,7 +25,7 @@ class RequestCacheOrFilter extends RequestCache
      *
      * @return array
      */
-    public static function buildSqlFilters(array $arrFilters)
+    public function buildSqlFilters(array $arrFilters)
     {
         $strWhere = '';
         $arrWhere = [];

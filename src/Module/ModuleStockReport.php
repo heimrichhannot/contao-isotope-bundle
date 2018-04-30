@@ -61,16 +61,16 @@ class ModuleStockReport extends Module
 
                 switch ($percent) {
                     default:
-                        $strClass = 'progress-bar-success';
+                        $strClass = 'badge-success';
                         break;
                     case $percent < 25:
-                        $strClass = 'progress-bar-danger';
+                        $strClass = 'badge-danger';
                         break;
                     case $percent < 50:
-                        $strClass = 'progress-bar-warning';
+                        $strClass = 'badge-warning';
                         break;
                     case $percent < 75:
-                        $strClass = 'progress-bar-info';
+                        $strClass = 'badge-info';
                         break;
                 }
                 $arrProducts[$objProducts->id]['stockClass'] = $strClass;
