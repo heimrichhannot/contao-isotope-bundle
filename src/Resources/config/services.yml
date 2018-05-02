@@ -5,9 +5,6 @@ services:
   huh.isotope.model.requestCacheOrFilter:
     class: HeimrichHannot\IsotopeBundle\Model\RequestCacheOrFilter
     public: true
-  huh.isotope.model.product_collection_item:
-      class: HeimrichHannot\IsotopeBundle\Model\ProductCollectionItemModel
-      public: true
   huh.isotope.helper.download:
     class: HeimrichHannot\IsotopeBundle\Helper\DownloadHelper
     public: true
