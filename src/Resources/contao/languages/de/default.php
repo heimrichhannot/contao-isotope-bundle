@@ -25,13 +25,15 @@ $GLOBALS['TL_LANG']['MSC']['formhybrid']['submitLabels']['createProducts'] = 'Pr
  * Buttons
  */
 $GLOBALS['TL_LANG']['MSC']['buttonLabel']['downloadSingleProduct'] = 'Download';
+$GLOBALS['TL_LANG']['MSC']['buttonLabel']['edit_booking_plan']     = 'Belegungsplan';
 
 /**
  * Messages
  */
 $GLOBALS['TL_LANG']['MSC']['productNotFound']      = 'Das Produkt der Direktbestellung wurde nicht gefunden.';
 $GLOBALS['TL_LANG']['MSC']['stockEmpty']           = 'Der Artikel "%s" ist nicht mehr verfügbar.';
-$GLOBALS['TL_LANG']['MSC']['stockExceeded']        = 'Vom Artikel "%s" sind nur noch %s Stück verfügbar. Bitte bedenken Sie, dass es manche Artikel nur im Set gibt.';
+$GLOBALS['TL_LANG']['MSC']['stockExceeded']        =
+    'Vom Artikel "%s" sind nur noch %s Stück verfügbar. Bitte bedenken Sie, dass es manche Artikel nur im Set gibt.';
 $GLOBALS['TL_LANG']['MSC']['maxOrderSizeExceeded'] = 'Sie können den Artikel "%s" pro Bestellung nur maximal %s-mal anfordern.';
 
 /**

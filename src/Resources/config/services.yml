@@ -17,3 +17,9 @@ services:
   huh.isotope.manager:
     class: HeimrichHannot\IsotopeBundle\Manager\IsotopeManager
     public: true
+  huh.isotope.ajax_manager:
+    class: HeimrichHannot\IsotopeBundle\Manager\AjaxManager
+    public: true
+  huh.isotope.hooks.product_collection:
+    class: HeimrichHannot\IsotopeBundle\Hooks\ProductCollection
+    public: true

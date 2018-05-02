@@ -11,15 +11,30 @@ namespace HeimrichHannot\IsotopeBundle\Item;
 use Contao\System;
 use HeimrichHannot\ReaderBundle\Item\DefaultItem;
 use Isotope\Frontend\ProductCollectionAction\AddToCartAction;
-use Isotope\Model\Product\Standard;
+use Isotope\Model\Product;
+use Isotope\Model\ProductCollection;
 
 class IsotopeReaderItem extends DefaultItem
 {
     public function getAddToCartAction()
     {
         $action = new AddToCartAction();
+        global $objPage;
 
-        $product = Standard::findPublishedByPk($this->_raw['id']);
+        $objProduct = Product::findAvailableByIdOrAlias($this->_raw['id']);
+
+        $arrConfig = [
+            'module' => System::getContainer()->get('huh.utils.model')->findModelInstanceByPk('tl_module', 16),
+            'template' => 'iso_reader_dav_vhb',
+            'gallery' => 2,
+            'buttons' => [],
+            'useQuantity' => 1,
+            'jumpTo' => $objPage,
+        ];
+
+        $product = $objProduct->generate($arrConfig);
+
+//            ProductCollection::findByPk($this->_raw['id']);
 
         return $action->generate($product);
     }

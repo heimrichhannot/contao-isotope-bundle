@@ -170,4 +170,65 @@ class IsotopeManager
 
         return $config->{$property};
     }
+
+    /**
+     * @param int $quantity
+     *
+     * @return array|string
+     */
+    public function getBlockedDates(int $productId, int $quantity = 1)
+    {
+        $blocked = [];
+
+        if (null === ($collectionItems = System::getContainer()->get('huh.isotope.model.product_collection_item')->findByItem($productId))) {
+            return $blocked;
+        }
+
+        $stock = System::getContainer()->get('huh.isotope.model.product')->getStock($productId) - $quantity;
+
+        if (0 > $stock) {
+            return [];
+        }
+
+        $bookings = [];
+        $bookingsFlat = [];
+
+        foreach ($collectionItems as $booking) {
+            $bookings[$booking->id] = range($booking->bookingStart, $booking->bookingStop, 86400);
+
+            $bookingsFlat = array_merge($bookingsFlat, range($booking->bookingStart, $booking->bookingStop, 86400));
+        }
+
+        $counts = [];
+
+        foreach ($bookings as $dates) {
+            foreach ($dates as $date) {
+                $count = 0;
+
+                foreach ($bookings as $compareDates) {
+                    foreach ($compareDates as $compareDate) {
+                        if ($compareDate != $date) {
+                            continue;
+                        }
+
+                        ++$count;
+
+                        $counts[$date] = $count;
+                    }
+                }
+            }
+        }
+
+        $locked = [];
+
+        foreach ($counts as $date => $bookingCount) {
+            if ($date < strtotime('today midnight') || ($stock + $quantity) - $bookingCount > $quantity) {
+                continue;
+            }
+
+            $locked[] = $date;
+        }
+
+        return $locked;
+    }
 }

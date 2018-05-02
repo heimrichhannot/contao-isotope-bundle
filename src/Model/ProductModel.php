@@ -24,4 +24,13 @@ class ProductModel extends Model
 
         return [];
     }
+
+    public function getStock($id)
+    {
+        $product = $this->findByPk($id);
+
+        $stock = $product->stock;
+
+        return $stock;
+    }
 }

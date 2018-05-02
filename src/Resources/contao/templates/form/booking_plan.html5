@@ -1,0 +1,1 @@
+<input id="dayCreate" type="text" data-blocked="<?= $this->blocked;?>">
