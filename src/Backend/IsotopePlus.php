@@ -120,6 +120,13 @@ class IsotopePlus extends \Isotope\Isotope
         return true;
     }
 
+    /**
+     * @param $objProduct
+     * @param $intQuantity
+     * @param ProductCollection $objProductCollection
+     *
+     * @return int
+     */
     public function validateStockCollectionAdd($objProduct, $intQuantity, ProductCollection $objProductCollection)
     {
         if (!System::getContainer()->get('huh.isotope.manager')->validateQuantity($objProduct, $intQuantity, $objProductCollection->getItemForProduct($objProduct))) {
