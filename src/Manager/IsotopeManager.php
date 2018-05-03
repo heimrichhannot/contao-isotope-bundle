@@ -179,7 +179,6 @@ class IsotopeManager
     public function getBlockedDates(int $productId, int $quantity = 1)
     {
         $blocked = [];
-
         if (null === ($collectionItems = System::getContainer()->get('huh.isotope.model.product_collection_item')->findByItem($productId))) {
             return $blocked;
         }
