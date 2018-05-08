@@ -32,7 +32,7 @@ $arrDca['palettes']['iso_productlist'] = str_replace('{config_legend}', '{config
 $arrDca['palettes']['iso_productreader'] = str_replace('iso_buttons;', 'iso_buttons;{creator_legend},addEditCol,addDeleteCol,addPublishCol,addCreateButton;{bookings_legend},bp_months;', $arrDca['palettes']['iso_productreader']);
 
 
-$arrDca['palettes']['iso_cart_link'] = '{title_legend},name,headline,type;{config_legend},jumpTo;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
+$arrDca['palettes']['iso_cart_link'] = '{title_legend},name,headline,type;{config_legend},jumpTo,customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
 
 $arrDca['palettes']['iso_direct_checkout'] =
     '{title_legend},name,headline,type;' . '{config_legend},jumpTo,formHybridAsync,formHybridResetAfterSubmission,iso_direct_checkout_product_mode,iso_direct_checkout_products,nc_notification,iso_shipping_modules,iso_use_notes,iso_useAgb,iso_useConsent;' . '{template_legend},formHybridTemplate;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';

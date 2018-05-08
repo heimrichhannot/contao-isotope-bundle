@@ -41,6 +41,13 @@ $GLOBALS['FE_MOD']['isotopeBundle'] = [
  */
 $GLOBALS['TL_MODELS']['tl_iso_product'] = 'HeimrichHannot\IsotopeBundle\Model\ProductModel';
 
+
+/**
+ * Product actions
+ */
+\Isotope\Frontend\ProductAction\Registry::add(new \HeimrichHannot\IsotopeBundle\Action\BookingPlanAction());
+
+
 /**
  * CSS
  */
@@ -54,3 +61,28 @@ if (System::getContainer()->get('huh.utils.container')->isBackend()) {
 if (System::getContainer()->get('huh.utils.container')->isFrontend()) {
     $GLOBALS['TL_JAVASCRIPT']['tablesorter'] = 'assets/components/tablesorter/js/tablesorter.min.js|static';
 }
+
+
+if(\Contao\System::getContainer()->get('huh.utils.container')->isFrontend() && !class_exists(\HeimrichHannot\EncoreBundle\DependencyInjection\EncoreExtension::class))
+{
+    $GLOBALS['TL_JAVASCRIPT']['contao-watchlist-bundle'] = 'bundles/heimrichhannotcontaowatchlist/js/contao.isotope-bundle.min.js|static';
+}
+
+
+$GLOBALS['TL_HOOKS']['getPageLayout'][] = ['huh.isotope.ajax_manager', 'ajaxActions'];
+$GLOBALS['ISO_HOOKS']['postAddProductToCollection'][] = ['huh.isotope.hooks.product_collection', 'applyBookingPlanToCollectionItem'];
+
+/**
+ * ajax actions
+ */
+$GLOBALS['AJAX'][\HeimrichHannot\IsotopeBundle\Manager\AjaxManager::ISOTOPE_AJAX_GROUP] = [
+  'actions' => [
+      \HeimrichHannot\IsotopeBundle\Manager\AjaxManager::ISOTOPE_AJAX_BOOKING_PLAN_UPDATE => [
+          'arguments' => [
+              \HeimrichHannot\IsotopeBundle\Manager\AjaxManager::ISOTOPE_AJAX_VARIABLE_PRODUCT_ID,
+              \HeimrichHannot\IsotopeBundle\Manager\AjaxManager::ISOTOPE_AJAX_VARIABLE_QUANTITY
+          ],
+          'options' => []
+      ]
+  ]
+];

@@ -1,9 +1,42 @@
-let $ = require('jquery');
+(function($)
+{
+    window.ISOTOPE_BUNDLE = {
+        init: function () {
+            this.initPDFViewer();
+            this.initBookingPlan();
+            this.registerEvents();
+        },
+        registerEvents: function () {
+            $(document).keydown(function(e) {
+                if (e.which == 13) {
+                    e.preventDefault();
+                    pageNum = parseInt($('#ctrl-pageNum_' + activeID).val());
 
-(function($) {
-    var pdfJS = {
-        init: function() {
+                    if ($('#ctrl-pageNum_' + activeID + ':focus').length && pageNum <= pdfDoc.numPages && pageNum >= 1) {
+                        isotopeBundle.queueRenderPage(pageNum);
+                    }
+                }
+            });
 
+            $('#ctrl-prev_' + activeID).on('click', function() {
+                isotopeBundle.onPrevPage();
+            });
+
+            $('#ctrl-next_' + activeID).on('click', function() {
+                isotopeBundle.onNextPage();
+            });
+
+            $('.tabs').on('click', function() {
+                activeID = $(this).data('target');
+                pageNum = parseInt($('#ctrl-pageNum_' + activeID).val());
+
+                if (!$('#pdfViewer_' + activeID).hasClass('loaded')) {
+                    isotopeBundle.initPDFViewer();
+                }
+            });
+
+        },
+        initPDFViewer: function() {
             // activeID = $('.tabs_pdfViewer li.active').data('target');
             canvas = $('#pdfViewer_' + activeID)[0];
             ctx = canvas.getContext('2d');
@@ -14,17 +47,15 @@ let $ = require('jquery');
             // If absolute URL from the remote server is provided, configure the CORS
             // header on that server.
 
-            PDFJS.getDocument(url).then(function(pdfDoc_) {
+            isotopeBundle.getDocument(url).then(function(pdfDoc_) {
                 pdfDoc = pdfDoc_;
 
                 $('#pageCount_' + activeID)[0].textContent = pdfDoc.numPages;
                 // Initial/first page rendering
-                pdfJS.renderPage(pageNum);
+                isotopeBundle.renderPage(pageNum);
                 $(document).find('#loader').remove();
                 $('#pdfViewer_' + activeID).addClass('loaded');
             });
-
-            pdfJS.registerEvents();
         },
         /**
          * Get page info from document, resize canvas accordingly, and render page.
@@ -51,7 +82,7 @@ let $ = require('jquery');
                     pageRendering = false;
                     if (pageNumPending !== null) {
                         // New page rendering is pending
-                        pdfJS.renderPage(pageNumPending);
+                        isotopeBundle.renderPage(pageNumPending);
                         pageNumPending = null;
                     }
                 });
@@ -68,9 +99,9 @@ let $ = require('jquery');
             if (pageRendering) {
                 pageNumPending = num;
             } else {
-                pdfJS.renderPage(num);
+                isotopeBundle.renderPage(num);
             }
-            pdfJS.updatePageNum(num);
+            isotopeBundle.updatePageNum(num);
         },
         /**
          * Displays previous page.
@@ -80,7 +111,7 @@ let $ = require('jquery');
                 return;
             }
             pageNum--;
-            pdfJS.queueRenderPage(pageNum);
+            isotopeBundle.queueRenderPage(pageNum);
         },
         /**
          * Displays next page.
@@ -90,7 +121,7 @@ let $ = require('jquery');
                 return;
             }
             pageNum++;
-            pdfJS.queueRenderPage(pageNum);
+            isotopeBundle.queueRenderPage(pageNum);
         },
         /**
          * update displayed current page number
@@ -99,38 +130,34 @@ let $ = require('jquery');
         updatePageNum: function(num) {
             $('#ctrl-pageNum_' + activeID).val(num);
         },
-        registerEvents: function() {
-            $(document).keydown(function(e) {
-                if (e.which == 13) {
-                    e.preventDefault();
-                    pageNum = parseInt($('#ctrl-pageNum_' + activeID).val());
+        initBookingPlan: function() {
+            var input = $(document).find('#bookingPlan'),
+                blocked = input.data('blocked');
 
-                    if ($('#ctrl-pageNum_' + activeID + ':focus').length && pageNum <= pdfDoc.numPages && pageNum >= 1) {
-                        pdfJS.queueRenderPage(pageNum);
-                    }
-                }
-            });
+            flatpickr('#bookingPlan', {
+                dateFormat: 'd.m.Y',
+                minDate: 'today',
+                mode: 'range',
+                onDayCreate: function(dObj, dStr, fp, dayElem) {
+                    var date = dayElem.dateObj;
 
-            $('#ctrl-prev_' + activeID).on('click', function() {
-                pdfJS.onPrevPage();
-            });
-
-            $('#ctrl-next_' + activeID).on('click', function() {
-                pdfJS.onNextPage();
-            });
-
-            $('.tabs').on('click', function() {
-                activeID = $(this).data('target');
-                pageNum = parseInt($('#ctrl-pageNum_' + activeID).val());
-
-                if (!$('#pdfViewer_' + activeID).hasClass('loaded')) {
-                    pdfJS.init();
+                    var dateString = isotopeBundle.getComparableDate(date.getTime());
+                    $.each(blocked,function(key,value){
+                        if(value == dateString) {
+                            dayElem.className += ' disabled blocked';
+                        }
+                    });
                 }
             });
         },
+        getComparableDate: function(date) {
+            str = str.toString().substring(0,10);
+            str = parseInt(str);
+            return str+7200;
+        }
     };
 
     $(document).ready(function() {
-        pdfJS.init();
+        ISOTOPE_BUNDLE.init();
     });
-})(JQuery);
+})(jQuery);
