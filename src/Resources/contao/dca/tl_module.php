@@ -375,7 +375,7 @@ $arrDca['fields']['iso_buttons'] = [
     'exclude'          => true,
     'inputType'        => 'checkboxWizard',
     'default'          => ['add_to_cart'],
-    'options_callback' => ['Isotope\Backend\Module\Callback', 'getButtons'],
+    'options_callback' => ['HeimrichHannot\IsotopeBundle\Backend\Callbacks', 'getButtons'],
     'eval'             => ['multiple' => true, 'tl_class' => 'clr'],
     'sql'              => "blob NULL",
 ];

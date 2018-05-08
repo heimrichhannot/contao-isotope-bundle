@@ -185,6 +185,9 @@ class ProductListPlus extends ProductList
         $buffer = [];
         $defaultProductOptions = $this->getDefaultProductOptions();
 
+        // unset Isotope::defaultButtons because of performance reasons
+        unset($GLOBALS['ISO_HOOKS']['buttons'][0]);
+
         /** @var \Isotope\Model\Product\Standard $product */
         foreach ($products as $product) {
             $arrConfig = [
@@ -194,6 +197,7 @@ class ProductListPlus extends ProductList
                 'buttons' => StringUtil::deserialize($this->iso_buttons, true),
                 'useQuantity' => $this->iso_use_quantity,
                 'jumpTo' => $this->findJumpToPage($product),
+                'requestToken' => System::getContainer()->get('security.csrf.token_manager')->getToken($container->getParameter('contao.csrf_token_name'))->getValue(),
             ];
 
             if (\Environment::get('isAjaxRequest') && $request->getPost('AJAX_MODULE') == $this->id && $request->getPost('AJAX_PRODUCT') == $product->getProductId()) {

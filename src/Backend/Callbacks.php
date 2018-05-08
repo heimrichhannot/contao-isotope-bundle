@@ -13,6 +13,7 @@ use Contao\DataContainer;
 use Contao\FilesModel;
 use Contao\FrontendUser;
 use Contao\System;
+use Isotope\Frontend\ProductAction\Registry;
 
 class Callbacks
 {
@@ -81,5 +82,16 @@ class Callbacks
         }
 
         return $folder.'/'.$user->username;
+    }
+
+    public function getButtons()
+    {
+        $arrOptions['downloadSingleProduct'] = $GLOBALS['TL_LANG']['MSC']['buttonLabel']['downloadSingleProduct'];
+
+        foreach (Registry::all() as $action) {
+            $arrOptions[$action->getName()] = $action->getLabel();
+        }
+
+        return $arrOptions;
     }
 }

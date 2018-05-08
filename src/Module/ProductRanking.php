@@ -13,7 +13,7 @@ use Contao\System;
 
 class ProductRanking extends Module
 {
-    protected $template = 'mod_iso_product_ranking';
+    protected $strTemplate = 'mod_iso_product_ranking';
 
     public function generate()
     {

@@ -494,6 +494,33 @@ class IsotopePlus extends \Isotope\Isotope
         }
     }
 
+    /**
+     * Callback for isoButton Hook.
+     *
+     * @param array          $arrButtons
+     * @param IsotopeProduct $objProduct
+     *
+     * @return array
+     */
+    public static function defaultButtons($arrButtons, IsotopeProduct $objProduct = null)
+    {
+        $actions = [
+            new Frontend\ProductAction\UpdateAction(),
+            new Frontend\ProductAction\CartAction(),
+        ];
+
+        /** @var Frontend\ProductAction\ProductActionInterface $action */
+        foreach ($actions as $action) {
+            $arrButtons[$action->getName()] = [
+                'label' => $action->getLabel($objProduct),
+                'callback' => [get_class($action), 'handleSubmit'],
+                'class' => ($objProduct instanceof IsotopeProduct && is_callable([$action, 'getClasses']) ? $action->getClasses($objProduct) : ''),
+            ];
+        }
+
+        return $arrButtons;
+    }
+
     // copy of code in ProductCollection->generateItem
     protected function generateItem(ProductCollectionItem $item)
     {
