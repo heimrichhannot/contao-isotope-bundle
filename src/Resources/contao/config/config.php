@@ -39,7 +39,7 @@ $GLOBALS['FE_MOD']['isotopeBundle'] = [
 /**
  * Models
  */
-//$GLOBALS['TL_MODELS']['tl_iso_product'] = 'HeimrichHannot\IsotopeBundle\Model\ProductModel';
+$GLOBALS['TL_MODELS']['tl_iso_product'] = 'HeimrichHannot\IsotopeBundle\Model\ProductModel';
 
 /**
  * CSS
