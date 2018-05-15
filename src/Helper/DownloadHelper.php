@@ -71,45 +71,44 @@ class DownloadHelper
                 }
                 $strHref .= ((\Config::get('disableAlias') || false !== strpos($strHref, '?')) ? '&amp;' : '?').'file='.\System::urlEncode($objFile->path);
 
-                $objDownload = new \stdClass();
-                $objDownload->id = $objModel->id;
-                $objDownload->uuid = $objModel->uuid;
-                $objDownload->name = $objFile->basename;
-                $objDownload->formedname = preg_replace(['/_/', '/.\w+$/'], [' ', ''], $objFile->basename);
-                $objDownload->title = specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename));
-                $objDownload->link = $arrMeta['title'];
-                $objDownload->filesize = \System::getReadableSize($objFile->filesize, 1);
-                $objDownload->icon = TL_ASSETS_URL.'assets/contao/images/'.$objFile->icon;
-                $objDownload->href = $strHref;
-                $objDownload->mime = $objFile->mime;
-                $objDownload->extension = $objFile->extension;
-                $objDownload->path = $objFile->dirname;
-                $objDownload->class = 'isotope-download isotope-download-file';
+                $download['id'] = $objModel->id;
+                $download['uuid'] = $objModel->uuid;
+                $download['name'] = $objModel->basename;
+                $download['formedname'] = preg_replace(['/_/', '/.\w+$/'], [' ', ''], $objFile->basename);
+                $download['title'] = specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename));
+                $download['link'] = $arrMeta['title'];
+                $download['filesize'] = \System::getReadableSize($objFile->filesize, 1);
+                $download['icon'] = TL_ASSETS_URL.'assets/contao/images/'.$objFile->icon;
+                $download['href'] = $strHref;
+                $download['mime'] = $objFile->mime;
+                $download['extension'] = $objFile->extension;
+                $download['path'] = $objFile->dirname;
+                $download['class'] = 'isotope-download isotope-download-file';
 
                 // add thumbnail
                 $thumbnails = [];
                 foreach (StringUtil::deserialize($downloadFile->download_thumbnail, true) as $thumbnail) {
                     $thumbnails[] = $framework->getAdapter(FilesModel::class)->findByUuid($thumbnail);
                 }
-                $objDownload->thumbnail = $thumbnails;
+                $download['thumbnail'] = $thumbnails;
 
                 // get width and height of download
                 if (in_array($objFile->extension, ['jpg', 'jpeg', 'tiff', 'png'], true)) {
                     $size = getimagesize($objFile->path);
-                    $objDownload->size = sprintf($GLOBALS['TL_LANG']['MSC']['downloadSize'], $size[0], $size[1], $objDownload->filesize);
+                    $download['size'] = sprintf($GLOBALS['TL_LANG']['MSC']['downloadSize'], $size[0], $size[1], $download['filesize']);
                 }
 
                 if ('pdf' == $objFile->extension) {
-                    $objDownload->size = sprintf($GLOBALS['TL_LANG']['MSC']['downloadSizePdf'], $objDownload->name, $objDownload->filesize);
+                    $download['size'] = sprintf($GLOBALS['TL_LANG']['MSC']['downloadSizePdf'], $download['name'], $download['filesize']);
                 }
 
-                $objDownload->downloadTitle = $downloadFile->title;
+                $download['downloadTitle'] = $downloadFile->title;
 
                 $objT = new \FrontendTemplate('isotope_download_from_attribute');
-                $objT->setData((array) $objDownload);
-                $objDownload->output = $objT->parse();
+                $objT->setData((array) $download);
+                $download['output'] = $objT->parse();
 
-                $downloads[] = $objDownload;
+                $downloads[] = $download;
             }
         }
 

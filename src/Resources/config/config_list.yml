@@ -1,5 +1,7 @@
 huh:
     list:
+        config_element_types:
+            - { name: isotopeImage, class: HeimrichHannot\IsotopeBundle\ConfigElementType\IsotopeImageListConfigElementType }
         items:
             - { name: isotopeCollectionItem, class: HeimrichHannot\IsotopeBundle\ListItem\IsotopeCollectionItem }
         templates:

@@ -1,0 +1,6 @@
+huh:
+    reader:
+        config_element_types:
+            - { name: isotopeImage, class: HeimrichHannot\IsotopeBundle\ConfigElementType\IsotopeImageReaderConfigElementType }
+        delete_classes:
+            - { name: isotopeProduct, class: HeimrichHannot\IsotopeBundle\ConfigElementType\Delete\IsotopeProductDelete }
