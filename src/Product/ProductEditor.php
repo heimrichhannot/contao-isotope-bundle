@@ -10,6 +10,7 @@ namespace HeimrichHannot\IsotopeBundle\Product;
 
 use Contao\Controller;
 use Contao\Dbafs;
+use Contao\File;
 use Contao\FilesModel;
 use Contao\StringUtil;
 use Contao\System;
@@ -91,15 +92,15 @@ abstract class ProductEditor
         }
 
         if (!file_exists($path) && !empty($size['size'])) {
-            $path = null;
-            $image = $container->get('contao.image.image_factory')->create($file->path, [$size['size'][0], $size['size'][1], $size['size'][2]], $path);
+            $image = $container->get('contao.image.image_factory')->create($file->path, [$size['size'][0], $size['size'][1], $size['size'][2]], System::getContainer()->get('huh.utils.container')->getProjectDir().'/'.$path);
             if (null !== $image) {
                 $path = $image->getPath();
             }
         }
 
         if (null === ($downloadFile = $framework->getAdapter(FilesModel::class)->findByPath($path))) {
-            $downloadFile = $framework->getAdapter(Dbafs::class)->addResource(urldecode($path));
+            $path = str_replace(System::getContainer()->get('huh.utils.container')->getProjectDir().'/', '', urldecode($path));
+            $downloadFile = $framework->getAdapter(Dbafs::class)->addResource($path);
         }
 
         $this->saveCopyrightForFile($downloadFile, $product);
@@ -144,8 +145,8 @@ abstract class ProductEditor
     public function moveFile(FilesModel $file, $folder)
     {
         // create new File to enable moving the pdf to user folder
-        $moveFile = new \File($file->path);
-        $moveFile->close();
+        $moveFile = new File($file->path);
+//        $moveFile->close();
         $strTarget = $folder.'/'.$file->name;
         $strTarget = System::getContainer()->get('contao.framework')->getAdapter(Files::class)->getUniqueFileNameWithinTarget($strTarget, FormMultiFileUpload::UNIQID_PREFIX);
 

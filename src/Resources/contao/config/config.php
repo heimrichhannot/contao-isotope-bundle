@@ -1,7 +1,7 @@
 <?php
 
-define('ISO_PRODUCT_CREATOR_SINGLE_IMAGE_PRODUCT', 'HeimrichHannot\IsotopeBundle\Product\SingleImageProduct');
-define('ISO_PRODUCT_CREATOR_MULTI_IMAGE_PRODUCT', 'HeimrichHannot\IsotopeBundle\Product\MultiImageProduct');
+define('ISO_PRODUCT_CREATOR_SINGLE_IMAGE_PRODUCT', 'HeimrichHannot\IsotopeBundle\Product\SingleImageProductEditor');
+define('ISO_PRODUCT_CREATOR_MULTI_IMAGE_PRODUCT', 'HeimrichHannot\IsotopeBundle\Product\MultiImageProductEditor');
 
 $GLOBALS['ISO_HOOKS']['generateProduct'][]                                       = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'generateProductHook'];
 $GLOBALS['ISO_HOOKS']['addProductToCollection']['validateStockCollectionAdd']    = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'validateStockCollectionAdd'];
@@ -63,26 +63,25 @@ if (System::getContainer()->get('huh.utils.container')->isFrontend()) {
 }
 
 
-if(\Contao\System::getContainer()->get('huh.utils.container')->isFrontend() && !class_exists(\HeimrichHannot\EncoreBundle\DependencyInjection\EncoreExtension::class))
-{
+if (\Contao\System::getContainer()->get('huh.utils.container')->isFrontend() && !class_exists(\HeimrichHannot\EncoreBundle\DependencyInjection\EncoreExtension::class)) {
     $GLOBALS['TL_JAVASCRIPT']['contao-watchlist-bundle'] = 'bundles/heimrichhannotcontaowatchlist/js/contao.isotope-bundle.min.js|static';
 }
 
 
-$GLOBALS['TL_HOOKS']['getPageLayout'][] = ['huh.isotope.ajax_manager', 'ajaxActions'];
+$GLOBALS['TL_HOOKS']['getPageLayout'][]               = ['huh.isotope.ajax_manager', 'ajaxActions'];
 $GLOBALS['ISO_HOOKS']['postAddProductToCollection'][] = ['huh.isotope.hooks.product_collection', 'applyBookingPlanToCollectionItem'];
 
 /**
  * ajax actions
  */
 $GLOBALS['AJAX'][\HeimrichHannot\IsotopeBundle\Manager\AjaxManager::ISOTOPE_AJAX_GROUP] = [
-  'actions' => [
-      \HeimrichHannot\IsotopeBundle\Manager\AjaxManager::ISOTOPE_AJAX_BOOKING_PLAN_UPDATE => [
-          'arguments' => [
-              \HeimrichHannot\IsotopeBundle\Manager\AjaxManager::ISOTOPE_AJAX_VARIABLE_PRODUCT_ID,
-              \HeimrichHannot\IsotopeBundle\Manager\AjaxManager::ISOTOPE_AJAX_VARIABLE_QUANTITY
-          ],
-          'options' => []
-      ]
-  ]
+    'actions' => [
+        \HeimrichHannot\IsotopeBundle\Manager\AjaxManager::ISOTOPE_AJAX_BOOKING_PLAN_UPDATE => [
+            'arguments' => [
+                \HeimrichHannot\IsotopeBundle\Manager\AjaxManager::ISOTOPE_AJAX_VARIABLE_PRODUCT_ID,
+                \HeimrichHannot\IsotopeBundle\Manager\AjaxManager::ISOTOPE_AJAX_VARIABLE_QUANTITY,
+            ],
+            'options'   => [],
+        ],
+    ],
 ];

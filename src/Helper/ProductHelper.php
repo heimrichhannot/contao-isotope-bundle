@@ -8,7 +8,7 @@
 
 namespace HeimrichHannot\IsotopeBundle\Helper;
 
-use Contao\File;
+use Contao\FilesModel;
 use Contao\StringUtil;
 use Contao\System;
 use HeimrichHannot\IsotopeBundle\Model\ProductModel;
@@ -119,11 +119,11 @@ class ProductHelper
     }
 
     /**
-     * @param File $file
+     * @param FilesModel $file
      *
      * @return mixed|string
      */
-    public function getFileNameFromFile(File $file)
+    public function getFileNameFromFile(FilesModel $file)
     {
         if ('mp3' == $file->extension) {
             $title = str_replace(['_', '.'], [' ', ' '], $file->name);

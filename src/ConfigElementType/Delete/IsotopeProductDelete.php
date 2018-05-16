@@ -11,6 +11,7 @@ namespace HeimrichHannot\IsotopeBundle\ConfigElementType\Delete;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\File;
 use Contao\FilesModel;
+use Contao\Model\Collection;
 use Contao\StringUtil;
 use Contao\System;
 use HeimrichHannot\IsotopeBundle\Model\ProductModel;
@@ -71,6 +72,8 @@ class IsotopeProductDelete extends DefaultDelete
         $isoDownloads = $this->framework->getAdapter(Download::class)->findBy('pid', $product->id);
         if (null !== $isoDownloads) {
             $this->deleteDownloads($isoDownloads);
+        } else {
+            $this->deleteProductImages($item);
         }
 
         // delete
@@ -95,6 +98,43 @@ class IsotopeProductDelete extends DefaultDelete
             }
             $this->deleteFiles($download->getFiles());
             $download->delete();
+        }
+    }
+
+    /**
+     * delete images from tl_files.
+     *
+     * @param ItemInterface $item
+     */
+    protected function deleteProductImages(ItemInterface $item)
+    {
+        if (null !== $item->getRawValue('images')) {
+            $arrImages = StringUtil::deserialize($item->getRawValue('images'));
+
+            if (!is_array($arrImages) || empty($arrImages)) {
+                return;
+            }
+
+            foreach ($arrImages as $image) {
+                $strImage = 'isotope/'.strtolower(substr($image['src'], 0, 1)).'/'.$image['src'];
+
+                if (!is_file(TL_ROOT.'/'.$strImage)) {
+                    continue;
+                }
+                unlink(System::getContainer()->get('huh.utils.container')->getProjectDir().'/'.$strImage);
+            }
+        } elseif (null !== $item->getRawValue('uploadedFiles')) {
+            $uploadedFiles = $item->getRawValue('uploadedFiles');
+            if (is_array($upload = unserialize($uploadedFiles))) {
+                $uploadedFiles = $upload[0];
+            }
+            if (\Validator::isUuid($uploadedFiles)) {
+                /** @var FilesModel $imageFile */
+                $imageFile = System::getContainer()->get('contao.framework')->getAdapter(FilesModel::class)->findByUuid($uploadedFiles);
+                $file = new File($imageFile->path);
+                $file->delete();
+                $imageFile->delete();
+            }
         }
     }
 
