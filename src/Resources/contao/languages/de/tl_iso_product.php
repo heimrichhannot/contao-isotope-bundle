@@ -14,7 +14,8 @@ $GLOBALS['TL_LANG']['tl_iso_product']['overrideStockShopConfig'] = [
 ];
 $GLOBALS['TL_LANG']['tl_iso_product']['jumpTo']                  = ['Weiterleitungsseite', 'Wählen Sie hier die Weiterleitungsseite aus.'];
 $GLOBALS['TL_LANG']['tl_iso_product']['addedBy']                 = ['Hinzugefügt durch', 'Tragen Sie hier ein, wer den Artikel hochgeladen hat.'];
-$GLOBALS['TL_LANG']['tl_iso_product']['tag']                     = ['Schlagworte', 'Geben Sie bitte die Begriffe einzeln ein. (Kommas dienen NICHT zur Trennung der Begriffe.)'];
+$GLOBALS['TL_LANG']['tl_iso_product']['tag']                     =
+    ['Schlagworte', 'Geben Sie bitte die Begriffe einzeln ein. (Kommas dienen NICHT zur Trennung der Begriffe.)'];
 $GLOBALS['TL_LANG']['tl_iso_product']['createMultiImageProduct'] = [
     'Alle Bilder zu einem Produkt hinzufügen',
     'Wählen Sie diese Option, wenn alle Bilder aus dem Bildupload zu einem Produkt hinzugefügt werden sollen.',
@@ -40,3 +41,5 @@ $arrLang['uploadedDownloadFiles'] = [
     'Fügen Sie hier Dateien hinzu, die als Downloadelemente für den Artikel genutzt werden sollen.',
     'Datei(en) auswählen',
 ];
+
+$arrLang['bookingBlock'] = ['Artikel nach Bestellung blockieren', 'Tragen Sie hier die Anzahl der Tage ein die ein Artikel nach seiner Buchung gesperrt sein soll. Dies kann bspw. benötigt werden wenn ein Artikel für einen Buchungszeitraum gebucht wird und nach dem Buchungszeitraum aus logistischn Gründen für eine Zeit gesperrt ist.'];

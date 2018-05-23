@@ -1,6 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2018-05-23
+* fixed price calculation for bookingTime items 
+
+#### Fixed
+* updated slick dependency
+
+## [0.1.3] - 2018-05-03
+
+#### Fixed
+* updated slick dependency
+
 ## [0.1.3] - 2018-05-03
 
 #### Fixed

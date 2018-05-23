@@ -115,7 +115,8 @@ class IsotopeManager
         if ($product->overrideStockShopConfig) {
             return $product->{$property};
         }
-        if (null !== ($objProductType = System::getContainer()->get('contao.framework')->getAdapter(ProductType::class)->findByPk($product->type)) && $objProductType->overrideStockShopConfig) {
+        if (null !== ($objProductType = System::getContainer()->get('contao.framework')->getAdapter(ProductType::class)->findByPk($product->type))
+            && $objProductType->overrideStockShopConfig) {
             return $objProductType->{$property};
         }
 
@@ -172,18 +173,19 @@ class IsotopeManager
     }
 
     /**
+     * @param     $product
      * @param int $quantity
      *
      * @return array|string
      */
-    public function getBlockedDates(int $productId, int $quantity = 1)
+    public function getBlockedDates($product, int $quantity = 1)
     {
         $blocked = [];
-        if (null === ($collectionItems = System::getContainer()->get('huh.isotope.model.product_collection_item')->findByItem($productId))) {
+        if (null === ($collectionItems = System::getContainer()->get('huh.isotope.model.product_collection_item')->findByItem($product->id))) {
             return $blocked;
         }
 
-        $stock = System::getContainer()->get('huh.isotope.model.product')->getStock($productId) - $quantity;
+        $stock = System::getContainer()->get('huh.isotope.model.product')->getStock($product->id) - $quantity;
 
         if (0 > $stock) {
             return [];
@@ -193,9 +195,13 @@ class IsotopeManager
         $bookingsFlat = [];
 
         foreach ($collectionItems as $booking) {
-            $bookings[$booking->id] = range($booking->bookingStart, $booking->bookingStop, 86400);
+            if (!$booking->bookingStart || !$booking->bookingStop) {
+                continue;
+            }
 
-            $bookingsFlat = array_merge($bookingsFlat, range($booking->bookingStart, $booking->bookingStop, 86400));
+            $range = $this->getRange($product, $booking);
+            $bookings[$booking->id] = $range;
+            $bookingsFlat = array_merge($bookingsFlat, $range);
         }
 
         $counts = [];
@@ -229,5 +235,35 @@ class IsotopeManager
         }
 
         return $locked;
+    }
+
+    /**
+     * calculate the bookingRange of a product
+     * if the product has a bookingBlock it as to be added to the bookingStop and subtracted from the bookingStart
+     * bookingBlock means that the product will be blocked for a certain amount of days after it's booking.
+     *
+     * @param $product
+     * @param $booking
+     *
+     * @return array
+     */
+    public function getRange($product, $booking)
+    {
+        $bookingStart = '' != $product->bookingBlock ? $booking->bookingStart - ($product->bookingBlock * 86400) : $booking->bookingStart;
+        $bookingStop = '' != $product->bookingBlock ? $booking->bookingStop + ($product->bookingBlock * 86400) : $booking->bookingStop;
+
+        return range($bookingStart, $bookingStop, 86400);
+    }
+
+    /**
+     * @param $booking
+     *
+     * @return array
+     */
+    public function splitUpBookingDates($booking)
+    {
+        $bookingDates = explode('bis', $booking);
+
+        return [strtotime(trim($bookingDates[0])), strtotime(trim($bookingDates[1]))];
     }
 }

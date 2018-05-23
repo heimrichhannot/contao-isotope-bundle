@@ -10,6 +10,7 @@ namespace HeimrichHannot\IsotopeBundle\Manager;
 
 use Contao\System;
 use HeimrichHannot\AjaxBundle\Response\ResponseData;
+use HeimrichHannot\AjaxBundle\Response\ResponseError;
 use HeimrichHannot\AjaxBundle\Response\ResponseSuccess;
 
 class AjaxManager
@@ -27,7 +28,11 @@ class AjaxManager
 
     public function updateBookingPlan(int $productId, int $quantity)
     {
-        $blocked = System::getContainer()->get('huh.isotope.manager')->getBlockedDates($productId, $quantity);
+        if (null === ($product = System::getContainer()->get('huh.utils.model')->findModelInstanceByPk('tl_iso_product', $productId))) {
+            return new ResponseError();
+        }
+
+        $blocked = System::getContainer()->get('huh.isotope.manager')->getBlockedDates($product, $quantity);
 
         $response = new ResponseSuccess();
         $response->setResult(new ResponseData('', ['blocked' => $blocked]));

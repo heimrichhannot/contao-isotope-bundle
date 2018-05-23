@@ -226,7 +226,7 @@ $arrDca['fields']['bookingStart'] = [
     'inputType'  => 'text',
     'eval'       => ['tl_class' => 'w50', 'rgxp' => 'date','datepicker' => true],
     'attributes' => ['legend' => 'inventory_legend'],
-    'sql'        => "varchar(255) NOT NULL default ''",
+    'sql'        => "varchar(16) NOT NULL default ''",
 ];
 
 $arrDca['fields']['bookingStop'] = [
@@ -234,8 +234,17 @@ $arrDca['fields']['bookingStop'] = [
     'inputType' => 'text',
     'eval'      => ['tl_class' => 'w50', 'rgxp' => 'date','datepicker' => true],
     'attributes' => ['legend' => 'inventory_legend'],
-    'sql'        => "varchar(255) NOT NULL default ''",
+    'sql'        => "varchar(16) NOT NULL default ''",
 ];
+
+$arrDca['fields']['bookingBlock'] = [
+    'label'     => &$GLOBALS['TL_LANG']['tl_iso_product']['bookingBlock'],
+    'inputType' => 'text',
+    'eval'      => ['tl_class' => 'w50'],
+    'attributes' => ['legend' => 'inventory_legend'],
+    'sql'        => "varchar(8) NOT NULL default ''",
+];
+
 
 // arrays are always copied by value (not by reference) in php
 $arrDca['fields']['skipStockValidation']                                   = $GLOBALS['TL_DCA']['tl_iso_config']['fields']['skipStockValidation'];

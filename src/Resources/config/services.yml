@@ -20,6 +20,6 @@ services:
   huh.isotope.ajax_manager:
     class: HeimrichHannot\IsotopeBundle\Manager\AjaxManager
     public: true
-  huh.isotope.hooks.product_collection:
-    class: HeimrichHannot\IsotopeBundle\Hooks\ProductCollection
-    public: true
+  huh.isotope.product_collection_manager:
+      class: HeimrichHannot\IsotopeBundle\Manager\ProductCollectionManager
+      public: true
