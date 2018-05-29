@@ -14,12 +14,26 @@ services:
   huh.isotope.helper.product:
     class: HeimrichHannot\IsotopeBundle\Helper\ProductHelper
     public: true
+
+# Manager
+
   huh.isotope.manager:
     class: HeimrichHannot\IsotopeBundle\Manager\IsotopeManager
     public: true
+  huh.isotope.manager.productdata:
+    class: HeimrichHannot\IsotopeBundle\Manager\ProductDataManager
   huh.isotope.ajax_manager:
     class: HeimrichHannot\IsotopeBundle\Manager\AjaxManager
     public: true
   huh.isotope.product_collection_manager:
       class: HeimrichHannot\IsotopeBundle\Manager\ProductCollectionManager
       public: true
+
+# Event Listener
+
+  huh.isotope.listener.hooks:
+    class: HeimrichHannot\IsotopeBundle\EventListener\HookListener
+    arguments: ['@huh.isotope.manager.productdata']
+  huh.isotope.listener.callback.product:
+    class: HeimrichHannot\IsotopeBundle\EventListener\ProductCallbackListener
+    arguments: ['@contao.framework', '@huh.request', '@huh.utils.container']

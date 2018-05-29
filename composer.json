@@ -13,6 +13,7 @@
     "heimrichhannot/contao-frontendedit": "^6.0",
     "contao-components/tablesorter": ">=2.0.5.2",
     "heimrichhannot/contao-request": ">=1.1.3",
+    "heimrichhannot/contao-request-bundle": "^1.0",
     "alchemy/ghostscript": ">=0.4.0",
     "miljar/php-exif": "^v0.6",
     "heimrichhannot/contao-slick-bundle": "^1.0.0-beta"

@@ -49,7 +49,8 @@ $GLOBALS['FE_MOD']['isotopeBundle'] = [
 /**
  * Models
  */
-$GLOBALS['TL_MODELS']['tl_iso_product']                                 = 'HeimrichHannot\IsotopeBundle\Model\ProductModel';
+$GLOBALS['TL_MODELS']['tl_iso_product'] = \HeimrichHannot\IsotopeBundle\Model\ProductModel::class;
+$GLOBALS['TL_MODELS']['tl_iso_product_data'] = \HeimrichHannot\IsotopeBundle\Model\ProductDataModel::class;
 $GLOBALS['TL_MODELS'][\Isotope\Model\ProductCollectionItem::getTable()] = 'HeimrichHannot\IsotopeBundle\Model\ProductCollectionItemModel';
 
 /**
@@ -80,6 +81,7 @@ if (\Contao\System::getContainer()->get('huh.utils.container')->isFrontend()
 
 
 $GLOBALS['TL_HOOKS']['getPageLayout'][] = ['huh.isotope.ajax_manager', 'ajaxActions'];
+$GLOBALS['TL_HOOKS']['loadDataContainer']['huh.isotope.productdata_fields'] = ['huh.isotope.listener.hooks','addMetaFields'];
 
 /**
  * ajax actions

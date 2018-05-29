@@ -15,6 +15,13 @@ use Contao\System;
 class ProductModel extends Model
 {
     protected static $strTable = 'tl_iso_product';
+    protected $productDataManager;
+
+    public function __construct(Database\Result $objResult = null)
+    {
+        parent::__construct($objResult);
+        $this->productDataManager = System::getContainer()->get('huh.isotope.manager.productdata');
+    }
 
     public function getCopyrights()
     {
@@ -25,12 +32,8 @@ class ProductModel extends Model
         return [];
     }
 
-    public function getStock($id)
+    public function getStock(int $id)
     {
-        $product = $this->findByPk($id);
-
-        $stock = $product->stock;
-
-        return $stock;
+        return $this->productDataManager->getProductDataByProduct($id)->stock;
     }
 }

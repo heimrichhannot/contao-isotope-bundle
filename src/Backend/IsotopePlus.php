@@ -15,7 +15,6 @@ use Haste\Generator\RowClass;
 use Haste\Haste;
 use HeimrichHannot\HastePlus\Environment;
 use HeimrichHannot\HastePlus\Files;
-use HeimrichHannot\Request\Request;
 use Isotope\Frontend;
 use Isotope\Interfaces\IsotopeAttribute;
 use Isotope\Interfaces\IsotopeProduct;
@@ -470,18 +469,6 @@ class IsotopePlus extends \Isotope\Isotope
         }
 
         return serialize($return);
-    }
-
-    public function updateRelevance(\DataContainer $dc)
-    {
-        if (System::getContainer()->get('huh.utils.container')->isBackend()) {
-            return;
-        }
-
-        if (null !== ($product = System::getContainer()->get('contao.framework')->getAdapter(Product::class)->findBy('sku', Request::getGet('auto_item')))) {
-            ++$product->relevance;
-            $product->save();
-        }
     }
 
     public function updateDownloadCounter($filePath)
