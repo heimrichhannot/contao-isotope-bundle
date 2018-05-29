@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2018-05-29
+* added ability to reserve a product for booking dates from backend 
+
 ## [0.4.0] - 2018-05-23
 * fixed price calculation for bookingTime items 
 

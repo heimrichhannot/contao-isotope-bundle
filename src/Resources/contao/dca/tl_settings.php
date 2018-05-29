@@ -14,13 +14,13 @@ $arrDca['fields']['iso_creatorFallbackMember'] = [
     'exclude'    => true,
     'inputType'  => 'select',
     'foreignKey' => 'tl_member.username',
-    'eval'       => ['tl_class' => 'clr', 'mandatory' => true, 'includeBlankOption' => true],
+    'eval'       => ['tl_class' => 'clr', 'includeBlankOption' => true],
 ];
 $arrDca['fields']['iso_productFolderFallback'] = [
     'label'     => &$GLOBALS['TL_LANG']['tl_settings']['iso_productFolderFallback'],
     'exclude'   => true,
     'inputType' => 'fileTree',
-    'eval'      => ['fieldType' => 'radio', 'mandatory' => true, 'tl_class' => 'clr w50'],
+    'eval'      => ['fieldType' => 'radio', 'tl_class' => 'clr w50'],
     'sql'       => "binary(16) NULL",
 ];
 
