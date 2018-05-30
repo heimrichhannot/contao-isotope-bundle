@@ -8,90 +8,88 @@
 
 namespace HeimrichHannot\IsotopeBundle\Manager;
 
+use Contao\Message;
 use Contao\StringUtil;
 use Contao\System;
+use HeimrichHannot\IsotopeBundle\Attribute\MaxOrderSizeAttribute;
+use HeimrichHannot\IsotopeBundle\Attribute\StockAttribute;
+use HeimrichHannot\IsotopeBundle\Model\ProductDataModel;
+use HeimrichHannot\UtilsBundle\Container\ContainerUtil;
 use Isotope\Interfaces\IsotopeProduct;
 use Isotope\Isotope;
+use Isotope\Model\Config;
 use Isotope\Model\Product;
+use Isotope\Model\ProductCollectionItem;
 use Isotope\Model\ProductType;
 use Model\Collection;
 
 class IsotopeManager
 {
     /**
-     * @param            $product
-     * @param            $quantity
-     * @param null       $objCartItem
-     * @param bool|false $includeError
-     * @param bool|false $skipSets     override the normal handling of this property -> used for backend handling since this
-     *                                 uses the order item's setQuantity property
+     * @var ProductDataManager
+     */
+    private $productDataManager;
+    /**
+     * @var StockAttribute
+     */
+    private $stockAttribute;
+    /**
+     * @var MaxOrderSizeAttribute
+     */
+    private $maxOrderSizeAttribute;
+    /**
+     * @var ContainerUtil
+     */
+    private $containerUtil;
+
+    /**
+     * IsotopeManager constructor.
+     *
+     * @param ProductDataManager    $productDataManager
+     * @param StockAttribute        $stockAttribute
+     * @param MaxOrderSizeAttribute $maxOrderSizeAttribute
+     * @param ContainerUtil         $containerUtil
+     */
+    public function __construct(ProductDataManager $productDataManager, StockAttribute $stockAttribute, MaxOrderSizeAttribute $maxOrderSizeAttribute, ContainerUtil $containerUtil)
+    {
+        $this->productDataManager = $productDataManager;
+        $this->stockAttribute = $stockAttribute;
+        $this->maxOrderSizeAttribute = $maxOrderSizeAttribute;
+        $this->containerUtil = $containerUtil;
+    }
+
+    /**
+     * @param Product               $product
+     * @param int                   $quantity
+     * @param ProductCollectionItem $cartItem
+     * @param bool                  $includeError
+     * @param int                   $setQuantity
      *
      * @return array|bool
      */
-    public function validateQuantity(Product $product, int $quantity, $objCartItem = null, $includeError = false, $intSetQuantity = null)
+    public function validateQuantity(Product $product, int $quantity, ProductCollectionItem $cartItem = null, bool $includeError = false, int $setQuantity = null)
     {
-        $blnSkipStockValidation = $this->getOverridableStockProperty('skipStockValidation', $product);
-
         // no quantity at all
         if (null === $quantity) {
             return true;
-        } elseif ('' == $quantity) {
+        } elseif (empty($quantity)) {
             $quantity = 1;
         }
+        $productData = $this->productDataManager->getProductData($product->id);
+        $quantityTotal = $this->getTotalCartQuantity($quantity, $productData, $cartItem, $setQuantity);
 
-        $intQuantityTotal = $this->getTotalStockQuantity($quantity, $product, $objCartItem, $intSetQuantity);
-
-        $utilsContainer = System::getContainer()->get('huh.utils.container');
-        // stock
-        if (!$blnSkipStockValidation && '' != $product->stock && null !== $product->stock) {
-            if ($product->stock <= 0) {
-                $strErrorMessage = sprintf($GLOBALS['TL_LANG']['MSC']['stockEmpty'], $product->name);
-
-                if ($utilsContainer->isFrontend()) {
-                    $_SESSION['ISO_ERROR'][] = $strErrorMessage;
-                } else {
-                    \Message::addError($strErrorMessage);
-                }
-
-                if ($includeError) {
-                    return [false, $strErrorMessage];
-                }
-
-                return false;
-            } elseif ($intQuantityTotal > $product->stock) {
-                $strErrorMessage = sprintf($GLOBALS['TL_LANG']['MSC']['stockExceeded'], $product->name, $product->stock);
-
-                if ($utilsContainer->isFrontend()) {
-                    $_SESSION['ISO_ERROR'][] = $strErrorMessage;
-                } else {
-                    \Message::addError($strErrorMessage);
-                }
-
-                if ($includeError) {
-                    return [false, $strErrorMessage];
-                }
-
-                return false;
+        // Stock
+        if (!$this->getOverridableStockProperty('skipStockValidation', $product)) {
+            $validateStock = $this->stockAttribute->validate($productData, $quantityTotal, $includeError);
+            if (true !== $validateStock) {
+                return $this->validateQuantityErrorResult($validateStock[1], $includeError);
             }
         }
 
         // maxOrderSize
-        if ('' != $product->maxOrderSize && null !== $product->maxOrderSize) {
-            if ($intQuantityTotal > $product->maxOrderSize) {
-                $strErrorMessage = sprintf($GLOBALS['TL_LANG']['MSC']['maxOrderSizeExceeded'], $product->name, $product->maxOrderSize);
-
-                if ($utilsContainer->isFrontend()) {
-                    $_SESSION['ISO_ERROR'][] = $strErrorMessage;
-                } else {
-                    \Message::addError($strErrorMessage);
-                }
-
-                if ($includeError) {
-                    return [false, $strErrorMessage];
-                }
-
-                return false;
-            }
+        $validateMaxOrderSize = $this->maxOrderSizeAttribute->validate($productData, $quantityTotal);
+        if (true !== $validateMaxOrderSize) {
+            return $this->validateQuantityErrorResult($validateMaxOrderSize[1], $includeError);
         }
 
         if ($includeError) {
@@ -232,6 +230,62 @@ class IsotopeManager
         $bookingStop = '' != $blocking ? $stop + ($blocking * 86400) : $stop;
 
         return range($bookingStart, $bookingStop, 86400);
+    }
+
+    /**
+     * Returns the total quanitity of the product type added to cart and already in cart, taking set size into account.
+     *
+     * watch out: also in backend the current set quantity is used.
+     *
+     * @param int              $quantity
+     * @param ProductDataModel $product
+     * @param null             $cartItem
+     * @param null             $setQuantity
+     * @param array            $config
+     *
+     * @return int|null
+     */
+    public function getTotalCartQuantity(int $quantity, ProductDataModel $product, $cartItem = null, $setQuantity = null, Config $config = null)
+    {
+        $intFinalSetQuantity = 1;
+
+        if ($setQuantity) {
+            $intFinalSetQuantity = $setQuantity;
+        } elseif (!$this->getOverridableShopConfigProperty('skipSets', $config) && $product->setQuantity) {
+            $intFinalSetQuantity = $product->setQuantity;
+        }
+
+        $quantity *= $intFinalSetQuantity;
+
+        // Add to already existing quantity (if product is already in cart)
+        if ($cartItem) {
+            $quantity += $cartItem->quantity * $intFinalSetQuantity;
+        }
+
+        return $quantity;
+    }
+
+    /**
+     * Formats the return message of validateQuantity if an error occurred.
+     *
+     * @param string $errorMessage
+     * @param bool   $includeError
+     *
+     * @return array|bool
+     */
+    protected function validateQuantityErrorResult(string $errorMessage, bool $includeError)
+    {
+        if ($this->containerUtil->isFrontend()) {
+            $_SESSION['ISO_ERROR'][] = $errorMessage;
+        } else {
+            Message::addError($errorMessage);
+        }
+
+        if ($includeError) {
+            return [false, $errorMessage];
+        }
+
+        return false;
     }
 
     /**

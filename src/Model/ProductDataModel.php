@@ -9,6 +9,8 @@
 namespace HeimrichHannot\IsotopeBundle\Model;
 
 use Contao\Model;
+use Contao\System;
+use HeimrichHannot\IsotopeBundle\Manager\ProductDataManager;
 
 /**
  * Class ProductDataModel.
@@ -30,6 +32,20 @@ class ProductDataModel extends Model
      * @var ProductModel
      */
     protected $productModel;
+    /**
+     * @var ProductDataManager
+     */
+    protected $productDataManager;
+    protected $productDataChanged = false;
+
+    public function __set($strKey, $varValue)
+    {
+        if (array_key_exists($strKey, $this->getProductDataManager()->getProductDataFields())) {
+            $this->getProductModel()->$strKey = $varValue;
+            $this->productDataChanged = true;
+        }
+        parent::__set($strKey, $varValue);
+    }
 
     /**
      * Returns the product model for the current product data instance.
@@ -43,5 +59,32 @@ class ProductDataModel extends Model
         }
 
         return $this->productModel;
+    }
+
+    /**
+     * Returns the ProductDataManager.
+     *
+     * @return \HeimrichHannot\IsotopeBundle\Manager\ProductDataManager|object
+     */
+    public function getProductDataManager()
+    {
+        if (!$this->productDataManager) {
+            $this->productDataManager = System::getContainer()->get('huh.isotope.manager.productdata');
+        }
+
+        return $this->productDataManager;
+    }
+
+    public function save()
+    {
+        if ($this->productDataChanged) {
+            try {
+                $this->getProductModel()->save();
+                $this->productDataChanged = false;
+            } catch (\Exception $e) {
+            }
+        }
+
+        return parent::save();
     }
 }

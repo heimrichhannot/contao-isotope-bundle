@@ -21,6 +21,7 @@ use Isotope\Model\ProductCollectionItem;
 class ProductCollectionItemModel extends ProductCollectionItem
 {
     protected static $strTable = 'tl_iso_product_collection_item';
+    protected $productCache;
 
     public function findByItem($id, array $options = [])
     {
@@ -114,5 +115,14 @@ class ProductCollectionItemModel extends ProductCollectionItem
     public function setBookingStop(int $bookingStop)
     {
         $this->bookingStop = $bookingStop;
+    }
+
+    public function getProduct($noCache = false)
+    {
+        if (!$this->productCache || $noCache) {
+            $this->productCache = ProductModel::findByPk($this->product_id);
+        }
+
+        return $this->productCache;
     }
 }

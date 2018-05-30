@@ -28,6 +28,13 @@ class HookListener
         $this->productDataManager = $productDataManager;
     }
 
+    /**
+     * Add product data fields to the product dca.
+     *
+     * Hook: loadDataContainer
+     *
+     * @param string $current
+     */
     public function addMetaFields(string $current)
     {
         $table = ProductModel::getTable();

@@ -3,16 +3,20 @@
 define('ISO_PRODUCT_CREATOR_SINGLE_IMAGE_PRODUCT', 'HeimrichHannot\IsotopeBundle\Product\SingleImageProductEditor');
 define('ISO_PRODUCT_CREATOR_MULTI_IMAGE_PRODUCT', 'HeimrichHannot\IsotopeBundle\Product\MultiImageProductEditor');
 
-$GLOBALS['ISO_HOOKS']['generateProduct'][]                                       =
+$GLOBALS['ISO_HOOKS']['generateProduct'][]                                    =
     ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'generateProductHook'];
-$GLOBALS['ISO_HOOKS']['addProductToCollection']['validateStockCollectionAdd']    =
+$GLOBALS['ISO_HOOKS']['addProductToCollection']['validateStockCollectionAdd'] =
     ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'validateStockCollectionAdd'];
-$GLOBALS['ISO_HOOKS']['preCheckout']['validateStockCheckout']                    =
-    ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'validateStockPreCheckout'];
-$GLOBALS['ISO_HOOKS']['postCheckout']['validateStockCheckout']                   =
-    ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'validateStockPostCheckout'];
-$GLOBALS['ISO_HOOKS']['postCheckout']['sendOrderNotification']                   =
+
+$GLOBALS['ISO_HOOKS']['preCheckout']['validateStockCheckout'] =
+    ['huh.isotope.listener.hooks.isotope', 'validateStockPreCheckout'];
+
+$GLOBALS['ISO_HOOKS']['postCheckout']['validateStockCheckout'] =
+    ['huh.isotope.listener.hooks.isotope', 'validateStockPostCheckout'];
+
+$GLOBALS['ISO_HOOKS']['postCheckout']['sendOrderNotification'] =
     ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'sendOrderNotification'];
+
 $GLOBALS['ISO_HOOKS']['postCheckout']['setSetQuantity']                          =
     ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'setSetQuantity'];
 $GLOBALS['ISO_HOOKS']['updateItemInCollection']['validateStockCollectionUpdate'] =
@@ -51,7 +55,7 @@ $GLOBALS['FE_MOD']['isotopeBundle'] = [
  */
 $GLOBALS['TL_MODELS']['tl_iso_product'] = \HeimrichHannot\IsotopeBundle\Model\ProductModel::class;
 $GLOBALS['TL_MODELS']['tl_iso_product_data'] = \HeimrichHannot\IsotopeBundle\Model\ProductDataModel::class;
-$GLOBALS['TL_MODELS'][\Isotope\Model\ProductCollectionItem::getTable()] = 'HeimrichHannot\IsotopeBundle\Model\ProductCollectionItemModel';
+$GLOBALS['TL_MODELS'][\Isotope\Model\ProductCollectionItem::getTable()] = \HeimrichHannot\IsotopeBundle\Model\ProductCollectionItemModel::class;
 
 /**
  * Product actions

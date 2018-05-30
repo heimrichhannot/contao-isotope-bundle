@@ -20,6 +20,7 @@ services:
   huh.isotope.manager:
     class: HeimrichHannot\IsotopeBundle\Manager\IsotopeManager
     public: true
+    arguments: ['@huh.isotope.manager.productdata', '@huh.isotope.attribute.stock', '@huh.isotope.attribute.maxordersize', '@huh.utils.container']
   huh.isotope.manager.productdata:
     class: HeimrichHannot\IsotopeBundle\Manager\ProductDataManager
   huh.isotope.ajax_manager:
@@ -31,9 +32,22 @@ services:
 
 # Event Listener
 
+  huh.isotope.listener.hooks.isotope:
+    class: HeimrichHannot\IsotopeBundle\EventListener\IsotopeHookListener
+    arguments: ['@huh.isotope.manager.productdata', '@huh.isotope.manager']
   huh.isotope.listener.hooks:
     class: HeimrichHannot\IsotopeBundle\EventListener\HookListener
     arguments: ['@huh.isotope.manager.productdata']
   huh.isotope.listener.callback.product:
     class: HeimrichHannot\IsotopeBundle\EventListener\ProductCallbackListener
-    arguments: ['@contao.framework', '@huh.request', '@huh.utils.container']
+    arguments: ['@contao.framework', '@huh.request', '@huh.utils.container', '@huh.isotope.manager.productdata']
+  huh.isotope.listener.callback.productcollection:
+    class: HeimrichHannot\IsotopeBundle\EventListener\ProductCollectionCallbackListener
+    arguments: ['@contao.framework', '@huh.isotope.manager', '@huh.isotope.manager.productdata']
+
+# Attributes
+
+  huh.isotope.attribute.stock:
+    class: HeimrichHannot\IsotopeBundle\Attribute\StockAttribute
+  huh.isotope.attribute.maxordersize:
+    class: HeimrichHannot\IsotopeBundle\Attribute\MaxOrderSizeAttribute

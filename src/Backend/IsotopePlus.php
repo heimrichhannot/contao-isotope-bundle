@@ -64,61 +64,6 @@ class IsotopePlus extends \Isotope\Isotope
         System::getContainer()->get('huh.isotope.helper.download')->addDownloadsFromProductDownloadsToTemplate($objTemplate);
     }
 
-    public function validateStockPreCheckout($objOrder)
-    {
-        return $this->validateStockCheckout($objOrder);
-    }
-
-    public function validateStockPostCheckout($objOrder)
-    {
-        return $this->validateStockCheckout($objOrder, true);
-    }
-
-    public function validateStockCheckout($objOrder, $isPostCheckout = false)
-    {
-        $arrItems = $objOrder->getItems();
-        $arrOrders = [];
-
-        foreach ($arrItems as $objItem) {
-            $objProduct = $objItem->getProduct();
-
-            if ('' != $objProduct->stock && null !== $objProduct->stock) {
-                // override the quantity!
-                if (!System::getContainer()->get('huh.isotope.manager')->validateQuantity($objProduct, $objItem->quantity)) {
-                    return false;
-                }
-
-                if ($isPostCheckout) {
-                    $arrOrders[] = $objItem;
-                }
-            }
-        }
-
-        // save new stock
-        if ($isPostCheckout) {
-            foreach ($arrOrders as $objItem) {
-                $objProduct = $objItem->getProduct();
-
-                if ($this->getOverridableStockProperty('skipStockEdit', $objProduct)) {
-                    continue;
-                }
-
-                $intQuantity = $this->getTotalStockQuantity($objItem->quantity, $objProduct);
-
-                $objProduct->stock -= $intQuantity;
-
-                if ($objProduct->stock <= 0
-                    && !$this->getOverridableStockProperty('skipExemptionFromShippingWhenStockEmpty', $objProduct)) {
-                    $objProduct->shipping_exempt = true;
-                }
-
-                $objProduct->save();
-            }
-        }
-
-        return true;
-    }
-
     /**
      * @param $objProduct
      * @param $intQuantity

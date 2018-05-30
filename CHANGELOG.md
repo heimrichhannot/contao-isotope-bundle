@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] -2018-05-30
+
+#### Changes 
+* product data now save in own database with own model mirrowed into product model
+* refactoring
+
+#### Fixed
+* Module Stock reports
+* Update stock on order delete
+
 ## [0.5.0] - 2018-05-29
 * added ability to reserve a product for booking dates from backend 
 

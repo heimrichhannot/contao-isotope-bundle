@@ -10,16 +10,14 @@ namespace HeimrichHannot\IsotopeBundle\EventListener;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\DataContainer;
+use HeimrichHannot\IsotopeBundle\Manager\ProductDataManager;
+use HeimrichHannot\IsotopeBundle\Model\ProductModel;
 use HeimrichHannot\RequestBundle\Component\HttpFoundation\Request;
 use HeimrichHannot\UtilsBundle\Container\ContainerUtil;
 use Isotope\Model\Product;
 
 class ProductCallbackListener
 {
-    /**
-     * @var array
-     */
-    protected $metaFields;
     /**
      * @var ContainerUtil
      */
@@ -32,12 +30,17 @@ class ProductCallbackListener
      * @var Request
      */
     private $request;
+    /**
+     * @var ProductDataManager
+     */
+    private $productDataManager;
 
-    public function __construct(ContaoFrameworkInterface $framework, Request $request, ContainerUtil $containerUtil)
+    public function __construct(ContaoFrameworkInterface $framework, Request $request, ContainerUtil $containerUtil, ProductDataManager $productDataManager)
     {
         $this->containerUtil = $containerUtil;
         $this->framework = $framework;
         $this->request = $request;
+        $this->productDataManager = $productDataManager;
     }
 
     /**
@@ -57,12 +60,31 @@ class ProductCallbackListener
     }
 
     /**
+     * Save Product data fields to product data table
+     * Contao: onsave_callbak.
+     *
      * @param $value
      * @param DataContainer $dc
      *
      * @return mixed
      */
     public function saveMetaFields($value, DataContainer $dc)
+    {
+        if (!$dc->table === ProductModel::getTable()) {
+            return $value;
+        }
+        if (!array_key_exists($field = $dc->field, $this->productDataManager->getProductDataFields())) {
+            return $value;
+        }
+        $productData = $this->productDataManager->getProductData($dc->id);
+        $productData->$field = $value;
+        $productData->tstamp = time();
+        $productData->save();
+
+        return $value;
+    }
+
+    public function getMetaFieldValue($value, DataContainer $dc)
     {
         return $value;
     }

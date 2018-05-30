@@ -36,17 +36,17 @@ $GLOBALS['TL_DCA']['tl_iso_product_data'] = [
     ],
     'fields'   => [
         'id'                      => [
-            'sql' => "int(10) unsigned NOT NULL auto_increment",
+            'sql'  => "int(10) unsigned NOT NULL auto_increment",
             'eval' => ['skipProductPalette' => true]
         ],
-        'pid'         => [
-            'sql' => "int(10) unsigned NOT NULL default '0'",
+        'pid'                     => [
+            'sql'  => "int(10) unsigned NOT NULL default '0'",
             'eval' => ['skipProductPalette' => true]
         ],
         'tstamp'                  => [
             'label' => &$GLOBALS['TL_LANG']['tl_iso_product_data']['tstamp'],
             'sql'   => "int(10) unsigned NOT NULL default '0'",
-            'eval' => ['skipProductPalette' => true]
+            'eval'  => ['skipProductPalette' => true]
         ],
         'dateAdded'               => [
             'label'   => &$GLOBALS['TL_LANG']['MSC']['dateAdded'],
@@ -262,6 +262,54 @@ $GLOBALS['TL_DCA']['tl_iso_product_data'] = [
             'eval'       => ['tl_class' => 'w50'],
             'attributes' => ['legend' => 'inventory_legend'],
             'sql'        => "varchar(8) NOT NULL default ''",
+        ],
+        'bookingReservedDates' => [
+            'label'        => &$GLOBALS['TL_LANG']['tl_iso_product']['bookingReservedDates'],
+            'inputType'    => 'fieldpalette',
+            'foreignKey'   => 'tl_fieldpalette.id',
+            'relation'     => ['type' => 'hasMany', 'load' => 'eager'],
+            'eval'         => ['tl_class' => 'long'],
+            'attributes'   => ['legend' => 'inventory_legend'],
+            'sql'          => "blob NULL",
+            'fieldpalette' => [
+                'config'   => [
+                    'hidePublished' => true,
+                ],
+                'list'     => [
+                    'label' => [
+                        'fields' => ['start', 'stop'],
+                        'format' => '%s - %s',
+
+                    ],
+                ],
+                'palettes' => [
+                    'default' => '{block_legend},start,stop,count;',
+                ],
+                'fields'   => [
+                    'start' => [
+                        'label'     => &$GLOBALS['TL_LANG']['tl_iso_product']['start'],
+                        'exclude'   => true,
+                        'inputType' => 'text',
+                        'eval'      => ['rgxp' => 'date', 'datepicker' => true, 'tl_class' => 'w50 wizard', 'mandatory' => true],
+                        'sql'       => "varchar(10) NOT NULL default ''",
+                    ],
+                    'stop'  => [
+                        'label'     => &$GLOBALS['TL_LANG']['tl_iso_product']['stop'],
+                        'exclude'   => true,
+                        'inputType' => 'text',
+                        'eval'      => ['rgxp' => 'date', 'datepicker' => true, 'tl_class' => 'w50 wizard', 'mandatory' => true],
+                        'sql'       => "varchar(10) NOT NULL default ''",
+                    ],
+                    'count' => [
+                        'label'     => &$GLOBALS['TL_LANG']['tl_iso_product']['count'],
+                        'exclude'   => true,
+                        'inputType' => 'text',
+                        'eval'      => ['tl_class' => 'w50'],
+                        'sql'       => "varchar(10) NOT NULL default '1'",
+                    ]
+                ],
+
+            ]
         ]
     ]
 ];
