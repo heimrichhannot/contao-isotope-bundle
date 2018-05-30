@@ -1,4 +1,4 @@
-# Contao Isotope Plus
+# Contao Isotope Bundle
 
 [![](https://img.shields.io/packagist/v/heimrichhannot/contao-isotope-bundle.svg)](https://packagist.org/packages/heimrichhannot/contao-isotope-bundle)
 [![](https://img.shields.io/packagist/dt/heimrichhannot/contao-isotope-bundle.svg)](https://packagist.org/packages/heimrichhannot/contao-isotope-bundle)
