@@ -9,7 +9,7 @@
 namespace HeimrichHannot\IsotopeBundle\EventListener;
 
 use HeimrichHannot\IsotopeBundle\Manager\ProductDataManager;
-use Isotope\Model\Product;
+use HeimrichHannot\IsotopeBundle\Model\ProductModel;
 
 class HookListener
 {
@@ -30,7 +30,7 @@ class HookListener
 
     public function addMetaFields(string $current)
     {
-        $table = Product::getTable();
+        $table = ProductModel::getTable();
         if ($table !== $current) {
             return;
         }

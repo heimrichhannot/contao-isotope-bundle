@@ -79,7 +79,6 @@ if (\Contao\System::getContainer()->get('huh.utils.container')->isFrontend()
     $GLOBALS['TL_JAVASCRIPT']['contao-watchlist-bundle'] = 'bundles/heimrichhannotcontaowatchlist/js/contao.isotope-bundle.min.js|static';
 }
 
-
 $GLOBALS['TL_HOOKS']['getPageLayout'][] = ['huh.isotope.ajax_manager', 'ajaxActions'];
 $GLOBALS['TL_HOOKS']['loadDataContainer']['huh.isotope.productdata_fields'] = ['huh.isotope.listener.hooks','addMetaFields'];
 

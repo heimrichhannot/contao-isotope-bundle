@@ -8,11 +8,8 @@
 
 namespace HeimrichHannot\IsotopeBundle\EventListener;
 
-use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\DataContainer;
-use DC_ProductData;
-use HeimrichHannot\IsotopeBundle\Model\ProductDataModel;
 use HeimrichHannot\RequestBundle\Component\HttpFoundation\Request;
 use HeimrichHannot\UtilsBundle\Container\ContainerUtil;
 use Isotope\Model\Product;
@@ -59,34 +56,14 @@ class ProductCallbackListener
         }
     }
 
-    public function addMetaFields(DC_ProductData $dc)
+    /**
+     * @param $value
+     * @param DataContainer $dc
+     *
+     * @return mixed
+     */
+    public function saveMetaFields($value, DataContainer $dc)
     {
-        $GLOBALS['TL_DCA'][Product::getTable()]['fields'] = array_merge(
-            $GLOBALS['TL_DCA'][Product::getTable()]['fields'],
-            $this->getMetaFields()
-        );
-    }
-
-    public function saveMetaFields()
-    {
-    }
-
-    protected function getMetaFields(bool $useCache = true)
-    {
-        if (!$this->metaFields) {
-            $table = ProductDataModel::getTable();
-            Controller::loadDataContainer($table);
-            $fields = $GLOBALS['TL_DCA'][$table]['fields'];
-            $metaFields = [];
-            foreach ($fields as $key => $field) {
-                if ('inventory_legend' === $field['attributes']['legend']) {
-                    unset($field['sql']);
-                    $metaFields[$key] = $field;
-                }
-            }
-            $this->metaFields = $metaFields;
-        }
-
-        return $this->metaFields;
+        return $value;
     }
 }

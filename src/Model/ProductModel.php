@@ -20,12 +20,22 @@ class ProductModel extends Model
     public function __construct(Database\Result $objResult = null)
     {
         parent::__construct($objResult);
-        $this->productDataManager = System::getContainer()->get('huh.isotope.manager.productdata');
+        $container = System::getContainer();
+        $this->framework = $container->get('contao.framework');
+        $this->productDataManager = $container->get('huh.isotope.manager.productdata');
     }
 
+    /**
+     * @return array
+     *
+     * @todo
+     */
     public function getCopyrights()
     {
-        if (null !== ($copyrights = System::getContainer()->get('contao.framework')->createInstance(Database::class)->prepare("SELECT * FROM tl_iso_product WHERE copyright IS NOT NULL AND copyright != ''")->execute())) {
+        /** @var Database\Result $copyrights */
+        $copyrights = $this->framework->get('contao.framework')->createInstance(Database::class)->prepare("SELECT * FROM tl_iso_product_data WHERE copyright IS NOT NULL AND copyright != ''")->execute();
+
+        if (null !== ($copyrights)) {
             return array_unique($copyrights->fetchEach('copyright'));
         }
 
