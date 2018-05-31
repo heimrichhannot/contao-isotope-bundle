@@ -9,8 +9,8 @@
 namespace HeimrichHannot\IsotopeBundle\Model;
 
 use Contao\Database;
-use Contao\Model;
 use Contao\System;
+use Isotope\Model\Product\Standard;
 
 /**
  * Class ProductModel.
@@ -50,7 +50,7 @@ use Contao\System;
  * @property string $setQuantity
  * @property string $releaseDate
  */
-class ProductModel extends Model
+class ProductModel extends Standard
 {
     protected static $strTable = 'tl_iso_product';
     protected $productDataManager;

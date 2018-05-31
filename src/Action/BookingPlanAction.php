@@ -66,7 +66,7 @@ class BookingPlanAction extends CartAction
                 Controller::reload();
             }
 
-            System::getContainer()->get('huh.utils.url')->jumpTo($config['module']->iso_addProductJumpTo);
+            System::getContainer()->get('huh.utils.url')->redirect($config['module']->iso_addProductJumpTo);
         }
     }
 

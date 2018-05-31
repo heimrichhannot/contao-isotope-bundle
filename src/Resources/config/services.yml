@@ -9,6 +9,7 @@ services:
   huh.isotope.helper.product:
     class: HeimrichHannot\IsotopeBundle\Helper\ProductHelper
     public: true
+    arguments: ['@contao.framework']
 
 # Manager
 

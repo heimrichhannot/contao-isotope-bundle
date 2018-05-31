@@ -18,7 +18,7 @@ $arrDca['fields']['licence'] = [
     'inputType'        => 'select',
     'exclude'          => true,
     'search'           => true,
-    'options_callback' => ['HeimrichHannot\IsotopeBundle\Helper\ProductHelper', 'getLicenceTitle'],
+    'options_callback' => ['huh.isotope.helper.product', 'getLicenceTitle'],
     'eval'             => ['tl_class' => 'w50'],
     'sql'              => "varchar(25) NOT NULL default ''",
 ];

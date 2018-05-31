@@ -171,7 +171,7 @@ $GLOBALS['TL_DCA']['tl_iso_product_data'] = [
             'search'           => true,
             'sorting'          => true,
             'inputType'        => 'tagsinput',
-            'options_callback' => ['HeimrichHannot\IsotopeBundle\Helper\ProductHelper', 'getTags'],
+            'options_callback' => ['huh.isotope.helper.product', 'getTags'],
             'eval'             => [
                 'tl_class'       => 'long clr autoheight',
                 'multiple'       => true,
@@ -191,7 +191,7 @@ $GLOBALS['TL_DCA']['tl_iso_product_data'] = [
             'sorting'          => true,
             'inputType'        => 'select',
             'reference'        => &$GLOBALS['TL_LANG']['tl_iso_product']['licence'],
-            'options_callback' => ['\HeimrichHannot\IsotopeBundle\Helper\ProductHelper', 'getLicenceTitle'],
+            'options_callback' => ['huh.isotope.helper.product', 'getLicenceTitle'],
             'eval'             => ['mandatory' => true, 'tl_class' => 'clr w50', 'includeBlankOption' => true],
             'attributes'       => ['legend' => 'general_legend', 'fe_sorting' => true, 'fe_search' => true],
             'sql'              => "varchar(255) NOT NULL default ''",
@@ -230,7 +230,7 @@ $GLOBALS['TL_DCA']['tl_iso_product_data'] = [
             'search'           => true,
             'sorting'          => true,
             'inputType'        => 'tagsinput',
-            'options_callback' => ['\HeimrichHannot\IsotopeBundle\Helper\ProductHelper', 'getCopyrights'],
+            'options_callback' => ['huh.isotope.helper.product', 'getCopyrights'],
             'eval'             => [
                 'maxlength'      => 255,
                 'decodeEntities' => true,

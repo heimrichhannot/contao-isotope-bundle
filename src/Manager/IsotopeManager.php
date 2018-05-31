@@ -16,7 +16,6 @@ use HeimrichHannot\IsotopeBundle\Attribute\MaxOrderSizeAttribute;
 use HeimrichHannot\IsotopeBundle\Attribute\StockAttribute;
 use HeimrichHannot\IsotopeBundle\Model\ProductCollectionItemModel;
 use HeimrichHannot\IsotopeBundle\Model\ProductDataModel;
-use HeimrichHannot\IsotopeBundle\Model\ProductModel;
 use HeimrichHannot\UtilsBundle\Container\ContainerUtil;
 use Isotope\Interfaces\IsotopeProduct;
 use Isotope\Isotope;
@@ -196,7 +195,8 @@ class IsotopeManager
             return $blocked;
         }
 
-        $stock = $this->framework->getAdapter(ProductModel::class)->getStock($product->id) - $quantity;
+        $stock = $this->productDataManager->getProductData($product)->stock;
+        -$quantity;
 
         if (0 > $stock) {
             return [];

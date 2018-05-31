@@ -24,5 +24,5 @@ $arrDca['fields']['skipExemptionFromShippingWhenStockEmpty']               = $GL
 $arrDca['fields']['skipExemptionFromShippingWhenStockEmpty']['attributes'] = ['legend' => 'shipping_legend'];
 
 if (\Contao\System::getContainer()->get('huh.utils.container')->isFrontend()) {
-    $arrDca['fields']['type']['options_callback'] = ['\HeimrichHannot\IsotopeBundle\Helper\ProductHelper', 'getEditableCategories'];
+    $arrDca['fields']['type']['options_callback'] = ['huh.isotope.helper.product', 'getEditableCategories'];
 }
