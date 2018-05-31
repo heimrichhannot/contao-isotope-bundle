@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.7.0] -2018-05-31
+
+#### Added
+* upgrade command for product data
+
 ## [0.6.0] -2018-05-30
 
 #### Changes 

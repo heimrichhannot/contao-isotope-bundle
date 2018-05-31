@@ -1,4 +1,8 @@
 services:
+  _defaults:
+    autoconfigure: true
+
+
   huh.isotope.model.product:
     class: HeimrichHannot\IsotopeBundle\Model\ProductModel
     public: true
@@ -20,7 +24,11 @@ services:
   huh.isotope.manager:
     class: HeimrichHannot\IsotopeBundle\Manager\IsotopeManager
     public: true
-    arguments: ['@huh.isotope.manager.productdata', '@huh.isotope.attribute.stock', '@huh.isotope.attribute.maxordersize', '@huh.utils.container']
+    arguments:
+      - '@huh.isotope.manager.productdata'
+      - '@huh.isotope.attribute.stock'
+      - '@huh.isotope.attribute.maxordersize'
+      - '@huh.utils.container'
   huh.isotope.manager.productdata:
     class: HeimrichHannot\IsotopeBundle\Manager\ProductDataManager
   huh.isotope.ajax_manager:
@@ -51,3 +59,9 @@ services:
     class: HeimrichHannot\IsotopeBundle\Attribute\StockAttribute
   huh.isotope.attribute.maxordersize:
     class: HeimrichHannot\IsotopeBundle\Attribute\MaxOrderSizeAttribute
+
+# Commands
+
+  huh.isotope.command.upgrade:
+    class: HeimrichHannot\IsotopeBundle\Command\UpgradeCommand
+    arguments: ['@contao.framework', '@huh.isotope.manager.productdata']

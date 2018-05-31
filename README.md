@@ -10,4 +10,27 @@ This bundle offers additional functionality for the isotope ecommerce system.
 This bundle is a port of [Contao Isotope Module](https://github.com/heimrichhannot/contao-isotope_plus).
 
 
+## Usage
+
+### Upgrade from older version or module
+
+If you upgrade from [Isotope_Plus](https://github.com/heimrichhannot/contao-isotope_plus) or the bundle prior to version 0.7, you should use the upgrade command to setup the product data table.
+
+```php
+# From project folder:
+php vendor/bin/contao-console huh:isotope:upgrade
+```
+
+This command fills the product data table based on the data stored in product table.
+
+## Developers
+
+### Commands
+
+For more informations use the help function (`[command] --help`).
+
+Command | Description | Attributes | Options
+--------|-------------|------------|--------
+huh:isotope:upgrade | Mirrors product data to the product data table | - | overwriteExistingEntries
+
 
