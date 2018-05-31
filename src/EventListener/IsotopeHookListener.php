@@ -8,7 +8,6 @@
 
 namespace HeimrichHannot\IsotopeBundle\EventListener;
 
-use Contao\System;
 use HeimrichHannot\IsotopeBundle\Manager\IsotopeManager;
 use HeimrichHannot\IsotopeBundle\Manager\ProductDataManager;
 use Isotope\Model\ProductCollection\Order;
@@ -70,7 +69,7 @@ class IsotopeHookListener
             $productData = $this->productDataManager->getProductData($product);
             if (!empty($productData->stock)) {
                 // override the quantity!
-                if (!System::getContainer()->get('huh.isotope.manager')->validateQuantity($product, $item->quantity)) {
+                if (!$this->isotopeManager->validateQuantity($product, $item->quantity)) {
                     return false;
                 }
 

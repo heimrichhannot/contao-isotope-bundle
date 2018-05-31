@@ -195,8 +195,7 @@ class IsotopeManager
             return $blocked;
         }
 
-        $stock = $this->productDataManager->getProductData($product)->stock;
-        -$quantity;
+        $stock = $this->productDataManager->getProductData($product)->stock - $quantity;
 
         if (0 > $stock) {
             return [];
