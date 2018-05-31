@@ -9,6 +9,7 @@
 namespace HeimrichHannot\IsotopeBundle\Action;
 
 use Contao\Controller;
+use Contao\Input;
 use Contao\System;
 use HeimrichHannot\IsotopeBundle\Manager\AjaxManager;
 use Isotope\Frontend\ProductAction\CartAction;
@@ -80,8 +81,8 @@ class BookingPlanAction extends CartAction
         $module = $config['module'];
         $quantity = 1;
 
-        if ($module->iso_use_quantity && \Input::post('quantity_requested') > 0) {
-            $quantity = (int) \Input::post('quantity_requested');
+        if ($module->iso_use_quantity && Input::post('quantity_requested') > 0) {
+            $quantity = (int) Input::post('quantity_requested');
         }
 
         // Do not add parent of variant product to the cart

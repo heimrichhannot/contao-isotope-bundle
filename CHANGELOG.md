@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.7.1] -2018-05-31
+
+#### Changed
+* removed heimrichhannot/contao-request dependency
+* removed some unnecassary services
+* dependency injection for download helper
+* enhanced code quality for some classes
+* updated some namespaces
+
 ## [0.7.0] -2018-05-31
 
 #### Added

@@ -9,6 +9,15 @@ This bundle offers additional functionality for the isotope ecommerce system.
 
 This bundle is a port of [Contao Isotope Module](https://github.com/heimrichhannot/contao-isotope_plus).
 
+## Install 
+
+```php
+composer require heimrichhannot/contao-isotope-bundle
+```
+
+You need to call the database update tool after install.
+
+We recommend use [Contao Encore](https://github.com/heimrichhannot/contao-encore-bundle) for assets managment.
 
 ## Usage
 

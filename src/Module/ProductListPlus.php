@@ -8,13 +8,17 @@
 
 namespace HeimrichHannot\IsotopeBundle\Module;
 
+use Contao\BackendTemplate;
 use Contao\Controller;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Database;
+use Contao\Environment;
 use Contao\StringUtil;
 use Contao\System;
 use Haste\Generator\RowClass;
 use Haste\Haste;
 use Haste\Http\Response\HtmlResponse;
+use HeimrichHannot\IsotopeBundle\Model\RequestCacheOrFilter;
 use Isotope\Isotope;
 use Isotope\Model\Product;
 use Isotope\Model\ProductCache;
@@ -41,6 +45,23 @@ class ProductListPlus extends ProductList
      * @var bool
      */
     protected $cacheProducts = true;
+    /**
+     * @var ContaoFramework|object
+     */
+    protected $framework;
+    protected $request;
+    protected $tokenManager;
+    protected $token;
+
+    public function __construct(\ModuleModel $objModule, string $strColumn = 'main')
+    {
+        parent::__construct($objModule, $strColumn);
+        $container = System::getContainer();
+        $this->framework = $container->get('contao.framework');
+        $this->request = $container->get('huh.request');
+        $this->tokenManager = $container->get('security.csrf.token_manager');
+        $this->token = $container->getParameter('contao.csrf_token_name');
+    }
 
     /**
      * Display a wildcard in the back end.
@@ -50,14 +71,14 @@ class ProductListPlus extends ProductList
     public function generate()
     {
         if (System::getContainer()->get('huh.utils.container')->isBackend()) {
-            $objTemplate = new \BackendTemplate('be_wildcard');
+            $objTemplate = new BackendTemplate('be_wildcard');
 
             $objTemplate->wildcard = '### ISOTOPE ECOMMERCE: PRODUCT LIST PLUS ###';
 
             $objTemplate->title = $this->headline;
             $objTemplate->id = $this->id;
             $objTemplate->link = $this->name;
-            $objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id='.$this->id;
+            $objTemplate->href = 'contao?do=themes&amp;table=tl_module&amp;act=edit&amp;id='.$this->id;
 
             return $objTemplate->parse();
         }
@@ -73,10 +94,8 @@ class ProductListPlus extends ProductList
      */
     protected function compile()
     {
-        $container = System::getContainer();
-        $request = $container->get('huh.request');
         // return message if no filter is set
-        if ($this->iso_emptyFilter && !$request->hasGet('isorc') && !$request->hasGet('keywords')) {
+        if ($this->iso_emptyFilter && !$this->request->hasGet('isorc') && !$this->request->hasGet('keywords')) {
             $this->Template->message = $this->replaceInsertTags($this->iso_noFilter);
             $this->Template->type = 'noFilter';
             $this->Template->products = [];
@@ -89,18 +108,17 @@ class ProductListPlus extends ProductList
         $products = null;
         $cacheIds = null;
 
-        $framework = $container->get('contao.framework');
         $cacheKey = $this->getCacheKey();
         /** @var ProductCache $cache Try to load the products from cache */
-        if ($this->cacheProducts && null !== ($cache = $framework->getAdapter(ProductCache::class)->findByUniqid($cacheKey))) {
+        if ($this->cacheProducts && null !== ($cache = $this->framework->getAdapter(ProductCache::class)->findByUniqid($cacheKey))) {
             $cacheIds = $cache->getProductIds();
 
             // Use the cache if keywords match. Otherwise we will use the product IDs as a "limit" for findProducts()
-            if ($cache->keywords == $request->getGet('keywords')) {
+            if ($cache->keywords == $this->request->getGet('keywords')) {
                 $cacheIds = $this->generatePagination($cacheIds);
 
-                $products = $framework->getAdapter(Product::class)->findAvailableByIds($cacheIds, [
-                    'order' => $framework->createInstance(Database::class)->findInSet(Product::getTable().'.id', $cacheIds),
+                $products = $this->framework->getAdapter(Product::class)->findAvailableByIds($cacheIds, [
+                    'order' => $this->framework->createInstance(Database::class)->findInSet(Product::getTable().'.id', $cacheIds),
                 ]);
 
                 $products = (null === $products) ? [] : $products->getModels();
@@ -116,10 +134,10 @@ class ProductListPlus extends ProductList
         if (!is_array($products)) {
             // Display "loading products" message and add cache flag
             if ($this->cacheProducts) {
-                $productCacheAdapter = $framework->getAdapter(ProductCache::class);
-                $cacheMessage = (bool) $this->iso_productcache[$intPage][(int) $request->getGet('isorc')];
+                $productCacheAdapter = $this->framework->getAdapter(ProductCache::class);
+                $cacheMessage = (bool) $this->iso_productcache[$intPage][(int) $this->request->getGet('isorc')];
 
-                if ($cacheMessage && !$request->hasGet('buildCache')) {
+                if ($cacheMessage && !$this->request->hasGet('buildCache')) {
                     // Do not index or cache the page
                     $objPage->noSearch = 1;
                     $objPage->cache = 0;
@@ -142,13 +160,13 @@ class ProductListPlus extends ProductList
 
                 $arrCacheMessage = $this->iso_productcache;
                 if ($cacheMessage != $this->cacheProducts) {
-                    $arrCacheMessage[$intPage][(int) $request->getGet('isorc')] = $this->cacheProducts;
-                    $framework->createInstance(Database::class)->prepare('UPDATE tl_module SET iso_productcache=? WHERE id=?')->execute(serialize($arrCacheMessage), $this->id);
+                    $arrCacheMessage[$intPage][(int) $this->request->getGet('isorc')] = $this->cacheProducts;
+                    $this->framework->createInstance(Database::class)->prepare('UPDATE tl_module SET iso_productcache=? WHERE id=?')->execute(serialize($arrCacheMessage), $this->id);
                 }
 
                 // Do not write cache if table is locked. That's the case if another process is already writing cache
                 if ($productCacheAdapter->isWritable()) {
-                    $framework->createInstance(Database::class)->lockTables([ProductCache::getTable() => 'WRITE', 'tl_iso_product' => 'READ']);
+                    $this->framework->createInstance(Database::class)->lockTables([ProductCache::getTable() => 'WRITE', 'tl_iso_product' => 'READ']);
 
                     $arrIds = [];
                     foreach ($products as $product) {
@@ -164,7 +182,7 @@ class ProductListPlus extends ProductList
                     $cache->setProductIds($arrIds);
                     $cache->save();
 
-                    $framework->createInstance(Database::class)->getInstance()->unlockTables();
+                    $this->framework->createInstance(Database::class)->getInstance()->unlockTables();
                 }
             } else {
                 $products = $this->findProducts();
@@ -197,11 +215,11 @@ class ProductListPlus extends ProductList
                 'buttons' => StringUtil::deserialize($this->iso_buttons, true),
                 'useQuantity' => $this->iso_use_quantity,
                 'jumpTo' => $this->findJumpToPage($product),
-                'requestToken' => System::getContainer()->get('security.csrf.token_manager')->getToken($container->getParameter('contao.csrf_token_name'))->getValue(),
+                'requestToken' => $this->tokenManager->getToken($this->token)->getValue(),
             ];
 
-            if (\Environment::get('isAjaxRequest') && $request->getPost('AJAX_MODULE') == $this->id && $request->getPost('AJAX_PRODUCT') == $product->getProductId()) {
-                $arrCheck = $container->get('huh.isotope.manager')->validateQuantity($product, $request->getPost('quantity_requested'), Isotope::getCart()->getItemForProduct($product), true);
+            if (Environment::get('isAjaxRequest') && $this->request->getPost('AJAX_MODULE') == $this->id && $this->request->getPost('AJAX_PRODUCT') == $product->getProductId()) {
+                $arrCheck = $container->get('huh.isotope.manager')->validateQuantity($product, $this->request->getPost('quantity_requested'), Isotope::getCart()->getItemForProduct($product), true);
                 if (isset($arrCheck[0])) {
                     // remove synchronous error messages in case of ajax
                     unset($_SESSION['ISO_ERROR']);
@@ -217,7 +235,7 @@ class ProductListPlus extends ProductList
 
             // Must be done after setting options to generate the variant config into the URL
             if ($this->iso_jump_first && '' == \Haste\Input\Input::getAutoItem('product', false, true)) {
-                $framework->getAdapter(Controller::class)->redirect($product->generateUrl($arrConfig['jumpTo']));
+                $this->framework->getAdapter(Controller::class)->redirect($product->generateUrl($arrConfig['jumpTo']));
             }
 
             $arrCSS = StringUtil::deserialize($product->cssID, true);
@@ -267,7 +285,7 @@ class ProductListPlus extends ProductList
             $columns[] = Product::getTable().'.id IN ('.implode(',', $cacheIds).')';
         }
 
-        $newProductLimit = System::getContainer()->get('contao.framework')->getAdapter(Isotope::class)->getConfig()->getNewProductLimit();
+        $newProductLimit = $this->framework->get('contao.framework')->getAdapter(Isotope::class)->getConfig()->getNewProductLimit();
         // Apply new/old product filter
         if ('show_new' == $this->iso_newFilter) {
             $columns[] = Product::getTable().'.dateAdded>='.$newProductLimit;
@@ -296,7 +314,7 @@ class ProductListPlus extends ProductList
         }
 
         /** @var Collection $products */
-        $products = System::getContainer()->get('contao.framework')->getAdapter(Product::class)->findAvailableBy($columns, $values, [
+        $products = $this->framework->getAdapter(Product::class)->findAvailableBy($columns, $values, [
             'order' => 'c.sorting',
             'filters' => $filters,
             'sorting' => $sortings,
@@ -315,7 +333,7 @@ class ProductListPlus extends ProductList
     protected function getFiltersAndSorting($nativeSql = true)
     {
         /** @var RequestCache $requestCache */
-        $requestCache = System::getContainer()->get('contao.framework')->getAdapter(Isotope::class)->getRequestCache();
+        $requestCache = $this->framework->getAdapter(Isotope::class)->getRequestCache();
         $arrFilters = $requestCache->getFiltersForModules($this->iso_filterModules);
         $arrSorting = $requestCache->getSortingsForModules($this->iso_filterModules);
 
@@ -324,7 +342,8 @@ class ProductListPlus extends ProductList
         }
 
         if ($nativeSql) {
-            list($arrFilters, $strWhere, $arrValues) = System::getContainer()->get('huh.isotope.model.requestCacheOrFilter')->buildSqlFilters($arrFilters);
+            $requestCacheOrFilter = new RequestCacheOrFilter();
+            list($arrFilters, $strWhere, $arrValues) = $requestCacheOrFilter->buildSqlFilters($arrFilters);
 
             return [$arrFilters, $arrSorting, $strWhere, $arrValues];
         }

@@ -8,12 +8,15 @@
 
 namespace HeimrichHannot\IsotopeBundle\Manager;
 
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Message;
 use Contao\StringUtil;
 use Contao\System;
 use HeimrichHannot\IsotopeBundle\Attribute\MaxOrderSizeAttribute;
 use HeimrichHannot\IsotopeBundle\Attribute\StockAttribute;
+use HeimrichHannot\IsotopeBundle\Model\ProductCollectionItemModel;
 use HeimrichHannot\IsotopeBundle\Model\ProductDataModel;
+use HeimrichHannot\IsotopeBundle\Model\ProductModel;
 use HeimrichHannot\UtilsBundle\Container\ContainerUtil;
 use Isotope\Interfaces\IsotopeProduct;
 use Isotope\Isotope;
@@ -41,21 +44,27 @@ class IsotopeManager
      * @var ContainerUtil
      */
     private $containerUtil;
+    /**
+     * @var ContaoFrameworkInterface
+     */
+    private $framework;
 
     /**
      * IsotopeManager constructor.
      *
-     * @param ProductDataManager    $productDataManager
-     * @param StockAttribute        $stockAttribute
-     * @param MaxOrderSizeAttribute $maxOrderSizeAttribute
-     * @param ContainerUtil         $containerUtil
+     * @param ProductDataManager       $productDataManager
+     * @param StockAttribute           $stockAttribute
+     * @param MaxOrderSizeAttribute    $maxOrderSizeAttribute
+     * @param ContainerUtil            $containerUtil
+     * @param ContaoFrameworkInterface $framework
      */
-    public function __construct(ProductDataManager $productDataManager, StockAttribute $stockAttribute, MaxOrderSizeAttribute $maxOrderSizeAttribute, ContainerUtil $containerUtil)
+    public function __construct(ProductDataManager $productDataManager, StockAttribute $stockAttribute, MaxOrderSizeAttribute $maxOrderSizeAttribute, ContainerUtil $containerUtil, ContaoFrameworkInterface $framework)
     {
         $this->productDataManager = $productDataManager;
         $this->stockAttribute = $stockAttribute;
         $this->maxOrderSizeAttribute = $maxOrderSizeAttribute;
         $this->containerUtil = $containerUtil;
+        $this->framework = $framework;
     }
 
     /**
@@ -115,7 +124,8 @@ class IsotopeManager
         if ($product->overrideStockShopConfig) {
             return $product->{$property};
         }
-        if (null !== ($objProductType = System::getContainer()->get('contao.framework')->getAdapter(ProductType::class)->findByPk($product->type))
+        /** @var ProductType|null $objProductType */
+        if (null !== ($objProductType = $this->framework->getAdapter(ProductType::class)->findByPk($product->type))
             && $objProductType->overrideStockShopConfig) {
             return $objProductType->{$property};
         }
@@ -181,11 +191,12 @@ class IsotopeManager
     public function getBlockedDates($product, int $quantity = 1)
     {
         $blocked = [];
-        if (null === ($collectionItems = System::getContainer()->get('huh.isotope.model.product_collection_item')->findByItem($product->id))) {
+        /** @var ProductCollectionItemModel|Collection|null $collectionItems */
+        if (null === ($collectionItems = $this->framework->getAdapter(ProductCollectionItemModel::class)->findByItem($product->id))) {
             return $blocked;
         }
 
-        $stock = System::getContainer()->get('huh.isotope.model.product')->getStock($product->id) - $quantity;
+        $stock = $this->framework->getAdapter(ProductModel::class)->getStock($product->id) - $quantity;
 
         if (0 > $stock) {
             return [];
@@ -241,7 +252,7 @@ class IsotopeManager
      * @param ProductDataModel $product
      * @param null             $cartItem
      * @param null             $setQuantity
-     * @param array            $config
+     * @param Config           $config
      *
      * @return int|null
      */

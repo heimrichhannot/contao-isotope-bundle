@@ -8,16 +8,37 @@
 
 namespace HeimrichHannot\IsotopeBundle\Helper;
 
+use Contao\Config;
 use Contao\Controller;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Environment;
 use Contao\File;
 use Contao\FilesModel;
 use Contao\Frontend;
+use Contao\FrontendTemplate;
 use Contao\StringUtil;
 use Contao\System;
-use HeimrichHannot\Request\Request;
+use Contao\Validator;
+use HeimrichHannot\RequestBundle\Component\HttpFoundation\Request;
+use Isotope\Model\Download;
 
 class DownloadHelper
 {
+    /**
+     * @var Request|object
+     */
+    protected $request;
+    /**
+     * @var ContaoFrameworkInterface
+     */
+    private $framework;
+
+    public function __construct(ContaoFrameworkInterface $framework, Request $request)
+    {
+        $this->request = $request;
+        $this->framework = $framework;
+    }
+
     public function addDownloadsFromProductDownloadsToTemplate($objTemplate)
     {
         $objTemplate->downloads = $this->getDownloadsFromProductDownloads($objTemplate->id);
@@ -30,46 +51,43 @@ class DownloadHelper
      */
     public function getDownloadsFromProductDownloads($id)
     {
-        $container = System::getContainer();
-        $framework = $container->get('contao.framework');
-
         $downloads = [];        // array for downloadfiles from db
 
         global $objPage;
 
-        $downloadFiles = $framework->getAdapter(\Isotope\Model\Download::class)->findBy('pid', $id, ['order' => 'sorting ASC']);
+        $downloadFiles = $this->framework->getAdapter(Download::class)->findBy('pid', $id, ['order' => 'sorting ASC']);
         if (null === $downloadFiles) {
             return $downloads;
         }
 
         foreach ($downloadFiles as $downloadFile) {
-            $objModel = $framework->getAdapter(\FilesModel::class)->findByUuid($downloadFile->singleSRC);
+            $objModel = $this->framework->getAdapter(FilesModel::class)->findByUuid($downloadFile->singleSRC);
             if (null === $objModel) {
-                if (!\Validator::isUuid($downloadFile->singleSRC)) {
+                if (!Validator::isUuid($downloadFile->singleSRC)) {
                     return ['<p class="error">'.$GLOBALS['TL_LANG']['ERR']['version2format'].'</p>'];
                 }
             } elseif (is_file(TL_ROOT.'/'.$objModel->path)) {
                 $objFile = new File($objModel->path);
 
-                $file = Request::getGet('file', true);
+                $file = $this->request->getGet('file', true);
                 // Send the file to the browser and do not send a 404 header (see #4632)
                 if ('' != $file && $file == $objFile->path) {
-                    $framework->getAdapter(Controller::class)->sendFileToBrowser($file);
+                    $this->framework->getAdapter(Controller::class)->sendFileToBrowser($file);
                 }
 
-                $arrMeta = $framework->getAdapter(Frontend::class)->getMetaData($objModel->meta, $objPage->language);
+                $arrMeta = $this->framework->getAdapter(Frontend::class)->getMetaData($objModel->meta, $objPage->language);
                 if (empty($arrMeta)) {
                     if (null !== $objPage->rootFallbackLanguage) {
-                        $arrMeta = $framework->getAdapter(Frontend::class)->getMetaData($objModel->meta, $objPage->rootFallbackLanguage);
+                        $arrMeta = $this->framework->getAdapter(Frontend::class)->getMetaData($objModel->meta, $objPage->rootFallbackLanguage);
                     }
                 }
 
-                $strHref = \Environment::get('request');
+                $strHref = Environment::get('request');
                 // Remove an existing file parameter (see #5683)
                 if (preg_match('/(&(amp;)?|\?)file=/', $strHref)) {
                     $strHref = preg_replace('/(&(amp;)?|\?)file=[^&]+/', '', $strHref);
                 }
-                $strHref .= ((\Config::get('disableAlias') || false !== strpos($strHref, '?')) ? '&amp;' : '?').'file='.\System::urlEncode($objFile->path);
+                $strHref .= ((Config::get('disableAlias') || false !== strpos($strHref, '?')) ? '&amp;' : '?').'file='.\System::urlEncode($objFile->path);
 
                 $download['id'] = $objModel->id;
                 $download['uuid'] = $objModel->uuid;
@@ -77,7 +95,7 @@ class DownloadHelper
                 $download['formedname'] = preg_replace(['/_/', '/.\w+$/'], [' ', ''], $objFile->basename);
                 $download['title'] = specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename));
                 $download['link'] = $arrMeta['title'];
-                $download['filesize'] = \System::getReadableSize($objFile->filesize, 1);
+                $download['filesize'] = System::getReadableSize($objFile->filesize, 1);
                 $download['icon'] = TL_ASSETS_URL.'assets/contao/images/'.$objFile->icon;
                 $download['href'] = $strHref;
                 $download['mime'] = $objFile->mime;
@@ -88,7 +106,7 @@ class DownloadHelper
                 // add thumbnail
                 $thumbnails = [];
                 foreach (StringUtil::deserialize($downloadFile->download_thumbnail, true) as $thumbnail) {
-                    $thumbnails[] = $framework->getAdapter(FilesModel::class)->findByUuid($thumbnail);
+                    $thumbnails[] = $this->framework->getAdapter(FilesModel::class)->findByUuid($thumbnail);
                 }
                 $download['thumbnail'] = $thumbnails;
 
@@ -104,7 +122,7 @@ class DownloadHelper
 
                 $download['downloadTitle'] = $downloadFile->title;
 
-                $objT = new \FrontendTemplate('isotope_download_from_attribute');
+                $objT = new FrontendTemplate('isotope_download_from_attribute');
                 $objT->setData((array) $download);
                 $download['output'] = $objT->parse();
 
