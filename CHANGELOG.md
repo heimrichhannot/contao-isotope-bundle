@@ -1,15 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.8.0] -2018-05-31
+## [0.8.0-DEV] -2018-05-31
+
+#### Added
+* validation for booked dateranges
 
 #### Changed
 * ProductModel now extends Isotope\Model\Product\Standard
 * removed heimrichhannot/contao-request dependency
-* removed some unnecassary services
-* dependency injection for download helper
-* enhanced code quality for some classes
-* updated some namespaces
+* refactoring
 
 #### Fixed
 * booking plan reservation not working

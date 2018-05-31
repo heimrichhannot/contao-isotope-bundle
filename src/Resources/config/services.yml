@@ -52,6 +52,9 @@ services:
     class: HeimrichHannot\IsotopeBundle\Attribute\StockAttribute
   huh.isotope.attribute.maxordersize:
     class: HeimrichHannot\IsotopeBundle\Attribute\MaxOrderSizeAttribute
+  huh.isotope.attribute.booking:
+    class: HeimrichHannot\IsotopeBundle\Attribute\BookingAttributes
+    arguments: ['@contao.framework', '@huh.isotope.manager.productdata', '@huh.utils.model', '@translator']
 
 # Commands
 

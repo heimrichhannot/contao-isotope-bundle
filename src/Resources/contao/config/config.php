@@ -7,6 +7,8 @@ $GLOBALS['ISO_HOOKS']['generateProduct'][]                                    =
     ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'generateProductHook'];
 $GLOBALS['ISO_HOOKS']['addProductToCollection']['validateStockCollectionAdd'] =
     ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'validateStockCollectionAdd'];
+$GLOBALS['ISO_HOOKS']['postAddProductToCollection']['huh_isotope_bundle'] =
+    ['huh.isotope.listener.hooks.isotope', 'validateStockCollectionAdd'];
 
 $GLOBALS['ISO_HOOKS']['preCheckout']['validateStockCheckout'] =
     ['huh.isotope.listener.hooks.isotope', 'validateStockPreCheckout'];

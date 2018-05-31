@@ -15,6 +15,7 @@ use Haste\Generator\RowClass;
 use Haste\Haste;
 use HeimrichHannot\HastePlus\Environment;
 use HeimrichHannot\HastePlus\Files;
+use HeimrichHannot\IsotopeBundle\Manager\ProductCollectionManager;
 use Isotope\Frontend;
 use Isotope\Interfaces\IsotopeAttribute;
 use Isotope\Interfaces\IsotopeProduct;
@@ -67,7 +68,7 @@ class IsotopePlus extends \Isotope\Isotope
     /**
      * @param $objProduct
      * @param $intQuantity
-     * @param ProductCollection $objProductCollection
+     * @param ProductCollectionManager|ProductCollection $objProductCollection
      *
      * @return int
      */
@@ -76,6 +77,7 @@ class IsotopePlus extends \Isotope\Isotope
         if (!System::getContainer()->get('huh.isotope.manager')->validateQuantity($objProduct, $intQuantity, $objProductCollection->getItemForProduct($objProduct))) {
             return 0;
         }
+
         unset($_SESSION['ISO_ERROR']);
 
         return $intQuantity;

@@ -69,7 +69,7 @@ class ProductCollectionManager extends ProductCollection
             && is_array($GLOBALS['ISO_HOOKS']['addProductToCollection'])
         ) {
             foreach ($GLOBALS['ISO_HOOKS']['addProductToCollection'] as $callback) {
-                $intQuantity = \System::importStatic($callback[0])->{$callback[1]}($objProduct, $intQuantity, $this);
+                $intQuantity = System::importStatic($callback[0])->{$callback[1]}($objProduct, $intQuantity, $this);
             }
         }
 

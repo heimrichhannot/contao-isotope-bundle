@@ -5,3 +5,9 @@ huh.isotope.collection.table.label:
   orderNumber: Bestellnummer
   total: Gesamt
   status: Status
+huh:
+  isotope:
+    collection:
+      booking:
+        error:
+          overbooked: 'Der gewünschte Zeitraum kann leider nicht mehr gebucht werden, da es keine freien Kapazitäten mehr gibt.'

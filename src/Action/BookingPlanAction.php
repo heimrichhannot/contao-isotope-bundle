@@ -30,7 +30,7 @@ class BookingPlanAction extends CartAction
 
     public function getBlockedDates($product)
     {
-        return System::getContainer()->get('huh.isotope.manager')->getBlockedDates($product);
+        return System::getContainer()->get('huh.isotope.attribute.booking')->getBlockedDates($product);
     }
 
     public function generate(IsotopeProduct $product, array $config = [])
@@ -67,6 +67,8 @@ class BookingPlanAction extends CartAction
             }
 
             System::getContainer()->get('huh.utils.url')->redirect($config['module']->iso_addProductJumpTo);
+        } else {
+            return false;
         }
     }
 
@@ -85,10 +87,18 @@ class BookingPlanAction extends CartAction
             $quantity = (int) Input::post('quantity_requested');
         }
 
+        $item = System::getContainer()->get('huh.isotope.product_collection_manager')->addProduct($product, $quantity, $config);
+
         // Do not add parent of variant product to the cart
         if (($product->hasVariants() && !$product->isVariant())
-            || !System::getContainer()->get('huh.isotope.product_collection_manager')->addProduct($product, $quantity, $config)
+            || !$item
         ) {
+            return false;
+        }
+
+        if ($item->hasErrors()) {
+            Message::addError($item->getErrors()[0]);
+
             return false;
         }
 

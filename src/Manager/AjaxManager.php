@@ -32,7 +32,7 @@ class AjaxManager
             return new ResponseError();
         }
 
-        $blocked = System::getContainer()->get('huh.isotope.manager')->getBlockedDates($product, $quantity);
+        $blocked = System::getContainer()->get('huh.isotope.attribute.booking')->getBlockedDates($product, $quantity);
 
         $response = new ResponseSuccess();
         $response->setResult(new ResponseData('', ['blocked' => $blocked]));

@@ -11,7 +11,7 @@ namespace HeimrichHannot\IsotopeBundle\Manager;
 use Contao\Controller;
 use HeimrichHannot\IsotopeBundle\Model\ProductDataModel;
 use HeimrichHannot\IsotopeBundle\Model\ProductModel;
-use Isotope\Model\Product;
+use Isotope\Interfaces\IsotopeProduct;
 
 class ProductDataManager
 {
@@ -57,7 +57,7 @@ class ProductDataManager
      * Returns the product data for a product.
      * If no product data is available, a new instance will be returned.
      *
-     * @param Product|ProductModel|int $product The product model or id
+     * @param IsotopeProduct|ProductModel|int $product The product model or id
      *
      * @return ProductDataModel
      */

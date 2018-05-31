@@ -8,6 +8,7 @@
 
 namespace HeimrichHannot\IsotopeBundle\EventListener;
 
+use Contao\System;
 use HeimrichHannot\IsotopeBundle\Manager\IsotopeManager;
 use HeimrichHannot\IsotopeBundle\Manager\ProductDataManager;
 use Isotope\Model\ProductCollection\Order;
@@ -27,6 +28,11 @@ class IsotopeHookListener
     {
         $this->isotopeManager = $isotopeManager;
         $this->productDataManager = $productDataManager;
+    }
+
+    public function validateStockCollectionAdd(&$objItem, $intQuantity, &$collection)
+    {
+        System::getContainer()->get('huh.isotope.attribute.booking')->validateCart($objItem, $intQuantity, $collection);
     }
 
     /**

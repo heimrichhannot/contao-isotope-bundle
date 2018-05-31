@@ -23,6 +23,16 @@ use HeimrichHannot\IsotopeBundle\Manager\ProductDataManager;
  * @property string $stock
  * @property string $setQuantity
  * @property string $releaseDate
+ * @property string $maxOrderSize
+ * @property string|bool $overrideStockShopConfig
+ * @property int $jumpTo
+ * @property int $addedBy
+ * @property string $uploadedFiles
+ * @property string $uploadedDownloadFiles
+ * @property string $tag
+ * @property string $licence
+ * @property string|bool $createMultiImageProduct
+ * @property int $downloadCount
  */
 class ProductDataModel extends Model
 {

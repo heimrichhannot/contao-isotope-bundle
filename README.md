@@ -9,6 +9,14 @@ This bundle offers additional functionality for the isotope ecommerce system.
 
 This bundle is a port of [Contao Isotope Module](https://github.com/heimrichhannot/contao-isotope_plus).
 
+## Features
+
+> List not complete
+
+* Stock managment
+* Sets
+* Booking time range
+
 ## Install 
 
 ```php
