@@ -104,6 +104,10 @@ class IsotopeManager
     }
 
     /**
+     * Returns the config value.
+     *
+     * Checks if global value is overwritten by product or product type
+     *
      * priorities (first is the most important):
      * product, product type, global shop config.
      *

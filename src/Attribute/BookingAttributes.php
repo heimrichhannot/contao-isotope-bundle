@@ -11,11 +11,13 @@ namespace HeimrichHannot\IsotopeBundle\Attribute;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Model\Collection;
 use Contao\StringUtil;
+use HeimrichHannot\IsotopeBundle\Manager\IsotopeManager;
 use HeimrichHannot\IsotopeBundle\Manager\ProductCollectionManager;
 use HeimrichHannot\IsotopeBundle\Manager\ProductDataManager;
 use HeimrichHannot\IsotopeBundle\Model\ProductCollectionItemModel;
 use HeimrichHannot\UtilsBundle\Model\ModelUtil;
 use Isotope\Interfaces\IsotopeProduct;
+use Isotope\Model\ProductCollectionItem;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -39,13 +41,18 @@ class BookingAttributes
      * @var TranslatorInterface
      */
     private $translator;
+    /**
+     * @var IsotopeManager
+     */
+    private $isotopeManager;
 
-    public function __construct(ContaoFrameworkInterface $framework, ProductDataManager $productDataManager, ModelUtil $modelUtil, TranslatorInterface $translator)
+    public function __construct(ContaoFrameworkInterface $framework, ProductDataManager $productDataManager, ModelUtil $modelUtil, TranslatorInterface $translator, IsotopeManager $isotopeManager)
     {
         $this->framework = $framework;
         $this->productDataManager = $productDataManager;
         $this->modelUtil = $modelUtil;
         $this->translator = $translator;
+        $this->isotopeManager = $isotopeManager;
     }
 
     /**
@@ -53,13 +60,13 @@ class BookingAttributes
      *
      * Will add an error to the item, if booking for selected dates is not possible. Will return true otherwise.
      *
-     * @param ProductCollectionItemModel $item
-     * @param int                        $quantity
-     * @param ProductCollectionManager   $productCollection
+     * @param ProductCollectionItemModel|ProductCollectionItem $item
+     * @param int                                              $quantity
+     * @param ProductCollectionManager                         $productCollection
      *
      * @return bool
      */
-    public function validateCart(&$item, $quantity, &$productCollection)
+    public function validateCart(&$item, $quantity)
     {
         $product = $item->getProduct();
         if (!$item->hasBooking()) {
@@ -72,7 +79,7 @@ class BookingAttributes
             return true;
         }
 
-        $item->addError($this->translator->trans('huh.isotope.collection.booking.error.overbooked'));
+        $item->addError($this->translator->trans('huh.isotope.collection.booking.error.overbooked', ['%product%' => $product->getName()]));
 
         return false;
     }
@@ -97,7 +104,7 @@ class BookingAttributes
      * @param IsotopeProduct $product
      * @param int            $quantity
      *
-     * @return array|string
+     * @return array
      */
     public function getBlockedDates($product, int $quantity = 1)
     {
@@ -120,7 +127,7 @@ class BookingAttributes
     {
         $stock = $this->productDataManager->getProductData($product)->stock - $quantity;
 
-        if (0 > $stock) {
+        if ($this->isotopeManager->getOverridableStockProperty('skipStockValidation', $product)) {
             return [];
         }
 

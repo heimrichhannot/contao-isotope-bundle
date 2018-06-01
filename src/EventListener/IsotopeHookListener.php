@@ -9,8 +9,10 @@
 namespace HeimrichHannot\IsotopeBundle\EventListener;
 
 use Contao\System;
+use HeimrichHannot\IsotopeBundle\Attribute\BookingAttributes;
 use HeimrichHannot\IsotopeBundle\Manager\IsotopeManager;
 use HeimrichHannot\IsotopeBundle\Manager\ProductDataManager;
+use Isotope\Message;
 use Isotope\Model\ProductCollection\Order;
 
 class IsotopeHookListener
@@ -24,10 +26,16 @@ class IsotopeHookListener
      */
     private $productDataManager;
 
-    public function __construct(ProductDataManager $productDataManager, IsotopeManager $isotopeManager)
+    /**
+     * @var BookingAttributes
+     */
+    private $bookingAttributes;
+
+    public function __construct(ProductDataManager $productDataManager, IsotopeManager $isotopeManager, BookingAttributes $bookingAttributes)
     {
         $this->isotopeManager = $isotopeManager;
         $this->productDataManager = $productDataManager;
+        $this->bookingAttributes = $bookingAttributes;
     }
 
     public function validateStockCollectionAdd(&$objItem, $intQuantity, &$collection)
@@ -39,11 +47,24 @@ class IsotopeHookListener
      * ['ISO_HOOKS']['preCheckout'].
      *
      * @param Order $order
+     * @param $checkout
      *
      * @return bool
      */
-    public function validateStockPreCheckout($order)
+    public function validateStockPreCheckout(&$order, $checkout)
     {
+        foreach ($order->getItems() as $item) {
+            $product = $item->getProduct();
+            if ($this->isotopeManager->getOverridableStockProperty('skipStockValidation', $product)) {
+                continue;
+            }
+            if (false === $this->bookingAttributes->validateCart($item, $item->quantity)) {
+                Message::addError($item->getErrors()[0]);
+
+                return false;
+            }
+        }
+
         return $this->validateStockCheckout($order);
     }
 

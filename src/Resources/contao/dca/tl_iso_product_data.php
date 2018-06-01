@@ -268,7 +268,7 @@ $GLOBALS['TL_DCA']['tl_iso_product_data'] = [
             'inputType'    => 'fieldpalette',
             'foreignKey'   => 'tl_fieldpalette.id',
             'relation'     => ['type' => 'hasMany', 'load' => 'eager'],
-            'eval'         => ['tl_class' => 'long'],
+            'eval'         => ['tl_class' => 'clr'],
             'attributes'   => ['legend' => 'inventory_legend'],
             'sql'          => "blob NULL",
             'fieldpalette' => [

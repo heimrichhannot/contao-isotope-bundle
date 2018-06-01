@@ -1,10 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.8.0-DEV] -2018-05-31
+## [0.8.0] -2018-05-31
 
 #### Added
-* validation for booked dateranges
+* validation for product booking an add to cart and checkout
 
 #### Changed
 * ProductModel now extends Isotope\Model\Product\Standard

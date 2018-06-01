@@ -35,7 +35,7 @@ services:
 
   huh.isotope.listener.hooks.isotope:
     class: HeimrichHannot\IsotopeBundle\EventListener\IsotopeHookListener
-    arguments: ['@huh.isotope.manager.productdata', '@huh.isotope.manager']
+    arguments: ['@huh.isotope.manager.productdata', '@huh.isotope.manager', '@huh.isotope.attribute.booking']
   huh.isotope.listener.hooks:
     class: HeimrichHannot\IsotopeBundle\EventListener\HookListener
     arguments: ['@huh.isotope.manager.productdata']
@@ -54,7 +54,7 @@ services:
     class: HeimrichHannot\IsotopeBundle\Attribute\MaxOrderSizeAttribute
   huh.isotope.attribute.booking:
     class: HeimrichHannot\IsotopeBundle\Attribute\BookingAttributes
-    arguments: ['@contao.framework', '@huh.isotope.manager.productdata', '@huh.utils.model', '@translator']
+    arguments: ['@contao.framework', '@huh.isotope.manager.productdata', '@huh.utils.model', '@translator', '@huh.isotope.manager']
 
 # Commands
 

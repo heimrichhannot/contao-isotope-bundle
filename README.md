@@ -15,7 +15,7 @@ This bundle is a port of [Contao Isotope Module](https://github.com/heimrichhann
 
 * Stock managment
 * Sets
-* Booking time range
+* Booking functionality (book a ressource (product) for specific time)
 
 ## Install 
 

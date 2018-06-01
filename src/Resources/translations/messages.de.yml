@@ -10,4 +10,4 @@ huh:
     collection:
       booking:
         error:
-          overbooked: 'Der gewünschte Zeitraum kann leider nicht mehr gebucht werden, da es keine freien Kapazitäten mehr gibt.'
+          overbooked: 'Der gewünschte Zeitraum für das Produkt %product% kann leider nicht mehr gebucht werden, da es keine freien Kapazitäten mehr gibt.'
