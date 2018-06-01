@@ -12,7 +12,6 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Model\Collection;
 use Contao\StringUtil;
 use HeimrichHannot\IsotopeBundle\Manager\IsotopeManager;
-use HeimrichHannot\IsotopeBundle\Manager\ProductCollectionManager;
 use HeimrichHannot\IsotopeBundle\Manager\ProductDataManager;
 use HeimrichHannot\IsotopeBundle\Model\ProductCollectionItemModel;
 use HeimrichHannot\UtilsBundle\Model\ModelUtil;
@@ -62,14 +61,13 @@ class BookingAttributes
      *
      * @param ProductCollectionItemModel|ProductCollectionItem $item
      * @param int                                              $quantity
-     * @param ProductCollectionManager                         $productCollection
      *
      * @return bool
      */
     public function validateCart(&$item, $quantity)
     {
         $product = $item->getProduct();
-        if (!$item->hasBooking()) {
+        if (!is_a($item, ProductCollectionItemModel::class) || !$item->hasBooking()) {
             return true;
         }
         $blockedDates = $this->getBlockedDatesWithoutSelf($product, $quantity, $item);

@@ -1,7 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.8.0] -2018-05-31
+## [0.8.1] -2018-06-01
+
+#### Fixed
+* error adding a item with no booking functionality to cart
+
+## [0.8.0] -2018-06-01
 
 #### Added
 * validation for product booking an add to cart and checkout
