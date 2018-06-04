@@ -15,6 +15,7 @@ use Isotope\Model\Product\Standard;
 /**
  * Class ProductModel.
  *
+ *
  * @property int    $id
  * @property int    $pid
  * @property int    $gid
@@ -98,6 +99,23 @@ class ProductModel extends Standard
         }
 
         return parent::__isset($strKey);
+    }
+
+    /**
+     * Updates the model data with product data model data.
+     * Attention: Only updates model instance data and do not save. You need to call save() yourself!
+     *
+     * @return $this
+     */
+    public function syncWithProductData()
+    {
+        $productData = $this->getProductData();
+        foreach ($this->getProductDataManager()->getProductDataFields() as $key => $value) {
+            $this->$key = $productData->$key;
+        }
+        $this->tstamp = time();
+
+        return $this;
     }
 
     /**

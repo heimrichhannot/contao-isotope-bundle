@@ -13,7 +13,6 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Model\Collection;
 use HeimrichHannot\IsotopeBundle\Manager\ProductDataManager;
 use HeimrichHannot\IsotopeBundle\Model\ProductDataModel;
-use HeimrichHannot\IsotopeBundle\Model\ProductModel;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -65,9 +64,11 @@ class UpgradeCommand extends AbstractLockedCommand
         $io = new SymfonyStyle($input, $output);
         $io->title('Starting import product data.');
         $this->framework->initialize();
-//        $output->writeln("Starting import product data.");
         /** @var ProductDataModel[]|Collection|null $products */
-        $products = $this->framework->getAdapter(ProductModel::class)->findAll();
+        $products = $this->productDataManager->getAllProducts();
+
+        $io->writeln('Found '.$products->count().' products.');
+        $io->writeln('Updating product data:');
 
         $io->newLine();
         $io->progressStart($products->count());
@@ -90,11 +91,7 @@ class UpgradeCommand extends AbstractLockedCommand
             } else {
                 ++$dataUpdated;
             }
-            $dataFields = $this->productDataManager->getProductDataFields();
-            foreach ($dataFields as $key => $value) {
-                $productData->$key = $product->$key;
-            }
-            $productData->tstamp = time();
+            $productData->syncWithProduct();
             $productData->save();
         }
         $io->progressFinish();

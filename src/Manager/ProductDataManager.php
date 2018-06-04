@@ -9,6 +9,9 @@
 namespace HeimrichHannot\IsotopeBundle\Manager;
 
 use Contao\Controller;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Database;
+use Contao\Model\Collection;
 use HeimrichHannot\IsotopeBundle\Model\ProductDataModel;
 use HeimrichHannot\IsotopeBundle\Model\ProductModel;
 use Isotope\Interfaces\IsotopeProduct;
@@ -24,6 +27,15 @@ class ProductDataManager
      * @var ProductDataModel[]
      */
     protected $productDataModelCache = [];
+    /**
+     * @var ContaoFrameworkInterface
+     */
+    private $framework;
+
+    public function __construct(ContaoFrameworkInterface $framework)
+    {
+        $this->framework = $framework;
+    }
 
     /**
      * Returns all product data fields.
@@ -73,12 +85,27 @@ class ProductDataManager
         if (!$productData) {
             $productData = new ProductDataModel();
             $productData->pid = $pid;
-            $productData->tstamp = time();
-            $productData->dateAdded = time();
+            $productData->dateAdded = $productData->tstamp = time();
+            $productData->syncWithProduct();
         } else {
             $this->productDataModelCache[$productData->pid] = $productData;
         }
 
         return $productData;
+    }
+
+    /**
+     * Returns all product models bypassing findAll method from isotope TypeAgent.
+     *
+     * @return Collection|ProductModel[]
+     */
+    public function getAllProducts()
+    {
+        $table = ProductModel::getTable();
+        /** @var Database $db */
+        $db = $this->framework->createInstance(Database::class);
+        $result = $db->query("SELECT * FROM $table");
+
+        return $this->framework->getAdapter(Collection::class)->createFromDbResult($result, $table);
     }
 }

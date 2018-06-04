@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.0] -2018-06-04
+
+#### Added
+* sync method for ProductModel and ProductDataModel
+* findAllProducts method for ProductDataManager
+
+#### Fixed 
+* findAll method for product model not working due isotope TypeAgent inheritance
+* upgrade command not working due failing findAll method
+
 ## [0.8.1] -2018-06-01
 
 #### Fixed

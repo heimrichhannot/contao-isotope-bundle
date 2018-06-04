@@ -7,8 +7,6 @@
 
 This bundle offers additional functionality for the isotope ecommerce system.
 
-This bundle is a port of [Contao Isotope Module](https://github.com/heimrichhannot/contao-isotope_plus).
-
 ## Features
 
 > List not complete
@@ -17,6 +15,8 @@ This bundle is a port of [Contao Isotope Module](https://github.com/heimrichhann
 * Sets
 * Booking functionality (book a ressource (product) for specific time)
 
+Also read [Contao Isotope_Plus](https://github.com/heimrichhannot/contao-isotope_plus) Documentation for more information about included features.
+
 ## Install 
 
 ```php
@@ -24,6 +24,8 @@ composer require heimrichhannot/contao-isotope-bundle
 ```
 
 You need to call the database update tool after install.
+
+If you update from an older version as 0.8 or from isotope_plus module, you need to call the upgrade command (see usage).
 
 We recommend use [Contao Encore](https://github.com/heimrichhannot/contao-encore-bundle) for assets managment.
 
@@ -46,8 +48,8 @@ This command fills the product data table based on the data stored in product ta
 
 For more informations use the help function (`[command] --help`).
 
-Command | Description | Attributes | Options
---------|-------------|------------|--------
+Command             | Description | Attributes | Options
+--------------------|-------------|------------|--------
 huh:isotope:upgrade | Mirrors product data to the product data table | - | overwriteExistingEntries
 
 

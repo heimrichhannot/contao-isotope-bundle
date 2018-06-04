@@ -24,6 +24,7 @@ services:
       - '@contao.framework'
   huh.isotope.manager.productdata:
     class: HeimrichHannot\IsotopeBundle\Manager\ProductDataManager
+    arguments: ['@contao.framework']
   huh.isotope.ajax_manager:
     class: HeimrichHannot\IsotopeBundle\Manager\AjaxManager
     public: true

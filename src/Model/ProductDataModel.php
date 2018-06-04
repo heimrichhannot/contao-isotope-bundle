@@ -58,6 +58,23 @@ class ProductDataModel extends Model
     }
 
     /**
+     * Updates the model data with product model data.
+     * Attention: Only updates model instance data and do not save. You need to call save() yourself!
+     *
+     * @return $this
+     */
+    public function syncWithProduct()
+    {
+        $product = $this->getProductModel();
+        foreach ($this->getProductDataManager()->getProductDataFields() as $key => $value) {
+            $this->$key = $product->$key;
+        }
+        $this->tstamp = time();
+
+        return $this;
+    }
+
+    /**
      * Returns the product model for the current product data instance.
      *
      * @return ProductModel
