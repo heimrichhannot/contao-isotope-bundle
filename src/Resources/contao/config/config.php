@@ -61,6 +61,11 @@ $GLOBALS['TL_MODELS']['tl_iso_product_data'] = \HeimrichHannot\IsotopeBundle\Mod
 $GLOBALS['TL_MODELS'][\Isotope\Model\ProductCollectionItem::getTable()] = \HeimrichHannot\IsotopeBundle\Model\ProductCollectionItemModel::class;
 
 /**
+ * Isotope Product Types
+ */
+\Isotope\Model\Product::registerModelType('standard', \HeimrichHannot\IsotopeBundle\Model\ProductModel::class);
+
+/**
  * Product actions
  */
 \Isotope\Frontend\ProductAction\Registry::add(new \HeimrichHannot\IsotopeBundle\Action\BookingPlanAction());

@@ -58,23 +58,6 @@ class ProductDataModel extends Model
     }
 
     /**
-     * Updates the model data with product model data.
-     * Attention: Only updates model instance data and do not save. You need to call save() yourself!
-     *
-     * @return $this
-     */
-    public function syncWithProduct()
-    {
-        $product = $this->getProductModel();
-        foreach ($this->getProductDataManager()->getProductDataFields() as $key => $value) {
-            $this->$key = $product->$key;
-        }
-        $this->tstamp = time();
-
-        return $this;
-    }
-
-    /**
      * Returns the product model for the current product data instance.
      *
      * @return ProductModel
@@ -103,13 +86,32 @@ class ProductDataModel extends Model
     }
 
     /**
-     * @return $this|Model
+     * Updates the model data with product model data.
+     * Attention: Only updates model instance data and do not save. You need to call save() yourself!
+     *
+     * @return $this
      */
-    public function save()
+    public function syncWithProduct()
     {
-        parent::save();
-        $this->getProductModel(false)->syncWithProductData()->save();
+        $product = $this->getProductModel();
+        foreach ($this->getProductDataManager()->getProductDataFields() as $key => $value) {
+            $this->$key = $product->$key;
+        }
+        $this->tstamp = time();
 
         return $this;
+    }
+
+    public function save()
+    {
+        if ($this->productDataChanged) {
+            try {
+                $this->getProductModel()->save();
+                $this->productDataChanged = false;
+            } catch (\Exception $e) {
+            }
+        }
+
+        return parent::save();
     }
 }

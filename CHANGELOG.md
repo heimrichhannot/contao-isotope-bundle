@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.1] -2018-06-04
+
+#### Fixed
+* error on save (removed sync on Model save)
+* return wrong product model type from model methods (added ProductModel as "standard" product isotope type)
+
 ## [0.9.0] -2018-06-04
 
 #### Added

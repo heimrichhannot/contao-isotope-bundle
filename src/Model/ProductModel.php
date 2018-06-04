@@ -9,7 +9,6 @@
 namespace HeimrichHannot\IsotopeBundle\Model;
 
 use Contao\Database;
-use Contao\Model;
 use Contao\System;
 use Isotope\Model\Product\Standard;
 
@@ -103,23 +102,6 @@ class ProductModel extends Standard
     }
 
     /**
-     * Updates the model data with product data model data.
-     * Attention: Only updates model instance data and do not save. You need to call save() yourself!
-     *
-     * @return $this
-     */
-    public function syncWithProductData()
-    {
-        $productData = $this->getProductData();
-        foreach ($this->getProductDataManager()->getProductDataFields() as $key => $value) {
-            $this->$key = $productData->$key;
-        }
-        $this->tstamp = time();
-
-        return $this;
-    }
-
-    /**
      * @return array
      *
      * @todo
@@ -170,13 +152,29 @@ class ProductModel extends Standard
     }
 
     /**
-     * @return $this|Model
+     * Updates the model data with product data model data.
+     * Attention: Only updates model instance data and do not save. You need to call save() yourself!
+     *
+     * @return $this
      */
-    public function save()
+    public function syncWithProductData()
     {
-        parent::save();
-        $this->getProductData(false)->syncWithProduct()->save();
+        $productData = $this->getProductData();
+        foreach ($this->getProductDataManager()->getProductDataFields() as $key => $value) {
+            $this->$key = $productData->$key;
+        }
+        $this->tstamp = time();
 
         return $this;
+    }
+
+    public function save()
+    {
+        if ($this->productDataChanged) {
+            $this->getProductData()->save();
+            $this->productDataChanged = false;
+        }
+
+        return parent::save();
     }
 }
