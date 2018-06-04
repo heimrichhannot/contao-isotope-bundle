@@ -9,6 +9,7 @@
 namespace HeimrichHannot\IsotopeBundle\Model;
 
 use Contao\Database;
+use Contao\Model;
 use Contao\System;
 use Isotope\Model\Product\Standard;
 
@@ -168,13 +169,14 @@ class ProductModel extends Standard
         return $this->productDataManager;
     }
 
+    /**
+     * @return $this|Model
+     */
     public function save()
     {
-        if ($this->productDataChanged) {
-            $this->getProductData()->save();
-            $this->productDataChanged = false;
-        }
+        parent::save();
+        $this->getProductData(false)->syncWithProduct()->save();
 
-        return parent::save();
+        return $this;
     }
 }

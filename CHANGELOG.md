@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.10.0] -2018-06-04
+
+#### Changed
+* ProductModel and ProductDataModel now call sync on save
+* moved 3 config fields to product data table
+
+You need to call the database updater!
+You should call the upgrade command!
+
 ## [0.9.0] -2018-06-04
 
 #### Added

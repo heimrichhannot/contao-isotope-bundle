@@ -102,16 +102,14 @@ class ProductDataModel extends Model
         return $this->productDataManager;
     }
 
+    /**
+     * @return $this|Model
+     */
     public function save()
     {
-        if ($this->productDataChanged) {
-            try {
-                $this->getProductModel()->save();
-                $this->productDataChanged = false;
-            } catch (\Exception $e) {
-            }
-        }
+        parent::save();
+        $this->getProductModel(false)->syncWithProductData()->save();
 
-        return parent::save();
+        return $this;
     }
 }

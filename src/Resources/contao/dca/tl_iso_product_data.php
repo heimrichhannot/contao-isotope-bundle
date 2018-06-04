@@ -313,3 +313,12 @@ $GLOBALS['TL_DCA']['tl_iso_product_data'] = [
         ]
     ]
 ];
+
+Controller::loadDataContainer('tl_iso_config');
+$arrDca = &$GLOBALS['TL_DCA']['tl_iso_product_data'];
+$arrDca['fields']['skipStockValidation']                                   = $GLOBALS['TL_DCA']['tl_iso_config']['fields']['skipStockValidation'];
+$arrDca['fields']['skipStockValidation']['attributes']                     = ['legend' => 'shipping_legend'];
+$arrDca['fields']['skipStockEdit']                                         = $GLOBALS['TL_DCA']['tl_iso_config']['fields']['skipStockEdit'];
+$arrDca['fields']['skipStockEdit']['attributes']                           = ['legend' => 'shipping_legend'];
+$arrDca['fields']['skipExemptionFromShippingWhenStockEmpty']               = $GLOBALS['TL_DCA']['tl_iso_config']['fields']['skipExemptionFromShippingWhenStockEmpty'];
+$arrDca['fields']['skipExemptionFromShippingWhenStockEmpty']['attributes'] = ['legend' => 'shipping_legend'];
