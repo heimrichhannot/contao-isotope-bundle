@@ -55,7 +55,9 @@ class BookingPlanAction extends CartAction
      */
     public function handleSubmit(IsotopeProduct $product, array $config = [])
     {
-        if (!isset($_POST[$this->getName()])) {
+        if (empty($_POST[$this->getName()])) {
+            Message::addError(System::getContainer()->get('translator')->trans('huh.isotope.collection.booking.error.emptySelection'));
+
             return false;
         }
 
