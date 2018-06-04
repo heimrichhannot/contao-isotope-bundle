@@ -10,6 +10,8 @@ $GLOBALS['ISO_HOOKS']['addProductToCollection']['validateStockCollectionAdd'] =
 
 $GLOBALS['ISO_HOOKS']['postAddProductToCollection']['huh_isotope_bundle'] =
     ['huh.isotope.listener.hooks.isotope', 'validateStockCollectionAdd'];
+$GLOBALS['ISO_HOOKS']['postAddProductToCollection']['huh_isotope_bundle'] =
+    ['huh.isotope.listener.hooks.isotope', 'addBookingInformationToItem'];
 
 $GLOBALS['ISO_HOOKS']['preCheckout']['validateStockCheckout'] =
     ['huh.isotope.listener.hooks.isotope', 'validateStockPreCheckout'];

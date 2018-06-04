@@ -15,7 +15,6 @@ use Haste\Generator\RowClass;
 use Haste\Haste;
 use HeimrichHannot\HastePlus\Environment;
 use HeimrichHannot\HastePlus\Files;
-use HeimrichHannot\IsotopeBundle\Manager\ProductCollectionManager;
 use Isotope\Frontend;
 use Isotope\Interfaces\IsotopeAttribute;
 use Isotope\Interfaces\IsotopeProduct;
@@ -68,7 +67,7 @@ class IsotopePlus extends \Isotope\Isotope
     /**
      * @param $objProduct
      * @param $intQuantity
-     * @param ProductCollectionManager|ProductCollection $objProductCollection
+     * @param ProductCollection $objProductCollection
      *
      * @return int
      */

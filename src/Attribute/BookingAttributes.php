@@ -159,6 +159,20 @@ class BookingAttributes
     }
 
     /**
+     * Split up booking date string to two seperate timestamps.
+     *
+     * @param string $booking
+     *
+     * @return array
+     */
+    public function splitUpBookingDates(string $booking)
+    {
+        $bookingDates = explode('bis', $booking);
+
+        return [strtotime(trim($bookingDates[0])), strtotime(trim($bookingDates[1]))];
+    }
+
+    /**
      * get the booking dates for a product from collectionItems.
      *
      * @param            $product

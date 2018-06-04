@@ -12,8 +12,11 @@ use Contao\System;
 use HeimrichHannot\IsotopeBundle\Attribute\BookingAttributes;
 use HeimrichHannot\IsotopeBundle\Manager\IsotopeManager;
 use HeimrichHannot\IsotopeBundle\Manager\ProductDataManager;
+use HeimrichHannot\RequestBundle\Component\HttpFoundation\Request;
 use Isotope\Message;
+use Isotope\Model\ProductCollection;
 use Isotope\Model\ProductCollection\Order;
+use Isotope\Model\ProductCollectionItem;
 
 class IsotopeHookListener
 {
@@ -30,12 +33,39 @@ class IsotopeHookListener
      * @var BookingAttributes
      */
     private $bookingAttributes;
+    /**
+     * @var Request
+     */
+    private $request;
 
-    public function __construct(ProductDataManager $productDataManager, IsotopeManager $isotopeManager, BookingAttributes $bookingAttributes)
+    public function __construct(ProductDataManager $productDataManager, IsotopeManager $isotopeManager, BookingAttributes $bookingAttributes, Request $request)
     {
         $this->isotopeManager = $isotopeManager;
         $this->productDataManager = $productDataManager;
         $this->bookingAttributes = $bookingAttributes;
+        $this->request = $request;
+    }
+
+    /**
+     * Add booking information to Cart Item.
+     *
+     *
+     * ['ISO_HOOKS']['postAddProductToCollection']
+     *
+     * @param $item
+     * @param int               $quantity
+     * @param ProductCollection $collection
+     */
+    public function addBookingInformationToItem(ProductCollectionItem &$item, int $quantity, ProductCollection $collection)
+    {
+        list($bookingStart, $bookingStop) = $this->bookingAttributes->splitUpBookingDates($this->request->getPost('edit_booking_plan'));
+
+        if ($bookingStart && $bookingStop) {
+            $item->bookingStart = $bookingStart;
+            $item->bookingStop = $bookingStop;
+            $item->tstamp = time();
+            $item->save();
+        }
     }
 
     public function validateStockCollectionAdd(&$objItem, $intQuantity, &$collection)

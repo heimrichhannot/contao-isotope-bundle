@@ -182,18 +182,6 @@ class IsotopeManager
     }
 
     /**
-     * @param string $booking
-     *
-     * @return array
-     */
-    public function splitUpBookingDates(string $booking)
-    {
-        $bookingDates = explode('bis', $booking);
-
-        return [strtotime(trim($bookingDates[0])), strtotime(trim($bookingDates[1]))];
-    }
-
-    /**
      * Returns the total quanitity of the product type added to cart and already in cart, taking set size into account.
      *
      * watch out: also in backend the current set quantity is used.

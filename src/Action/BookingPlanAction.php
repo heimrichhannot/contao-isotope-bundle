@@ -14,6 +14,7 @@ use Contao\System;
 use HeimrichHannot\IsotopeBundle\Manager\AjaxManager;
 use Isotope\Frontend\ProductAction\CartAction;
 use Isotope\Interfaces\IsotopeProduct;
+use Isotope\Isotope;
 use Isotope\Message;
 
 class BookingPlanAction extends CartAction
@@ -38,7 +39,7 @@ class BookingPlanAction extends CartAction
         return sprintf(
                     '<div class="bookingPlan_container" data-update="%s" data-product-id="%s">
                     <label for="bookingPlan">%s</label>
-            <input type="text" name="%s" id="bookingPlan" class="submit %s %s"  data-blocked="%s"></div>',
+            <input type="text" name="%s" id="bookingPlan" class="submit %s %s"  data-blocked="%s" required></div>',
             System::getContainer()->get('huh.ajax.action')->generateUrl(AjaxManager::ISOTOPE_AJAX_GROUP, AjaxManager::ISOTOPE_AJAX_BOOKING_PLAN_UPDATE),
             $product->id,
             $this->getLabel(),
@@ -65,7 +66,6 @@ class BookingPlanAction extends CartAction
             if (!$config['module']->iso_addProductJumpTo) {
                 Controller::reload();
             }
-
             System::getContainer()->get('huh.utils.url')->redirect($config['module']->iso_addProductJumpTo);
         } else {
             return false;
@@ -87,11 +87,9 @@ class BookingPlanAction extends CartAction
             $quantity = (int) Input::post('quantity_requested');
         }
 
-        $item = System::getContainer()->get('huh.isotope.product_collection_manager')->addProduct($product, $quantity, $config);
-
         // Do not add parent of variant product to the cart
         if (($product->hasVariants() && !$product->isVariant())
-            || !$item
+            || !$item = Isotope::getCart()->addProduct($product, $quantity, $config)
         ) {
             return false;
         }

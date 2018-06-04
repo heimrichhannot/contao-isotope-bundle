@@ -28,15 +28,12 @@ services:
   huh.isotope.ajax_manager:
     class: HeimrichHannot\IsotopeBundle\Manager\AjaxManager
     public: true
-  huh.isotope.product_collection_manager:
-      class: HeimrichHannot\IsotopeBundle\Manager\ProductCollectionManager
-      public: true
 
 # Event Listener
 
   huh.isotope.listener.hooks.isotope:
     class: HeimrichHannot\IsotopeBundle\EventListener\IsotopeHookListener
-    arguments: ['@huh.isotope.manager.productdata', '@huh.isotope.manager', '@huh.isotope.attribute.booking']
+    arguments: ['@huh.isotope.manager.productdata', '@huh.isotope.manager', '@huh.isotope.attribute.booking', '@huh.request']
   huh.isotope.listener.hooks:
     class: HeimrichHannot\IsotopeBundle\EventListener\HookListener
     arguments: ['@huh.isotope.manager.productdata']
