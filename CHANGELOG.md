@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.2] -2018-06-04
+
+#### Fixed
+* empty pids for booking items
+* booking selection not mandatory
+
 ## [0.9.1] -2018-06-04
 
 #### Fixed
