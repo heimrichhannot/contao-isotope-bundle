@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.3] -2018-06-05
+
+#### Fixed
+* error added items with no booking information to cart
+
 ## [0.9.2] -2018-06-04
 
 #### Fixed

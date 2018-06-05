@@ -12,6 +12,7 @@ use Contao\System;
 use HeimrichHannot\IsotopeBundle\Attribute\BookingAttributes;
 use HeimrichHannot\IsotopeBundle\Manager\IsotopeManager;
 use HeimrichHannot\IsotopeBundle\Manager\ProductDataManager;
+use HeimrichHannot\IsotopeBundle\Model\ProductCollectionItemModel;
 use HeimrichHannot\RequestBundle\Component\HttpFoundation\Request;
 use Isotope\Message;
 use Isotope\Model\ProductCollection;
@@ -52,12 +53,15 @@ class IsotopeHookListener
      *
      * ['ISO_HOOKS']['postAddProductToCollection']
      *
-     * @param $item
-     * @param int               $quantity
-     * @param ProductCollection $collection
+     * @param ProductCollectionItem|ProductCollectionItemModel $item
+     * @param int                                              $quantity
+     * @param ProductCollection                                $collection
      */
     public function addBookingInformationToItem(ProductCollectionItem &$item, int $quantity, ProductCollection $collection)
     {
+        if (!$this->request->hasPost('edit_booking_plan')) {
+            return;
+        }
         list($bookingStart, $bookingStop) = $this->bookingAttributes->splitUpBookingDates($this->request->getPost('edit_booking_plan'));
 
         if ($bookingStart && $bookingStop) {
