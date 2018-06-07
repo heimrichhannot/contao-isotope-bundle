@@ -18,9 +18,9 @@ use HeimrichHannot\Request\Request;
 
 class DownloadHelper
 {
-    public function addDownloadsFromProductDownloadsToTemplate($objTemplate)
+    public function addDownloadsFromProductDownloadsToTemplate($template)
     {
-        $objTemplate->downloads = $this->getDownloadsFromProductDownloads($objTemplate->id);
+        $template->downloads = $this->getDownloadsFromProductDownloads($template->id);
     }
 
     /**
@@ -43,13 +43,13 @@ class DownloadHelper
         }
 
         foreach ($downloadFiles as $downloadFile) {
-            $objModel = $framework->getAdapter(\FilesModel::class)->findByUuid($downloadFile->singleSRC);
-            if (null === $objModel) {
+            $model = $framework->getAdapter(FilesModel::class)->findByUuid($downloadFile->singleSRC);
+            if (null === $model) {
                 if (!\Validator::isUuid($downloadFile->singleSRC)) {
                     return ['<p class="error">'.$GLOBALS['TL_LANG']['ERR']['version2format'].'</p>'];
                 }
-            } elseif (is_file(TL_ROOT.'/'.$objModel->path)) {
-                $objFile = new File($objModel->path);
+            } elseif (is_file(TL_ROOT.'/'.$model->path)) {
+                $objFile = new File($model->path);
 
                 $file = Request::getGet('file', true);
                 // Send the file to the browser and do not send a 404 header (see #4632)
@@ -57,10 +57,10 @@ class DownloadHelper
                     $framework->getAdapter(Controller::class)->sendFileToBrowser($file);
                 }
 
-                $arrMeta = $framework->getAdapter(Frontend::class)->getMetaData($objModel->meta, $objPage->language);
+                $arrMeta = $framework->getAdapter(Frontend::class)->getMetaData($model->meta, $objPage->language);
                 if (empty($arrMeta)) {
                     if (null !== $objPage->rootFallbackLanguage) {
-                        $arrMeta = $framework->getAdapter(Frontend::class)->getMetaData($objModel->meta, $objPage->rootFallbackLanguage);
+                        $arrMeta = $framework->getAdapter(Frontend::class)->getMetaData($model->meta, $objPage->rootFallbackLanguage);
                     }
                 }
 
@@ -71,9 +71,9 @@ class DownloadHelper
                 }
                 $strHref .= ((\Config::get('disableAlias') || false !== strpos($strHref, '?')) ? '&amp;' : '?').'file='.\System::urlEncode($objFile->path);
 
-                $download['id'] = $objModel->id;
-                $download['uuid'] = $objModel->uuid;
-                $download['name'] = $objModel->basename;
+                $download['id'] = $model->id;
+                $download['uuid'] = $model->uuid;
+                $download['name'] = $model->name;
                 $download['formedname'] = preg_replace(['/_/', '/.\w+$/'], [' ', ''], $objFile->basename);
                 $download['title'] = specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename));
                 $download['link'] = $arrMeta['title'];
@@ -88,7 +88,10 @@ class DownloadHelper
                 // add thumbnail
                 $thumbnails = [];
                 foreach (StringUtil::deserialize($downloadFile->download_thumbnail, true) as $thumbnail) {
-                    $thumbnails[] = $framework->getAdapter(FilesModel::class)->findByUuid($thumbnail);
+                    $thumbnail = $framework->getAdapter(FilesModel::class)->findByUuid($thumbnail);
+                    if (null !== $thumbnail) {
+                        $thumbnails[] = ['path' => $thumbnail->path, 'title' => $thumbnail->title];
+                    }
                 }
                 $download['thumbnail'] = $thumbnails;
 

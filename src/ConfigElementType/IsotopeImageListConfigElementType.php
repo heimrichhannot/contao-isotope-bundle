@@ -76,7 +76,7 @@ class IsotopeImageListConfigElementType implements ConfigElementType
 
         // Override the default image size
         if ('' !== $listConfigElement->imgSize) {
-            $size = StringUtil::deserialize($listConfigElement->imgSize);
+            $size = StringUtil::deserialize($listConfigElement->imgSize, true);
 
             if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2])) {
                 $imageArray['size'] = $listConfigElement->imgSize;

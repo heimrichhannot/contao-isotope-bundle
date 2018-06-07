@@ -14,7 +14,7 @@
                 <th><a href="#"><?php echo date('m/Y', strtotime("-2 month")); ?></a></th>
                 <th><a href="#"><?php echo date('m/Y', strtotime("-1 month")); ?></a></th>
                 <th><a href="#"><?php echo date('m/Y', time()) ?></th>
-                <th><a href="#"><?php echo $GLOBALS['TL_LANG']['tl_iso_product']['setQuantity'][0] ?></th>
+                <th><a href="#"><?php echo $GLOBALS['TL_LANG']['MSC']['set'] ?></th>
             </tr>
             </thead>
             <tbody>

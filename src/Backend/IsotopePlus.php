@@ -75,45 +75,51 @@ class IsotopePlus extends \Isotope\Isotope
         return $this->validateStockCheckout($objOrder, true);
     }
 
-    public function validateStockCheckout($objOrder, $isPostCheckout = false)
+    /**
+     * @param Order $order
+     * @param bool  $isPostCheckout
+     *
+     * @return bool
+     */
+    public function validateStockCheckout(Order $order, $isPostCheckout = false)
     {
-        $arrItems = $objOrder->getItems();
-        $arrOrders = [];
+        $items = $order->getItems();
+        $orders = [];
 
-        foreach ($arrItems as $objItem) {
-            $objProduct = $objItem->getProduct();
+        foreach ($items as $item) {
+            $product = $item->getProduct();
 
-            if ('' != $objProduct->stock && null !== $objProduct->stock) {
+            if ('' != $product->stock && null !== $product->stock) {
                 // override the quantity!
-                if (!System::getContainer()->get('huh.isotope.manager')->validateQuantity($objProduct, $objItem->quantity)) {
+                if (!System::getContainer()->get('huh.isotope.manager')->validateQuantity($product, $item->quantity)) {
                     return false;
                 }
 
                 if ($isPostCheckout) {
-                    $arrOrders[] = $objItem;
+                    $orders[] = $item;
                 }
             }
         }
 
         // save new stock
         if ($isPostCheckout) {
-            foreach ($arrOrders as $objItem) {
-                $objProduct = $objItem->getProduct();
+            foreach ($orders as $item) {
+                $product = $item->getProduct();
 
-                if ($this->getOverridableStockProperty('skipStockEdit', $objProduct)) {
+                if ($this->getOverridableStockProperty('skipStockEdit', $product)) {
                     continue;
                 }
 
-                $intQuantity = $this->getTotalStockQuantity($objItem->quantity, $objProduct);
+                $intQuantity = $this->getTotalStockQuantity($item->quantity, $product);
 
-                $objProduct->stock -= $intQuantity;
+                $product->stock -= $intQuantity;
 
-                if ($objProduct->stock <= 0
-                    && !$this->getOverridableStockProperty('skipExemptionFromShippingWhenStockEmpty', $objProduct)) {
-                    $objProduct->shipping_exempt = true;
+                if ($product->stock <= 0
+                    && !$this->getOverridableStockProperty('skipExemptionFromShippingWhenStockEmpty', $product)) {
+                    $product->shipping_exempt = true;
                 }
 
-                $objProduct->save();
+                $product->save();
             }
         }
 
@@ -121,8 +127,8 @@ class IsotopePlus extends \Isotope\Isotope
     }
 
     /**
-     * @param $objProduct
-     * @param $intQuantity
+     * @param                   $objProduct
+     * @param                   $intQuantity
      * @param ProductCollection $objProductCollection
      *
      * @return int
