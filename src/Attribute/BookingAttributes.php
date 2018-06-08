@@ -160,16 +160,24 @@ class BookingAttributes
         $monthDays = date('t', mktime(0, 0, 0, $month, 1, $year));
         $lastDay = mktime(23, 59, 59, $month, $monthDays, $year);
 
-        $bookingList = array_fill(1, $monthDays, 0);
+        $bookingList = [];
+        $bookingList['booked'] = $bookingList['blocked'] = $bookingList['reserved'] = array_fill(1, $monthDays, 0);
         $items = $this->getBookedItemsInTimeRange($product, $firstDay, $lastDay);
         if (!$items) {
             return $bookingList;
         }
         foreach ($items as $item) {
             $range = $this->getRange($item->bookingStart, $item->bookingStop, $product->bookingBlock ?: 0);
+            $startDay = date('j', $item->bookingStart);
+            $endDay = date('j', $item->bookingStop);
             foreach ($range as $tstamp) {
                 if ($year == date('Y', $tstamp) && ($month == date('n', $tstamp))) {
-                    ++$bookingList[date('j', $tstamp)];
+                    $selectedDay = date('j', $tstamp);
+                    if ($selectedDay < $startDay || $selectedDay > $endDay) {
+                        ++$bookingList['blocked'][$selectedDay];
+                        continue;
+                    }
+                    ++$bookingList['booked'][$selectedDay];
                 }
             }
         }
@@ -177,7 +185,7 @@ class BookingAttributes
         foreach ($reservedDates as $reserved) {
             foreach ($reserved as $tstamp) {
                 if ($year == date('Y', $tstamp) && ($month == date('n', $tstamp))) {
-                    ++$bookingList[date('j', $tstamp)];
+                    ++$bookingList['reserved'][date('j', $tstamp)];
                 }
             }
         }

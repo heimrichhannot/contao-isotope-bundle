@@ -1,14 +1,49 @@
 # messages
-huh.isotope.collection.table.label:
-  orderDate: Bestelldatum
-  customer: Kunde
-  orderNumber: Bestellnummer
-  total: Gesamt
-  status: Status
-huh:
-  isotope:
-    collection:
-      booking:
-        error:
-          overbooked: 'Der gewünschte Zeitraum für das Produkt %product% kann leider nicht mehr gebucht werden, da es keine freien Kapazitäten mehr gibt.'
-          emptySelection: 'Es wurden keine Buchungsdaten ausgewählt.'
+huh.isotope:
+  collection:
+    table.label:
+      orderDate: Bestelldatum
+      customer: Kunde
+      orderNumber: Bestellnummer
+      total: Gesamt
+      status: Status
+    booking:
+      error:
+        overbooked: 'Der gewünschte Zeitraum für das Produkt %product% kann leider nicht mehr gebucht werden, da es keine freien Kapazitäten mehr gibt.'
+        emptySelection: 'Es wurden keine Buchungsdaten ausgewählt.'
+
+
+  product:
+    booking:
+      plan: Buchungplan
+      list: 'Buchungen für "%product%" am %date%'
+      booked: Gebucht
+      reserved: Reserviert
+      blocked: Blockiert
+  order:
+    number: Bestellnummer
+    date: Bestelldatum
+    billingaddress: Rechnungsadresse
+    bookingdate: Buchungszeitraum
+
+
+Sunday: Sonntag
+Monday: Montag
+Tuesday: Dienstag
+Wednesday: Mittwoch
+Thursday: Donnerstag
+Friday: Freitag
+Saturday: Samstag
+
+January: Januar
+February: Februar
+March: März
+April: April
+May: Mai
+June: Juni
+July: Juli
+August: August
+September: September
+October: Oktober
+November: November
+December: Dezember

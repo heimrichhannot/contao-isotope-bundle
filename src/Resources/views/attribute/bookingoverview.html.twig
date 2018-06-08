@@ -11,7 +11,7 @@
      but I'd assume pushing everything into an array numerically indexed by that day:
      $days = array(1=>array('Something on the first'),31=>array('Halloween'));
 #}
-<h3>{% trans %}Booking plan{% endtrans %}</h3>
+<h3>{% trans %}huh.isotope.product.booking.plan{% endtrans %}</h3>
 <div id="huh_isotope_backend_product_booking_overview">
     <table class="tl_iso_product_bookingoverview tl_listing" id="tl_iso_product_bookingoverview">
         <thead>
@@ -59,11 +59,16 @@
                         }) }}"
                            onclick="Backend.openModalIframe({'title': this.dataset.title, 'url': this.href + '&popup=1'}); return false;"
                            class="huh_isotope_backend_openBookingList"
-                            data-title="{% trans with {'%product%': product.name, '%date%': tstamp|date("d.m.Y")} %}Booking list for <i>%product%</i> on %date%{% endtrans %}">
+                            data-title="{% trans with {'%product%': product.name, '%date%': tstamp|date("d.m.Y")} %}huh.isotope.product.booking.list{% endtrans %}">
 
                             <div class="date">{{ day }}</div>
                             <div class="data">
-                                {{ attribute(bookings, day)|default(0) }}
+                                <img src="system/themes/flexible/icons/member.svg" alt="{% trans %}huh.isotope.product.booking.booked{% endtrans %}">
+                                {{ attribute(bookings.booked, day)|default(0) }}
+                                <img src="system/themes/flexible/icons/member_.svg" alt="{% trans %}huh.isotope.product.booking.reserved{% endtrans %}">
+                                {{ attribute(bookings.reserved, day)|default(0) }}
+                                <img src="system/themes/flexible/icons/admin_.svg" alt="{% trans %}huh.isotope.product.booking.blocked{% endtrans %}">
+                                {{ attribute(bookings.blocked, day)|default(0) }}
                             </div>
                         </a>
                     </td>
@@ -81,4 +86,10 @@
             </tr>
         </tbody>
     </table>
+    <p class="tl_empty">
+        <img src="system/themes/flexible/icons/member.svg" alt="{% trans %}huh.isotope.product.booking.booked{% endtrans %}"> {% trans %}huh.isotope.product.booking.booked{% endtrans %}
+        <img src="system/themes/flexible/icons/member_.svg" alt="{% trans %}huh.isotope.product.booking.reserved{% endtrans %}"> {% trans %}huh.isotope.product.booking.reserved{% endtrans %}
+        <img src="system/themes/flexible/icons/admin_.svg" alt="{% trans %}huh.isotope.product.booking.blocked{% endtrans %}"> {% trans %}huh.isotope.product.booking.blocked{% endtrans %}
+    </p>
+
 </div>
