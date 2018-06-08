@@ -1,0 +1,45 @@
+{% extends "@ContaoCore/Backend/be_page.html.twig" %}
+
+{% block headline %}
+    {% trans with {'%product%': product.name, '%date%': tstamp|date("d.m.Y")} %}Booking list for "%product%" on %date%{% endtrans %}
+{% endblock %}
+
+{% block error %}{% if error|default %}{{ error }}{% endif %}{% endblock %}
+
+{% block main %}
+    <div class="tl_listing_container">
+        <table class="tl_iso_product_booking_order_list tl_listing">
+            <thead>
+                <th class="tl_header">{% trans %}ID{% endtrans %}</th>
+                <th class="tl_header">{% trans %}Order number{% endtrans %}</th>
+                <th class="tl_header">{% trans %}Order date{% endtrans %}</th>
+                <th class="tl_header">{% trans %}Billing address{% endtrans %}</th>
+                <th class="tl_header">{% trans %}Booking dates{% endtrans %}</th>
+            </thead>
+            <tbody>
+            {% if orders|default %}
+                {% for current in orders %}
+                    {% set order = current.order %}
+                    <tr>
+                        <td class="tl_file_list">{{ order.id }}</td>
+                        <td class="tl_file_list">{{ order.documentNumber }}</td>
+                        <td class="tl_file_list">{{ order.locked }}</td>
+                        <td class="tl_file_list">{{ order.billing_address_id }}</td>
+                        <td class="tl_file_list">
+                            {% for item in current.items %}
+                                {{ item.bookingStart|date("d.m.Y") }} - {{ item.bookingStop|date("d.m.Y") }}
+                                {% if loop.last == false %}
+                                    <br>
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <td colspan="5" class="tl_file_list">{% trans %}No orders for this day {% endtrans %}</td>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

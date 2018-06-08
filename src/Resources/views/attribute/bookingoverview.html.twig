@@ -1,0 +1,68 @@
+
+
+
+{#
+     time can be any string acceptable by http://www.php.net/strtotime, the
+     template will output that time's month.
+     If you don't want to pass in a date you can set time like this:
+     {% set time = "now"|date("U") %}
+     {% set time = "December 2012"|date("U") %}
+     How ever you want to output items onto the calendar is a different issue,
+     but I'd assume pushing everything into an array numerically indexed by that day:
+     $days = array(1=>array('Something on the first'),31=>array('Halloween'));
+#}
+<h3>{% trans %}Booking plan{% endtrans %}</h3>
+<table class="tl_iso_product_bookingoverview tl_listing">
+    <thead>
+        <tr>
+            <th colspan="7" class="tl_header">
+                {{ time|date('F')|trans }}
+            </th>
+        </tr>
+        <tr>
+            <td class="calendar-day-head tl_folder_tlist">{% trans %}Sunday{% endtrans %}</td>
+            <td class="calendar-day-head tl_folder_tlist">{% trans %}Monday{% endtrans %}</td>
+            <td class="calendar-day-head tl_folder_tlist">{% trans %}Tuesday{% endtrans %}</td>
+            <td class="calendar-day-head tl_folder_tlist">{% trans %}Wednesday{% endtrans %}</td>
+            <td class="calendar-day-head tl_folder_tlist">{% trans %}Thursday{% endtrans %}</td>
+            <td class="calendar-day-head tl_folder_tlist">{% trans %}Friday{% endtrans %}</td>
+            <td class="calendar-day-head tl_folder_tlist">{% trans %}Saturday{% endtrans %}</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            {% set daysInMonth = time|date('t') %}
+            {% set startDow = time|date('F 1\\s\\t Y')|date('w') %}
+            {% set dow = startDow %}
+            {% for day in range(1,daysInMonth) %}
+                {% if loop.first and startDow != 0 %}
+                    <td colspan="{{ startDow }}" class="tl_file_list"></td>
+                {% endif %}
+                <td class="day tl_file_list">
+                    <a href="{{ path('huh.isotope.backend.bookinglist', {
+                        'id': product,
+                        'day': day,
+                        'month': time|date('n'),
+                        'year': time|date('Y')
+                    }) }}" class="huh_isotope_backend_openBookingList">
+
+                        <div class="date">{{ day }}</div>
+                        <div class="data">
+                            {{ attribute(bookings, day)|default(0) }}
+                        </div>
+                    </a>
+                </td>
+                {% if loop.last and dow != 6 %}
+                    <td colspan="{{ 6 - dow }} " class="tl_file_list">&nbsp;</td>
+                {% endif %}
+                {% if dow == 6 %}
+                {% set dow = 0 %}
+            </tr>
+            <tr>
+                {% else %}
+                    {% set dow = dow + 1 %}
+                {% endif %}
+            {% endfor %}
+        </tr>
+    </tbody>
+</table>

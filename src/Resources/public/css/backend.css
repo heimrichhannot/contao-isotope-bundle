@@ -1,3 +1,21 @@
 #tl_navigation .tl_level_1_group .group-isotope {
   background-size: 12px 12px;
 }
+
+/*table.tl_iso_product_bookingoverview thead th {*/
+  /*padding: 8px 10px;*/
+  /*font-weight: bold;*/
+/*}*/
+/*table.tl_iso_product_bookingoverview tr td {*/
+  /*padding: 8px 10px;*/
+/*}*/
+/*table.tl_iso_product_bookingoverview tbody tr:nth-child(odd) td {*/
+  /*background-color: #fafafc;*/
+/*}*/
+table.tl_iso_product_bookingoverview tbody tr td.day div {
+  display: inline-block;
+  min-width: 20%;
+}
+table.tl_iso_product_bookingoverview tbody tr td.day div.date {
+  color: darkgray;
+}

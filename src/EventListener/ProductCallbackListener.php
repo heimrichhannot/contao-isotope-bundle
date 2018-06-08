@@ -10,6 +10,8 @@ namespace HeimrichHannot\IsotopeBundle\EventListener;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\DataContainer;
+use Contao\Date;
+use HeimrichHannot\IsotopeBundle\Attribute\BookingAttributes;
 use HeimrichHannot\IsotopeBundle\Manager\ProductDataManager;
 use HeimrichHannot\IsotopeBundle\Model\ProductModel;
 use HeimrichHannot\RequestBundle\Component\HttpFoundation\Request;
@@ -34,13 +36,23 @@ class ProductCallbackListener
      * @var ProductDataManager
      */
     private $productDataManager;
+    /**
+     * @var BookingAttributes
+     */
+    private $bookingAttributes;
+    /**
+     * @var \Twig_Environment
+     */
+    private $twig;
 
-    public function __construct(ContaoFrameworkInterface $framework, Request $request, ContainerUtil $containerUtil, ProductDataManager $productDataManager)
+    public function __construct(ContaoFrameworkInterface $framework, Request $request, ContainerUtil $containerUtil, ProductDataManager $productDataManager, BookingAttributes $bookingAttributes, \Twig_Environment $twig)
     {
         $this->containerUtil = $containerUtil;
         $this->framework = $framework;
         $this->request = $request;
         $this->productDataManager = $productDataManager;
+        $this->bookingAttributes = $bookingAttributes;
+        $this->twig = $twig;
     }
 
     /**
@@ -84,8 +96,22 @@ class ProductCallbackListener
         return $value;
     }
 
-    public function getMetaFieldValue($value, DataContainer $dc)
+    /**
+     * Generates an overview of bookings for product.
+     *
+     * @param array $attributes
+     *
+     * @return string An Html-Code
+     */
+    public function getBookingOverview(array $attributes)
     {
-        return $value;
+        $product = ProductModel::findById($attributes['dataContainer']->id);
+        $bookings = $this->bookingAttributes->getBookingCountsByMonth($product, date('n'), date('Y'));
+
+        return $this->twig->render('@HeimrichHannotContaoIsotope/attribute/bookingoverview.html.twig', [
+            'time' => time(),
+            'bookings' => $bookings,
+            'product' => $product->id,
+        ]);
     }
 }

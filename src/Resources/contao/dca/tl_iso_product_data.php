@@ -310,7 +310,15 @@ $GLOBALS['TL_DCA']['tl_iso_product_data'] = [
                 ],
 
             ]
-        ]
+        ],
+        "bookingOverview"      => [
+            'inputType' => 'huh_be_explanation',
+            'eval'      => [
+                'text_callback' => ['huh.isotope.listener.callback.product', 'getBookingOverview'],
+            ],
+            'attributes'   => ['legend' => 'inventory_legend'],
+            'text_callback' => ['huh.isotope.listener.callback.product', 'getBookingOverview'],
+        ],
     ]
 ];
 

@@ -3,6 +3,10 @@
 define('ISO_PRODUCT_CREATOR_SINGLE_IMAGE_PRODUCT', 'HeimrichHannot\IsotopeBundle\Product\SingleImageProductEditor');
 define('ISO_PRODUCT_CREATOR_MULTI_IMAGE_PRODUCT', 'HeimrichHannot\IsotopeBundle\Product\MultiImageProductEditor');
 
+/**
+ * Isotope Hooks
+ */
+
 $GLOBALS['ISO_HOOKS']['generateProduct'][]                                    =
     ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'generateProductHook'];
 $GLOBALS['ISO_HOOKS']['addProductToCollection']['validateStockCollectionAdd'] =
@@ -33,10 +37,17 @@ $GLOBALS['ISO_HOOKS']['buttons'][]                                              
 $GLOBALS['ISO_HOOKS']['preOrderStatusUpdate']['updateStock']                     =
     ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'updateStock'];
 
+/**
+ * Hooks
+ */
+
 $GLOBALS['TL_HOOKS']['replaceDynamicScriptTags'][]             = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'hookReplaceDynamicScriptTags'];
 $GLOBALS['TL_HOOKS']['postDownload']['downloadCounter']        = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'updateDownloadCounter'];
 $GLOBALS['ISO_HOOKS']['generateProduct']['updateTemplateData'] = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'updateTemplateData'];
 //$GLOBALS['TL_HOOKS']['parseItems']['addPdfViewerToTemplate']   = ['huh.isotope.helper.product', 'addPdfViewerToTemplate'];
+
+$GLOBALS['TL_HOOKS']['getPageLayout'][] = ['huh.isotope.ajax_manager', 'ajaxActions'];
+$GLOBALS['TL_HOOKS']['loadDataContainer']['huh.isotope.productdata_fields'] = ['huh.isotope.listener.hooks','addMetaFields'];
 
 
 /**
@@ -85,16 +96,12 @@ if (System::getContainer()->get('huh.utils.container')->isBackend()) {
  */
 if (System::getContainer()->get('huh.utils.container')->isFrontend()) {
     $GLOBALS['TL_JAVASCRIPT']['tablesorter'] = 'assets/components/tablesorter/js/tablesorter.min.js|static';
+    $GLOBALS['TL_JAVASCRIPT']['huh_contao-isotope-bundle'] = 'bundles/heimrichhannotcontaoisotope/js/contao.isotope-bundle.min.js|static';
 }
-
-
-if (\Contao\System::getContainer()->get('huh.utils.container')->isFrontend()
-    && !class_exists(\HeimrichHannot\EncoreBundle\DependencyInjection\EncoreExtension::class)) {
-    $GLOBALS['TL_JAVASCRIPT']['contao-watchlist-bundle'] = 'bundles/heimrichhannotcontaowatchlist/js/contao.isotope-bundle.min.js|static';
+if (\Contao\System::getContainer()->get('huh.utils.container')->isBackend())
+{
+    $GLOBALS['TL_JAVASCRIPT']['huh_isotope_backend'] = 'bundles/heimrichhannotcontaoisotope/js/contao.isotope-bundle.min.js|static';
 }
-
-$GLOBALS['TL_HOOKS']['getPageLayout'][] = ['huh.isotope.ajax_manager', 'ajaxActions'];
-$GLOBALS['TL_HOOKS']['loadDataContainer']['huh.isotope.productdata_fields'] = ['huh.isotope.listener.hooks','addMetaFields'];
 
 /**
  * ajax actions

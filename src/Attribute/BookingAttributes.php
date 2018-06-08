@@ -14,8 +14,10 @@ use Contao\StringUtil;
 use HeimrichHannot\IsotopeBundle\Manager\IsotopeManager;
 use HeimrichHannot\IsotopeBundle\Manager\ProductDataManager;
 use HeimrichHannot\IsotopeBundle\Model\ProductCollectionItemModel;
+use HeimrichHannot\IsotopeBundle\Model\ProductModel;
 use HeimrichHannot\UtilsBundle\Model\ModelUtil;
 use Isotope\Interfaces\IsotopeProduct;
+use Isotope\Model\ProductCollection;
 use Isotope\Model\ProductCollectionItem;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -115,6 +117,75 @@ class BookingAttributes
     }
 
     /**
+     * Returns a list of orders for given products for requested day.
+     *
+     * @param ProductModel $product
+     * @param int          $day
+     * @param int          $month
+     * @param int          $year
+     *
+     * @return Collection|array|ProductCollection[]|null
+     */
+    public function getOrdersWithBookingsByDay(ProductModel $product, int $day, int $month, int $year)
+    {
+        $orders = [];
+        $start = mktime(0, 0, 0, $month, $day, $year);
+        $end = mktime(23, 59, 59, $month, $day, $year);
+        $items = $this->getBookedItemsInTimeRange($product, $start, $end, true);
+        if (!$items) {
+            return $orders;
+        }
+        foreach ($items as $item) {
+            $orders[$item->pid]['items'][] = $item;
+            $orders[$item->pid]['order'] = ProductCollection::findOneBy(['id =?', 'type=?'], [$item->pid, 'order']);
+        }
+
+        return $orders;
+    }
+
+    /**
+     * Return a list with number of bookings per day.
+     *
+     * Includes reservations an blocked days.
+     *
+     * @param ProductModel $product
+     * @param int          $month
+     * @param int          $year
+     *
+     * @return array
+     */
+    public function getBookingCountsByMonth(ProductModel $product, int $month, int $year)
+    {
+        $firstDay = mktime(0, 0, 0, $month, 1, $year);
+        $monthDays = date('t', mktime(0, 0, 0, $month, 1, $year));
+        $lastDay = mktime(23, 59, 59, $month, $monthDays, $year);
+
+        $bookingList = array_fill(1, $monthDays, 0);
+        $items = $this->getBookedItemsInTimeRange($product, $firstDay, $lastDay);
+        if (!$items) {
+            return $bookingList;
+        }
+        foreach ($items as $item) {
+            $range = $this->getRange($item->bookingStart, $item->bookingStop, $product->bookingBlock ?: 0);
+            foreach ($range as $tstamp) {
+                if ($year == date('Y', $tstamp) && ($month == date('n', $tstamp))) {
+                    ++$bookingList[date('j', $tstamp)];
+                }
+            }
+        }
+        $reservedDates = $this->getReservedDates($product);
+        foreach ($reservedDates as $reserved) {
+            foreach ($reserved as $tstamp) {
+                if ($year == date('Y', $tstamp) && ($month == date('n', $tstamp))) {
+                    ++$bookingList[date('j', $tstamp)];
+                }
+            }
+        }
+
+        return $bookingList;
+    }
+
+    /**
      * @param Collection     $collectionItems
      * @param IsotopeProduct $product
      * @param $quantity
@@ -170,6 +241,34 @@ class BookingAttributes
         $bookingDates = explode('bis', $booking);
 
         return [strtotime(trim($bookingDates[0])), strtotime(trim($bookingDates[1]))];
+    }
+
+    /**
+     * @param ProductModel $product
+     * @param int          $startDate
+     * @param int          $endDate
+     * @param bool         $ignoreBlocking
+     *
+     * @return Collection|ProductCollectionItemModel[]|null
+     */
+    protected function getBookedItemsInTimeRange(ProductModel $product, int $startDate, int $endDate, bool $ignoreBlocking = false)
+    {
+        $searchRange = 0;
+        if ($product->bookingBlock && !$ignoreBlocking) {
+            //search block range * 2 to get also overlapping block dates and add 1 day to get the booking date
+            $searchRange = (86400 * $product->bookingBlock * 2) + 1;
+        }
+        $firstDayWithBlocking = $startDate - $searchRange;
+        $lastDayWithBlocking = $endDate + $searchRange;
+
+        return ProductCollectionItemModel::findBy([
+            'product_id = ?',
+            "((bookingStart <= $lastDayWithBlocking AND bookingStop >= $startDate) ".
+            "OR (bookingStart <= $endDate AND bookingStop >= $firstDayWithBlocking) ".
+            "OR (bookingStart <= $startDate AND bookingStop >= $endDate))",
+        ], [
+            (int) $product->id,
+        ]);
     }
 
     /**

@@ -1,0 +1,3 @@
+huh_isotopebundle:
+  resource: "@HeimrichHannotContaoIsotopeBundle/Controller/BackendController.php"
+  type: annotation

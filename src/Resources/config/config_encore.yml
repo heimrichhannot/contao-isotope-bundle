@@ -2,3 +2,6 @@ huh:
     encore:
         entries:
             - { name: contao-isotope-bundle, file: "vendor/heimrichhannot/contao-isotope-bundle/src/Resources/public/js/contao-isotope-bundle.es6.js" }
+        legacy:
+          js:
+            - huh_contao-isotope-bundle

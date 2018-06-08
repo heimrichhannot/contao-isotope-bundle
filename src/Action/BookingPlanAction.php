@@ -19,6 +19,13 @@ use Isotope\Message;
 
 class BookingPlanAction extends CartAction
 {
+    protected $actionManager;
+
+    public function __construct()
+    {
+        $this->actionManager = System::getContainer()->get('huh.ajax.action');
+    }
+
     public function getName()
     {
         return 'edit_booking_plan';
@@ -36,12 +43,15 @@ class BookingPlanAction extends CartAction
 
     public function generate(IsotopeProduct $product, array $config = [])
     {
+        $url = $this->actionManager->generateUrl(AjaxManager::ISOTOPE_AJAX_GROUP, AjaxManager::ISOTOPE_AJAX_BOOKING_PLAN_UPDATE);
+
         return sprintf(
                     '<div class="bookingPlan_container" data-update="%s" data-product-id="%s">
-                    <label for="bookingPlan">%s</label>
-            <input type="text" name="%s" id="bookingPlan" class="submit %s %s"  data-blocked="%s" required></div>',
-            System::getContainer()->get('huh.ajax.action')->generateUrl(AjaxManager::ISOTOPE_AJAX_GROUP, AjaxManager::ISOTOPE_AJAX_BOOKING_PLAN_UPDATE),
+                        <label for="%s">%s</label>
+                    <input type="text" name="%s" id="bookingPlan" class="submit %s %s"  data-blocked="%s" required></div>',
+            $url,
             $product->id,
+            $this->getName(),
             $this->getLabel(),
             $this->getName(),
             $this->getName(),
