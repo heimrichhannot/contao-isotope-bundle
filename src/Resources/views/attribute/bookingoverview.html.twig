@@ -38,13 +38,17 @@
                 {% if loop.first and startDow != 0 %}
                     <td colspan="{{ startDow }}" class="tl_file_list"></td>
                 {% endif %}
+                {% set tstamp = day ~ "." ~ time|date('n') ~ "." ~ time|date('Y') %}
                 <td class="day tl_file_list">
                     <a href="{{ path('huh.isotope.backend.bookinglist', {
-                        'id': product,
+                        'id': product.id,
                         'day': day,
                         'month': time|date('n'),
                         'year': time|date('Y')
-                    }) }}" class="huh_isotope_backend_openBookingList">
+                    }) }}"
+                       onclick="Backend.openModalIframe({'title': this.dataset.title, 'url': this.href + '&popup=1'}); return false;"
+                       class="huh_isotope_backend_openBookingList"
+                        data-title="{% trans with {'%product%': product.name, '%date%': tstamp|date("d.m.Y")} %}Booking list for <i>%product%</i> on %date%{% endtrans %}">
 
                         <div class="date">{{ day }}</div>
                         <div class="data">

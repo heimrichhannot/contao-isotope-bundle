@@ -111,7 +111,7 @@ class ProductCallbackListener
         return $this->twig->render('@HeimrichHannotContaoIsotope/attribute/bookingoverview.html.twig', [
             'time' => time(),
             'bookings' => $bookings,
-            'product' => $product->id,
+            'product' => $product,
         ]);
     }
 }
