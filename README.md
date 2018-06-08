@@ -31,6 +31,25 @@ We recommend use [Contao Encore](https://github.com/heimrichhannot/contao-encore
 
 ## Usage
 
+#### Booking
+
+![](docs/img/booking_frontend.png)
+
+To add booking functionality to a product, you need to active the booking action in the frontend module for bookable products. 
+
+In the backend, you can add the fields bookingOverview, bookingReservedDates and bookingOverview.
+
+Field | Description
+------|-----------
+bookingOverview | Days to block around booking date (for shipping, printing, ...)
+bookingReservedDates | Reserve date to block booking
+bookingOverview | Displays a calendar containing infomations about booked items.
+
+
+
+
+## Developers
+
 ### Upgrade from older version or module
 
 If you upgrade from [Isotope_Plus](https://github.com/heimrichhannot/contao-isotope_plus) or the bundle prior to version 0.7, you should use the upgrade command to setup the product data table.
@@ -41,8 +60,6 @@ php vendor/bin/contao-console huh:isotope:upgrade
 ```
 
 This command fills the product data table based on the data stored in product table.
-
-## Developers
 
 ### Commands
 

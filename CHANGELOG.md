@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.10.0-DEV] - 2018-06-08
+## [0.10.0] - 2018-06-08
 
 #### Added
 * Backend Booking information for product
