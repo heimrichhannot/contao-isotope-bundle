@@ -98,6 +98,10 @@ if (System::getContainer()->get('huh.utils.container')->isFrontend()) {
     $GLOBALS['TL_JAVASCRIPT']['tablesorter'] = 'assets/components/tablesorter/js/tablesorter.min.js|static';
     $GLOBALS['TL_JAVASCRIPT']['huh_contao-isotope-bundle'] = 'bundles/heimrichhannotcontaoisotope/js/contao.isotope-bundle.min.js|static';
 }
+if (\Contao\System::getContainer()->get('huh.utils.container')->isBackend())
+{
+    $GLOBALS['TL_JAVASCRIPT']['huh_isotope_backend'] = 'bundles/heimrichhannotcontaoisotope/js/huh.isotope.backend.js|static';
+}
 
 /**
  * ajax actions

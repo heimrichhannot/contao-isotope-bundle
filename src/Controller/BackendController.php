@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * @Route("/contao", defaults={
+ * @Route("/contao/isotope_bundle", defaults={
  *     "_scope" = "backend",
  *     "_token_check" = true
  * })
@@ -28,7 +28,7 @@ class BackendController extends AbstractController
     const ROUTE = '/contao/isotope_bundle';
 
     /**
-     * @Route("/isotope_bundle/bookinglist", name="huh.isotope.backend.bookinglist")
+     * @Route("/bookinglist", name="huh.isotope.backend.bookinglist")
      * @Template("@HeimrichHannotContaoIsotope/backend/bookinglist.html.twig")
      *
      * @param Request                  $request
@@ -57,6 +57,35 @@ class BackendController extends AbstractController
             'product' => $product,
             'orders' => $orders,
             'tstamp' => $date,
+        ];
+    }
+
+    /**
+     * @Route("/bookingoverview", name="huh.isotope.backend.bookingoverview")
+     * @Template("@HeimrichHannotContaoIsotope/attribute/bookingoverview.html.twig")
+     *
+     * @param Request                  $request
+     * @param ContaoFrameworkInterface $contaoFramework
+     * @param BookingAttributes        $bookingAttributes
+     * @param TranslatorInterface      $translator
+     *
+     * @return array
+     */
+    public function bookingOverviewAction(Request $request, ContaoFrameworkInterface $contaoFramework, BookingAttributes $bookingAttributes, TranslatorInterface $translator)
+    {
+        $id = $request->get('id');
+        if (!is_numeric($id) | !$product = ProductModel::findById($id)) {
+            return ['error' => $translator->trans('Invalid id')];
+        }
+        $bookings = $bookingAttributes->getBookingCountsByMonth($product, date('n'), date('Y'));
+        $year = is_numeric($request->get('year')) ? (int) $request->get('year') : date('Y');
+        $month = is_numeric($request->get('month')) ? (int) $request->get('month') : date('n');
+        $date = mktime(0, 0, 0, $month, 1, $year);
+
+        return [
+            'bookings' => $bookings,
+            'product' => $product,
+            'time' => $date,
         ];
     }
 }
