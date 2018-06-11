@@ -25,7 +25,7 @@ composer require heimrichhannot/contao-isotope-bundle
 
 You need to call the database update tool after install.
 
-If you update from an older version as 0.8 or from isotope_plus module, you need to call the upgrade command (see usage).
+If you update from an older version as 0.8 or from isotope_plus module, you need to call the upgrade command (see [Developers](#developers)).
 
 We recommend use [Contao Encore](https://github.com/heimrichhannot/contao-encore-bundle) for assets managment.
 
@@ -33,7 +33,7 @@ We recommend use [Contao Encore](https://github.com/heimrichhannot/contao-encore
 
 #### Booking
 
-![](docs/img/booking_frontend.png)
+<img src="docs/img/booking_frontend.png" width="250">
 
 To add booking functionality to a product, you need to active the booking action in the frontend module for bookable products. 
 
@@ -43,7 +43,7 @@ Field | Description
 ------|-----------
 bookingOverview | Days to block around booking date (for shipping, printing, ...)
 bookingReservedDates | Reserve date to block booking
-bookingOverview | Displays a calendar containing infomations about booked items.
+bookingOverview | Displays a calendar containing informations about booked items.
 
 
 
@@ -52,7 +52,7 @@ bookingOverview | Displays a calendar containing infomations about booked items.
 
 ### Upgrade from older version or module
 
-If you upgrade from [Isotope_Plus](https://github.com/heimrichhannot/contao-isotope_plus) or the bundle prior to version 0.7, you should use the upgrade command to setup the product data table.
+If you upgrade from [Isotope_Plus](https://github.com/heimrichhannot/contao-isotope_plus) or the bundle prior to version 0.8, you should use the upgrade command to setup the product data table.
 
 ```php
 # From project folder:
