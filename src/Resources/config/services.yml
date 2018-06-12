@@ -39,7 +39,7 @@ services:
     arguments: ['@huh.isotope.manager.productdata']
   huh.isotope.listener.callback.product:
     class: HeimrichHannot\IsotopeBundle\EventListener\ProductCallbackListener
-    arguments: ['@contao.framework', '@huh.request', '@huh.utils.container', '@huh.isotope.manager.productdata']
+    arguments: ['@contao.framework', '@huh.request', '@huh.utils.container', '@huh.isotope.manager.productdata', '@huh.isotope.attribute.booking', '@twig']
   huh.isotope.listener.callback.productcollection:
     class: HeimrichHannot\IsotopeBundle\EventListener\ProductCollectionCallbackListener
     arguments: ['@contao.framework', '@huh.isotope.manager', '@huh.isotope.manager.productdata']
@@ -59,3 +59,7 @@ services:
   huh.isotope.command.upgrade:
     class: HeimrichHannot\IsotopeBundle\Command\UpgradeCommand
     arguments: ['@contao.framework', '@huh.isotope.manager.productdata']
+
+# Controller
+  HeimrichHannot\IsotopeBundle\Controller\BackendController:
+    arguments: ['@contao.framework', '@huh.isotope.attribute.booking']

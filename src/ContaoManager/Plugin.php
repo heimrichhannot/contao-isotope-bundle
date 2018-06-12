@@ -14,12 +14,16 @@ use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ContainerBuilder;
 use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
+use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use HeimrichHannot\EncoreBundle\HeimrichHannotContaoEncoreBundle;
 use HeimrichHannot\IsotopeBundle\HeimrichHannotContaoIsotopeBundle;
 use HeimrichHannot\SlickBundle\HeimrichHannotContaoSlickBundle;
 use HeimrichHannot\UtilsBundle\Container\ContainerUtil;
+use Symfony\Component\Config\Loader\LoaderResolverInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Routing\RouteCollection;
 
-class Plugin implements BundlePluginInterface, ExtensionPluginInterface
+class Plugin implements BundlePluginInterface, ExtensionPluginInterface, RoutingPluginInterface
 {
     /**
      * {@inheritdoc}
@@ -53,5 +57,21 @@ class Plugin implements BundlePluginInterface, ExtensionPluginInterface
 
         return ContainerUtil::mergeConfigFile('huh_encore', $extensionName, $extensionConfigs,
             $container->getParameter('kernel.project_dir').'/vendor/heimrichhannot/contao-isotope-bundle/src/Resources/config/config_encore.yml');
+    }
+
+    /**
+     * Returns a collection of routes for this bundle.
+     *
+     * @param LoaderResolverInterface $resolver
+     * @param KernelInterface         $kernel
+     *
+     * @return RouteCollection|null
+     */
+    public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel)
+    {
+        return $resolver
+            ->resolve(__DIR__.'/../Resources/config/routing.yml')
+            ->load(__DIR__.'/../Resources/config/routing.yml')
+            ;
     }
 }

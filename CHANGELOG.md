@@ -1,7 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.9.3] -2018-06-05
+## [0.10.0] - 2018-06-08
+
+#### Added
+* Backend Booking information for product
+
+#### Changed 
+* better usage of encore bundle for frontend
+
+## [0.9.3] - 2018-06-05
 
 #### Fixed
 * error added items with no booking information to cart
@@ -12,13 +20,13 @@ All notable changes to this project will be documented in this file.
 * empty pids for booking items
 * booking selection not mandatory
 
-## [0.9.1] -2018-06-04
+## [0.9.1] - 2018-06-04
 
 #### Fixed
 * error on save (removed sync on Model save)
 * return wrong product model type from model methods (added ProductModel as "standard" product isotope type)
 
-## [0.9.0] -2018-06-04
+## [0.9.0] - 2018-06-04
 
 #### Added
 * sync method for ProductModel and ProductDataModel
@@ -33,12 +41,12 @@ All notable changes to this project will be documented in this file.
 You need to call the database updater!
 You should call the upgrade command!
 
-## [0.8.1] -2018-06-01
+## [0.8.1] - 2018-06-01
 
 #### Fixed
 * error adding a item with no booking functionality to cart
 
-## [0.8.0] -2018-06-01
+## [0.8.0] - 2018-06-01
 
 #### Added
 * validation for product booking an add to cart and checkout

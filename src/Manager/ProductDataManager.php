@@ -53,9 +53,9 @@ class ProductDataManager
             $metaFields = [];
             foreach ($fields as $key => $field) {
                 if (true !== $field['eval']['skipProductPalette']) {
-//                    unset($field['sql']);
-                    $field['save_callback'][] = ['huh.isotope.listener.callback.product', 'saveMetaFields'];
-                    $field['load_callback'][] = ['huh.isotope.listener.callback.product', 'getMetaFieldValue'];
+                    if (isset($field['sql']) && !empty($field['sql'])) {
+                        $field['save_callback'][] = ['huh.isotope.listener.callback.product', 'saveMetaFields'];
+                    }
                     $metaFields[$key] = $field;
                 }
             }

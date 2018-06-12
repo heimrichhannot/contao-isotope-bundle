@@ -1,0 +1,45 @@
+{% extends "@ContaoCore/Backend/be_page.html.twig" %}
+
+{% block headline %}
+    {% trans with {'%product%': product.name, '%date%': tstamp|date("d.m.Y")} %}huh.isotope.product.booking.list{% endtrans %}
+{% endblock %}
+
+{% block error %}{% if error|default %}{{ error }}{% endif %}{% endblock %}
+
+{% block main %}
+    <div class="tl_listing_container">
+        <table class="tl_iso_product_booking_order_list tl_listing">
+            <thead>
+                <th class="tl_header">{% trans %}ID{% endtrans %}</th>
+                <th class="tl_header">{% trans %}huh.isotope.collection.table.label.orderNumber{% endtrans %}</th>
+                <th class="tl_header">{% trans %}huh.isotope.collection.table.label.orderDate{% endtrans %}</th>
+                <th class="tl_header">{% trans %}huh.isotope.order.billingaddress{% endtrans %}</th>
+                <th class="tl_header">{% trans %}huh.isotope.order.bookingdate{% endtrans %}</th>
+            </thead>
+            <tbody>
+            {% if orders|default %}
+                {% for current in orders %}
+                    {% set order = current.order %}
+                    <tr>
+                        <td class="tl_file_list">{{ order.id }}</td>
+                        <td class="tl_file_list">{{ order.documentNumber }}</td>
+                        <td class="tl_file_list">{{ order.locked|date("d.m.Y") }}</td>
+                        <td class="tl_file_list">{{ order.getbillingaddress.company }}</td>
+                        <td class="tl_file_list">
+                            {% for item in current.items %}
+                                {{ item.bookingStart|date("d.m.Y") }} - {{ item.bookingStop|date("d.m.Y") }}
+                                {% if loop.last == false %}
+                                    <br>
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <td colspan="5" class="tl_file_list">{% trans %}No orders for this day {% endtrans %}</td>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

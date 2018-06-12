@@ -1,0 +1,95 @@
+
+
+
+{#
+     time can be any string acceptable by http://www.php.net/strtotime, the
+     template will output that time's month.
+     If you don't want to pass in a date you can set time like this:
+     {% set time = "now"|date("U") %}
+     {% set time = "December 2012"|date("U") %}
+     How ever you want to output items onto the calendar is a different issue,
+     but I'd assume pushing everything into an array numerically indexed by that day:
+     $days = array(1=>array('Something on the first'),31=>array('Halloween'));
+#}
+<h3>{% trans %}huh.isotope.product.booking.plan{% endtrans %}</h3>
+<div id="huh_isotope_backend_product_booking_overview">
+    <table class="tl_iso_product_bookingoverview tl_listing" id="tl_iso_product_bookingoverview">
+        <thead>
+            <tr>
+                <th colspan="7" class="tl_header">
+                    {{ time|date('F')|trans }}
+                    <a href="{{ path('huh.isotope.backend.bookingoverview', {
+                        'id': product.id,
+                        'month': time|date_modify("-1 month")|date('n'),
+                        'year': time|date_modify("- 1 month")|date('Y')
+                    }) }}" id="huh_isotope_bookingoverview_prev"><img src="system/themes/flexible/icons/movel.svg"></a>
+                    <a href="{{ path('huh.isotope.backend.bookingoverview', {
+                        'id': product.id,
+                        'month': time|date_modify("+1 month")|date('n'),
+                        'year': time|date_modify("+ 1 month")|date('Y')
+                    }) }}" id="huh_isotope_bookingoverview_next"><img src="system/themes/flexible/icons/mover.svg"></a>
+                </th>
+            </tr>
+            <tr>
+                <td class="calendar-day-head tl_folder_tlist">{% trans %}Sunday{% endtrans %}</td>
+                <td class="calendar-day-head tl_folder_tlist">{% trans %}Monday{% endtrans %}</td>
+                <td class="calendar-day-head tl_folder_tlist">{% trans %}Tuesday{% endtrans %}</td>
+                <td class="calendar-day-head tl_folder_tlist">{% trans %}Wednesday{% endtrans %}</td>
+                <td class="calendar-day-head tl_folder_tlist">{% trans %}Thursday{% endtrans %}</td>
+                <td class="calendar-day-head tl_folder_tlist">{% trans %}Friday{% endtrans %}</td>
+                <td class="calendar-day-head tl_folder_tlist">{% trans %}Saturday{% endtrans %}</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                {% set daysInMonth = time|date('t') %}
+                {% set startDow = time|date('F 1\\s\\t Y')|date('w') %}
+                {% set dow = startDow %}
+                {% for day in range(1,daysInMonth) %}
+                    {% if loop.first and startDow != 0 %}
+                        <td colspan="{{ startDow }}" class="tl_file_list"></td>
+                    {% endif %}
+                    {% set tstamp = day ~ "." ~ time|date('n') ~ "." ~ time|date('Y') %}
+                    <td class="day tl_file_list">
+                        <a href="{{ path('huh.isotope.backend.bookinglist', {
+                            'id': product.id,
+                            'day': day,
+                            'month': time|date('n'),
+                            'year': time|date('Y')
+                        }) }}"
+                           onclick="Backend.openModalIframe({'title': this.dataset.title, 'url': this.href + '&popup=1'}); return false;"
+                           class="huh_isotope_backend_openBookingList"
+                            data-title="{% trans with {'%product%': product.name, '%date%': tstamp|date("d.m.Y")} %}huh.isotope.product.booking.list{% endtrans %}">
+
+                            <div class="date">{{ day }}</div>
+                            <div class="data">
+                                <img src="system/themes/flexible/icons/member.svg" alt="{% trans %}huh.isotope.product.booking.booked{% endtrans %}">
+                                {{ attribute(bookings.booked, day)|default(0) }}
+                                <img src="system/themes/flexible/icons/member_.svg" alt="{% trans %}huh.isotope.product.booking.reserved{% endtrans %}">
+                                {{ attribute(bookings.reserved, day)|default(0) }}
+                                <img src="system/themes/flexible/icons/admin_.svg" alt="{% trans %}huh.isotope.product.booking.blocked{% endtrans %}">
+                                {{ attribute(bookings.blocked, day)|default(0) }}
+                            </div>
+                        </a>
+                    </td>
+                    {% if loop.last and dow != 6 %}
+                        <td colspan="{{ 6 - dow }} " class="tl_file_list">&nbsp;</td>
+                    {% endif %}
+                    {% if dow == 6 %}
+                    {% set dow = 0 %}
+                </tr>
+                <tr>
+                    {% else %}
+                        {% set dow = dow + 1 %}
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+    <p class="tl_empty">
+        <img src="system/themes/flexible/icons/member.svg" alt="{% trans %}huh.isotope.product.booking.booked{% endtrans %}"> {% trans %}huh.isotope.product.booking.booked{% endtrans %}
+        <img src="system/themes/flexible/icons/member_.svg" alt="{% trans %}huh.isotope.product.booking.reserved{% endtrans %}"> {% trans %}huh.isotope.product.booking.reserved{% endtrans %}
+        <img src="system/themes/flexible/icons/admin_.svg" alt="{% trans %}huh.isotope.product.booking.blocked{% endtrans %}"> {% trans %}huh.isotope.product.booking.blocked{% endtrans %}
+    </p>
+
+</div>
