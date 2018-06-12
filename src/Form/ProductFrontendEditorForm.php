@@ -11,23 +11,28 @@ namespace HeimrichHannot\IsotopeBundle\Form;
 use Contao\System;
 use HeimrichHannot\FormHybrid\Form;
 use HeimrichHannot\IsotopeBundle\Model\ProductModel;
-use HeimrichHannot\Request\Request;
+use HeimrichHannot\RequestBundle\Component\HttpFoundation\Request;
 
 class ProductFrontendEditorForm extends Form
 {
     protected $strMethod = FORMHYBRID_METHOD_POST;
     protected $strTable = 'tl_iso_product';
     protected $strTemplate = 'iso_product_creator';
+    /**
+     * @var Request|object
+     */
+    protected $request;
 
     public function __construct($objModule = null, $instanceId = 0)
     {
         parent::__construct($objModule, $instanceId);
+        $this->request = System::getContainer()->get('huh.request');
     }
 
     public function modifyDC(&$arrDca = null)
     {
         // limit upload to one image for editing existing product
-        if (null !== ($product = System::getContainer()->get('contao.framework')->getAdapter(ProductModel::class)->findByPk(Request::getGet('id'))) && 0 != $product->tstamp && !$product->createMultiImageProduct) {
+        if (null !== ($product = System::getContainer()->get('contao.framework')->getAdapter(ProductModel::class)->findByPk($this->request->getGet('id'))) && 0 != $product->tstamp && !$product->createMultiImageProduct) {
             $arrDca['fields']['uploadedFiles']['eval']['maxFiles'] = 1;
         }
 

@@ -40,3 +40,17 @@ $GLOBALS['TL_LANG']['tl_iso_product']['uploadedDownloadFiles'] = [
     'Fügen Sie hier Dateien hinzu, die als Downloadelemente für den Artikel genutzt werden sollen.',
     'Datei(en) auswählen',
 ];
+
+
+$lang['bookingStart']         = ['Buchungszeitraum-Start', 'Wählen Sie hier den Beginn der Buchung aus.'];
+$lang['bookingStop']          = ['Buchungszeitraum-Ende', 'Wählen Sie hier das Ende der Buchung aus.'];
+$lang['bookingBlock']         = [
+	'Artikel vor/nach Bestellung blockieren',
+	'Tragen Sie hier die Anzahl der Tage ein die ein Artikel nach seiner Buchung gesperrt sein soll. Dies kann bspw. benötigt werden wenn ein Artikel für einen Buchungszeitraum gebucht wird und nach dem Buchungszeitraum aus logistischn Gründen für eine Zeit gesperrt ist.'
+];
+$lang['bookingReservedDates'] = [
+	'Produkt-Reservierungen',
+	'Sie können hier Zeiträume hinterlegen, für die das Produkt reserviert sein soll. Die angegebenen Daten werden in die Berechnung der gesperrten Tage des Produktes aufgenommen.'
+];
+
+$lang['count'] = ['Anzahl', 'Wählen Sie hier die Anzahl der zu reservierenden Produkte aus.'];

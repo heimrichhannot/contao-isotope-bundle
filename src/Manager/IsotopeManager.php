@@ -8,88 +8,95 @@
 
 namespace HeimrichHannot\IsotopeBundle\Manager;
 
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\FilesModel;
+use Contao\Message;
+use Contao\StringUtil;
 use Contao\System;
+use HeimrichHannot\IsotopeBundle\Attribute\MaxOrderSizeAttribute;
+use HeimrichHannot\IsotopeBundle\Attribute\StockAttribute;
+use HeimrichHannot\IsotopeBundle\Model\ProductDataModel;
+use HeimrichHannot\UtilsBundle\Container\ContainerUtil;
 use Isotope\Interfaces\IsotopeProduct;
 use Isotope\Isotope;
+use Isotope\Model\Config;
 use Isotope\Model\Product;
+use Isotope\Model\ProductCollectionItem;
 use Isotope\Model\ProductType;
 
 class IsotopeManager
 {
     /**
-     * @param            $product
-     * @param            $quantity
-     * @param null       $objCartItem
-     * @param bool|false $includeError
-     * @param bool|false $skipSets     override the normal handling of this property -> used for backend handling since this
-     *                                 uses the order item's setQuantity property
+     * @var ProductDataManager
+     */
+    private $productDataManager;
+    /**
+     * @var StockAttribute
+     */
+    private $stockAttribute;
+    /**
+     * @var MaxOrderSizeAttribute
+     */
+    private $maxOrderSizeAttribute;
+    /**
+     * @var ContainerUtil
+     */
+    private $containerUtil;
+    /**
+     * @var ContaoFrameworkInterface
+     */
+    private $framework;
+
+    /**
+     * IsotopeManager constructor.
+     *
+     * @param ProductDataManager       $productDataManager
+     * @param StockAttribute           $stockAttribute
+     * @param MaxOrderSizeAttribute    $maxOrderSizeAttribute
+     * @param ContainerUtil            $containerUtil
+     * @param ContaoFrameworkInterface $framework
+     */
+    public function __construct(ProductDataManager $productDataManager, StockAttribute $stockAttribute, MaxOrderSizeAttribute $maxOrderSizeAttribute, ContainerUtil $containerUtil, ContaoFrameworkInterface $framework)
+    {
+        $this->productDataManager = $productDataManager;
+        $this->stockAttribute = $stockAttribute;
+        $this->maxOrderSizeAttribute = $maxOrderSizeAttribute;
+        $this->containerUtil = $containerUtil;
+        $this->framework = $framework;
+    }
+
+    /**
+     * @param Product               $product
+     * @param int                   $quantity
+     * @param ProductCollectionItem $cartItem
+     * @param bool                  $includeError
+     * @param int                   $setQuantity
      *
      * @return array|bool
      */
-    public function validateQuantity(Product $product, int $quantity, $objCartItem = null, $includeError = false, $intSetQuantity = null)
+    public function validateQuantity(Product $product, int $quantity, ProductCollectionItem $cartItem = null, bool $includeError = false, int $setQuantity = null)
     {
-        $blnSkipStockValidation = $this->getOverridableStockProperty('skipStockValidation', $product);
-
         // no quantity at all
         if (null === $quantity) {
             return true;
-        } elseif ('' == $quantity) {
+        } elseif (empty($quantity)) {
             $quantity = 1;
         }
+        $productData = $this->productDataManager->getProductData($product->id);
+        $quantityTotal = $this->getTotalCartQuantity($quantity, $productData, $cartItem, $setQuantity);
 
-        $intQuantityTotal = $this->getTotalStockQuantity($quantity, $product, $objCartItem, $intSetQuantity);
-
-        $utilsContainer = System::getContainer()->get('huh.utils.container');
-        // stock
-        if (!$blnSkipStockValidation && '' != $product->stock && null !== $product->stock) {
-            if ($product->stock <= 0) {
-                $strErrorMessage = sprintf($GLOBALS['TL_LANG']['MSC']['stockEmpty'], $product->name);
-
-                if ($utilsContainer->isFrontend()) {
-                    $_SESSION['ISO_ERROR'][] = $strErrorMessage;
-                } else {
-                    \Message::addError($strErrorMessage);
-                }
-
-                if ($includeError) {
-                    return [false, $strErrorMessage];
-                }
-
-                return false;
-            } elseif ($intQuantityTotal > $product->stock) {
-                $strErrorMessage = sprintf($GLOBALS['TL_LANG']['MSC']['stockExceeded'], $product->name, $product->stock);
-
-                if ($utilsContainer->isFrontend()) {
-                    $_SESSION['ISO_ERROR'][] = $strErrorMessage;
-                } else {
-                    \Message::addError($strErrorMessage);
-                }
-
-                if ($includeError) {
-                    return [false, $strErrorMessage];
-                }
-
-                return false;
+        // Stock
+        if (!$this->getOverridableStockProperty('skipStockValidation', $product)) {
+            $validateStock = $this->stockAttribute->validate($productData, $quantityTotal, $includeError);
+            if (true !== $validateStock) {
+                return $this->validateQuantityErrorResult($validateStock[1], $includeError);
             }
         }
 
         // maxOrderSize
-        if ('' != $product->maxOrderSize && null !== $product->maxOrderSize) {
-            if ($intQuantityTotal > $product->maxOrderSize) {
-                $strErrorMessage = sprintf($GLOBALS['TL_LANG']['MSC']['maxOrderSizeExceeded'], $product->name, $product->maxOrderSize);
-
-                if ($utilsContainer->isFrontend()) {
-                    $_SESSION['ISO_ERROR'][] = $strErrorMessage;
-                } else {
-                    \Message::addError($strErrorMessage);
-                }
-
-                if ($includeError) {
-                    return [false, $strErrorMessage];
-                }
-
-                return false;
-            }
+        $validateMaxOrderSize = $this->maxOrderSizeAttribute->validate($productData, $quantityTotal);
+        if (true !== $validateMaxOrderSize) {
+            return $this->validateQuantityErrorResult($validateMaxOrderSize[1], $includeError);
         }
 
         if ($includeError) {
@@ -100,6 +107,10 @@ class IsotopeManager
     }
 
     /**
+     * Returns the config value.
+     *
+     * Checks if global value is overwritten by product or product type
+     *
      * priorities (first is the most important):
      * product, product type, global shop config.
      *
@@ -115,7 +126,9 @@ class IsotopeManager
         if ($product->overrideStockShopConfig) {
             return $product->{$property};
         }
-        if (null !== ($objProductType = System::getContainer()->get('contao.framework')->getAdapter(ProductType::class)->findByPk($product->type)) && $objProductType->overrideStockShopConfig) {
+        /** @var ProductType|null $objProductType */
+        if (null !== ($objProductType = $this->framework->getAdapter(ProductType::class)->findByPk($product->type))
+            && $objProductType->overrideStockShopConfig) {
             return $objProductType->{$property};
         }
 
@@ -172,62 +185,125 @@ class IsotopeManager
     }
 
     /**
-     * @param int $quantity
+     * Returns the total quanitity of the product type added to cart and already in cart, taking set size into account.
      *
-     * @return array|string
+     * watch out: also in backend the current set quantity is used.
+     *
+     * @param int              $quantity
+     * @param ProductDataModel $product
+     * @param null             $cartItem
+     * @param null             $setQuantity
+     * @param Config           $config
+     *
+     * @return int|null
      */
-    public function getBlockedDates(int $productId, int $quantity = 1)
+    public function getTotalCartQuantity(int $quantity, ProductDataModel $product, $cartItem = null, $setQuantity = null, Config $config = null)
     {
-        $blocked = [];
-        if (null === ($collectionItems = System::getContainer()->get('huh.isotope.model.product_collection_item')->findByItem($productId))) {
-            return $blocked;
+        $intFinalSetQuantity = 1;
+
+        if ($setQuantity) {
+            $intFinalSetQuantity = $setQuantity;
+        } elseif (!$this->getOverridableShopConfigProperty('skipSets', $config) && $product->setQuantity) {
+            $intFinalSetQuantity = $product->setQuantity;
         }
 
-        $stock = System::getContainer()->get('huh.isotope.model.product')->getStock($productId) - $quantity;
+        $quantity *= $intFinalSetQuantity;
 
-        if (0 > $stock) {
-            return [];
+        // Add to already existing quantity (if product is already in cart)
+        if ($cartItem) {
+            $quantity += $cartItem->quantity * $intFinalSetQuantity;
         }
 
-        $bookings = [];
-        $bookingsFlat = [];
+        return $quantity;
+    }
 
-        foreach ($collectionItems as $booking) {
-            $bookings[$booking->id] = range($booking->bookingStart, $booking->bookingStop, 86400);
+    /**
+     * adds the image to the template data.
+     *
+     * @param array  $itemData
+     * @param string $imgSize
+     * @param array  $templateData
+     * @param string $imageKey
+     */
+    public function addImageToTemplateData(array $itemData, string $imgSize, array &$templateData, string $imageKey = 'image')
+    {
+        $image = null;
+        $imageFile = null;
+        $itemData['imageTitle'] = $itemData['name'];
 
-            $bookingsFlat = array_merge($bookingsFlat, range($booking->bookingStart, $booking->bookingStop, 86400));
-        }
+        if (null !== $itemData['images']) {
+            $imageField = 'images';
+            $arrImages = StringUtil::deserialize($itemData['images']);
 
-        $counts = [];
+            if (!is_array($arrImages) || empty($arrImages)) {
+                return;
+            }
 
-        foreach ($bookings as $dates) {
-            foreach ($dates as $date) {
-                $count = 0;
+            foreach ($arrImages as $image) {
+                $strImage = 'isotope/'.strtolower(substr($image['src'], 0, 1)).'/'.$image['src'];
 
-                foreach ($bookings as $compareDates) {
-                    foreach ($compareDates as $compareDate) {
-                        if ($compareDate != $date) {
-                            continue;
-                        }
-
-                        ++$count;
-
-                        $counts[$date] = $count;
-                    }
+                if (!is_file(TL_ROOT.'/'.$strImage)) {
+                    continue;
                 }
+                $image = System::getContainer()->get('contao.image.image_factory')->create($strImage);
+                if (null === $image
+                    || !file_exists(System::getContainer()->get('huh.utils.container')->getProjectDir().'/'.$image->getPath())) {
+                    return;
+                }
+                $itemData[$imageField] = $image->getPath();
+            }
+        } elseif (null !== $itemData['uploadedFiles']) {
+            $imageField = 'uploadedFiles';
+            $uploadedFiles = $itemData['uploadedFiles'];
+            if (is_array($upload = unserialize($uploadedFiles))) {
+                $uploadedFiles = $upload[0];
+            }
+            if (\Validator::isUuid($uploadedFiles)) {
+                $imageFile = System::getContainer()->get('contao.framework')->getAdapter(FilesModel::class)->findByUuid($uploadedFiles);
+                if (null === $imageFile
+                    || !file_exists(System::getContainer()->get('huh.utils.container')->getProjectDir().'/'.$imageFile->path)) {
+                    return;
+                }
+                $itemData[$imageField] = $imageFile->path;
+            }
+        } else {
+            return;
+        }
+
+        // Override the default image size
+        if ('' !== $imgSize) {
+            $size = StringUtil::deserialize($imgSize, true);
+
+            if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2])) {
+                $itemData['size'] = $imgSize;
             }
         }
 
-        $locked = [];
+        $templateData[$imageKey] = [];
 
-        foreach ($counts as $date => $bookingCount) {
-            if ($date < strtotime('today midnight') || ($stock + $quantity) - $bookingCount > $quantity) {
-                continue;
-            }
+        System::getContainer()->get('huh.utils.image')->addToTemplateData($imageField, 'published', $templateData[$imageKey], $itemData, null, null, null, $imageFile);
+    }
 
-            $locked[] = $date;
+    /**
+     * Formats the return message of validateQuantity if an error occurred.
+     *
+     * @param string $errorMessage
+     * @param bool   $includeError
+     *
+     * @return array|bool
+     */
+    protected function validateQuantityErrorResult(string $errorMessage, bool $includeError)
+    {
+        if ($this->containerUtil->isFrontend()) {
+            $_SESSION['ISO_ERROR'][] = $errorMessage;
+        } else {
+            Message::addError($errorMessage);
         }
 
-        return $locked;
+        if ($includeError) {
+            return [false, $errorMessage];
+        }
+
+        return false;
     }
 }

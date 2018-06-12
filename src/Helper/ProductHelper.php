@@ -8,9 +8,10 @@
 
 namespace HeimrichHannot\IsotopeBundle\Helper;
 
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\FilesModel;
 use Contao\StringUtil;
-use Contao\System;
+use HeimrichHannot\IsotopeBundle\Model\ProductDataModel;
 use HeimrichHannot\IsotopeBundle\Model\ProductModel;
 use Isotope\Model\ProductType;
 
@@ -20,6 +21,15 @@ class ProductHelper
     const ISO_LICENCE_FREE = 'free';
     const ISO_LICENCE_COPYRIGHT = 'copyright';
     const ISO_LICENCE_LOCKED = 'locked';
+    /**
+     * @var ContaoFrameworkInterface
+     */
+    protected $framework;
+
+    public function __construct(ContaoFrameworkInterface $framework)
+    {
+        $this->framework = $framework;
+    }
 
     public function prepareExifDataForSave($strExifTag, $arrExifData)
     {
@@ -79,7 +89,7 @@ class ProductHelper
         }
 
         foreach (StringUtil::deserialize($module->iso_editableCategories, true) as $cat) {
-            $categories[$cat] = System::getContainer()->get('contao.framework')->getAdapter(ProductType::class)->findByPk($cat)->name;
+            $categories[$cat] = $this->framework->getAdapter(ProductType::class)->findByPk($cat)->name;
         }
 
         asort($categories);
@@ -102,7 +112,11 @@ class ProductHelper
     public function getTags()
     {
         $options = [];
-        if (null === ($tags = System::getContainer()->get('contao.framework')->getAdapter(ProductModel::class)->findAll()->fetchEach('tag'))) {
+        if (null === ($tags = $this->framework->getAdapter(ProductDataModel::class)->findAll())) {
+            return $options;
+        }
+
+        if (null === ($tags = $tags->fetchEach('tag'))) {
             return $options;
         }
 
@@ -115,7 +129,7 @@ class ProductHelper
 
     public function getCopyrights()
     {
-        return System::getContainer()->get('contao.framework')->getAdapter(ProductModel::class)->getCopyrights();
+        return $this->framework->getAdapter(ProductModel::class)->getCopyrights();
     }
 
     /**

@@ -138,6 +138,7 @@ class IsotopePlus extends \Isotope\Isotope
         if (!System::getContainer()->get('huh.isotope.manager')->validateQuantity($objProduct, $intQuantity, $objProductCollection->getItemForProduct($objProduct))) {
             return 0;
         }
+
         unset($_SESSION['ISO_ERROR']);
 
         return $intQuantity;

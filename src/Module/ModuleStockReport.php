@@ -8,9 +8,11 @@
 
 namespace HeimrichHannot\IsotopeBundle\Module;
 
+use Contao\BackendTemplate;
 use Contao\Database;
 use Contao\Module;
 use Contao\System;
+use HeimrichHannot\IsotopeBundle\Model\ProductModel;
 use Patchwork\Utf8;
 
 class ModuleStockReport extends Module
@@ -20,12 +22,12 @@ class ModuleStockReport extends Module
     public function generate()
     {
         if (TL_MODE == 'BE') {
-            $objTemplate = new \BackendTemplate('be_wildcard');
+            $objTemplate = new BackendTemplate('be_wildcard');
             $objTemplate->wildcard = '### '.Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['iso_stockreport'][0]).' ###';
             $objTemplate->title = $this->headline;
             $objTemplate->id = $this->id;
             $objTemplate->link = $this->name;
-            $objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id='.$this->id;
+            $objTemplate->href = 'contao?do=themes&amp;table=tl_module&amp;act=edit&amp;id='.$this->id;
 
             return $objTemplate->parse();
         }
@@ -36,28 +38,29 @@ class ModuleStockReport extends Module
     protected function compile()
     {
         $arrProducts = [];
-        $objProducts = Database::getInstance()->prepare('SELECT p.*, t.name as type FROM tl_iso_product p INNER JOIN tl_iso_producttype t ON t.id = p.type WHERE p.published=1 AND p.shipping_exempt="" AND p.initialStock!="" AND stock IS NOT NULL ORDER BY iso_category ASC')->execute();
+        $result = Database::getInstance()->prepare('SELECT p.*, t.name as type FROM tl_iso_product p INNER JOIN tl_iso_producttype t ON t.id = p.type WHERE p.published=1 AND p.shipping_exempt="" AND p.initialStock!="" AND stock IS NOT NULL')->execute();
 
         System::loadLanguageFile('tl_reports');
 
-        if ($objProducts->numRows < 1) {
+        if ($result->numRows < 1) {
             return false;
         }
 
-        while ($objProducts->next()) {
-            $category = 'category_'.$objProducts->type;
+        while ($result->next()) {
+            $product = ProductModel::findByIdOrAlias($result->id);
+            $category = 'category_'.$product->type;
             if (!isset($arrProducts[$category])) {
                 $arrProducts[$category]['type'] = 'category';
-                $arrProducts[$category]['title'] = $objProducts->type;
+                $arrProducts[$category]['title'] = $result->type;
             }
 
-            $arrProducts[$objProducts->id] = $objProducts->row();
-            $arrProducts[$objProducts->id]['stockPercent'] = '-';
+            $arrProducts[$product->id] = $product->row();
+            $arrProducts[$product->id]['stockPercent'] = '-';
 
-            if ($objProducts->initialStock > 0 && '' !== $objProducts->initialStock) {
-                $percent = floor($objProducts->stock * 100 / $objProducts->initialStock);
+            if ($product->initialStock > 0 && '' !== $product->initialStock) {
+                $percent = floor($product->stock * 100 / $product->initialStock);
 
-                $arrProducts[$objProducts->id]['stockPercent'] = $percent;
+                $arrProducts[$product->id]['stockPercent'] = $percent;
 
                 switch ($percent) {
                     default:
@@ -73,7 +76,7 @@ class ModuleStockReport extends Module
                         $strClass = 'badge-info';
                         break;
                 }
-                $arrProducts[$objProducts->id]['stockClass'] = $strClass;
+                $arrProducts[$product->id]['stockClass'] = $strClass;
             }
         }
 
