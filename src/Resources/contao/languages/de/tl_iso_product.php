@@ -53,4 +53,5 @@ $lang['bookingReservedDates'] = [
 	'Sie können hier Zeiträume hinterlegen, für die das Produkt reserviert sein soll. Die angegebenen Daten werden in die Berechnung der gesperrten Tage des Produktes aufgenommen.'
 ];
 
+$lang['useCount'] = ['Anzahl festlegen', 'Wählen Sie diese Option, wenn Sie die Anzahl der reservierten Produkte angeben wollen. Wenn Sie diese Option nicht wählen, werden alle auf Lager befindlichen Produkte reserviert.'];
 $lang['count'] = ['Anzahl', 'Wählen Sie hier die Anzahl der zu reservierenden Produkte aus.'];

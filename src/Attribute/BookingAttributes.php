@@ -204,10 +204,6 @@ class BookingAttributes
     {
         $stock = $this->productDataManager->getProductData($product)->stock - $quantity;
 
-        if ($this->isotopeManager->getOverridableStockProperty('skipStockValidation', $product)) {
-            return [];
-        }
-
         $bookings = $this->getBookings($product, $collectionItems);
         $reservedDates = $this->getReservedDates($product);
 
@@ -329,7 +325,9 @@ class BookingAttributes
 
             $range = $this->getRange($blockedDates->start, $blockedDates->stop, $product->bookingBlock ? $product->bookingBlock : '');
 
-            for ($i = 0; $i < $blockedDates->count; ++$i) {
+            $count = $blockedDates->useCount ? $blockedDates->count : $product->stock;
+
+            for ($i = 0; $i < $count; ++$i) {
                 $reservedDates[] = $range;
             }
         }

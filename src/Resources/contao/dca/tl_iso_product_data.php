@@ -282,8 +282,12 @@ $GLOBALS['TL_DCA']['tl_iso_product_data'] = [
 
                     ],
                 ],
-                'palettes' => [
-                    'default' => '{block_legend},start,stop,count;',
+                'palettes'    => [
+                    '__selector__' => ['useCount'],
+                    'default'      => '{block_legend},start,stop,useCount;'
+                ],
+                'subpalettes' => [
+                    'useCount' => 'count'
                 ],
                 'fields'   => [
                     'start' => [
@@ -299,6 +303,13 @@ $GLOBALS['TL_DCA']['tl_iso_product_data'] = [
                         'inputType' => 'text',
                         'eval'      => ['rgxp' => 'date', 'datepicker' => true, 'tl_class' => 'w50 wizard', 'mandatory' => true],
                         'sql'       => "varchar(10) NOT NULL default ''",
+                    ],
+                    'useCount' => [
+                        'label'     => &$GLOBALS['TL_LANG']['tl_iso_product']['useCount'],
+                        'exclude'   => true,
+                        'inputType' => 'checkbox',
+                        'eval'      => ['tl_class' => 'clr w50', 'submitOnChange' => true],
+                        'sql'       => "char(1) NOT NULL default ''",
                     ],
                     'count' => [
                         'label'     => &$GLOBALS['TL_LANG']['tl_iso_product']['count'],

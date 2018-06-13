@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.10.2] - 2018-06-13
+
+#### Changed
+* changed count handling on bookingDates; if no count is given the whole stock is blocked
+
 ## [0.10.0] - 2018-06-08
 
 #### Added
