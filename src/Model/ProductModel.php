@@ -66,8 +66,17 @@ class ProductModel extends Standard
      */
     protected $productDataChanged = false;
 
-    public function __construct(Database\Result $objResult = null)
+    public function __construct(\Contao\Database\Result $objResult = null)
     {
+        // Register model type
+        if (!isset($this->arrData['type'])) {
+            $strType = array_search(get_called_class(), static::$arrModelTypes, true);
+
+            if ('' != $strType) {
+                $this->arrData['type'] = $strType;
+            }
+        }
+
         parent::__construct($objResult);
         $container = System::getContainer();
         $this->framework = $container->get('contao.framework');

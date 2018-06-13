@@ -7,36 +7,23 @@ define('ISO_PRODUCT_CREATOR_MULTI_IMAGE_PRODUCT', 'HeimrichHannot\IsotopeBundle\
  * Isotope Hooks
  */
 
-$GLOBALS['ISO_HOOKS']['generateProduct'][]                                    =
-    ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'generateProductHook'];
-$GLOBALS['ISO_HOOKS']['addProductToCollection']['validateStockCollectionAdd'] =
-    ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'validateStockCollectionAdd'];
+$GLOBALS['ISO_HOOKS']['generateProduct'][]                                    = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'generateProductHook'];
+$GLOBALS['ISO_HOOKS']['addProductToCollection']['validateStockCollectionAdd'] = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'validateStockCollectionAdd'];
 
-$GLOBALS['ISO_HOOKS']['postAddProductToCollection']['huh_isotope_bundle'] =
-    ['huh.isotope.listener.hooks.isotope', 'validateStockCollectionAdd'];
-$GLOBALS['ISO_HOOKS']['postAddProductToCollection']['huh_isotope_bundle'] =
-    ['huh.isotope.listener.hooks.isotope', 'addBookingInformationToItem'];
+$GLOBALS['ISO_HOOKS']['postAddProductToCollection']['huh_isotope_bundle'] = ['huh.isotope.listener.hooks.isotope', 'validateStockCollectionAdd'];
+$GLOBALS['ISO_HOOKS']['postAddProductToCollection']['huh_isotope_bundle'] = ['huh.isotope.listener.hooks.isotope', 'addBookingInformationToItem'];
 
-$GLOBALS['ISO_HOOKS']['preCheckout']['validateStockCheckout'] =
-    ['huh.isotope.listener.hooks.isotope', 'validateStockPreCheckout'];
+$GLOBALS['ISO_HOOKS']['preCheckout']['validateStockCheckout'] = ['huh.isotope.listener.hooks.isotope', 'validateStockPreCheckout'];
 
-$GLOBALS['ISO_HOOKS']['postCheckout']['validateStockCheckout'] =
-    ['huh.isotope.listener.hooks.isotope', 'validateStockPostCheckout'];
+$GLOBALS['ISO_HOOKS']['postCheckout']['validateStockCheckout'] = ['huh.isotope.listener.hooks.isotope', 'validateStockPostCheckout'];
 
-$GLOBALS['ISO_HOOKS']['postCheckout']['sendOrderNotification'] =
-    ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'sendOrderNotification'];
+$GLOBALS['ISO_HOOKS']['postCheckout']['sendOrderNotification'] = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'sendOrderNotification'];
 
-$GLOBALS['ISO_HOOKS']['postCheckout']['setSetQuantity']                          =
-    ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'setSetQuantity'];
-$GLOBALS['ISO_HOOKS']['updateItemInCollection']['validateStockCollectionUpdate'] =
-    ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'validateStockCollectionUpdate'];
-$GLOBALS['ISO_HOOKS']['buttons'][]                                               =
-    ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'addDownloadSingleProductButton'];
-$GLOBALS['ISO_HOOKS']['buttons'][]                                               =
-    ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'defaultButtons'];
-$GLOBALS['ISO_HOOKS']['preOrderStatusUpdate']['updateStock']                     =
-    ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'updateStock'];
-
+$GLOBALS['ISO_HOOKS']['postCheckout']['setSetQuantity']                          = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'setSetQuantity'];
+$GLOBALS['ISO_HOOKS']['updateItemInCollection']['validateStockCollectionUpdate'] = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'validateStockCollectionUpdate'];
+$GLOBALS['ISO_HOOKS']['buttons'][]                                               = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'addDownloadSingleProductButton'];
+$GLOBALS['ISO_HOOKS']['buttons'][]                                               = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'defaultButtons'];
+$GLOBALS['ISO_HOOKS']['preOrderStatusUpdate']['updateStock']                     = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'updateStock'];
 /**
  * Hooks
  */
@@ -46,8 +33,8 @@ $GLOBALS['TL_HOOKS']['postDownload']['downloadCounter']        = ['HeimrichHanno
 $GLOBALS['ISO_HOOKS']['generateProduct']['updateTemplateData'] = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'updateTemplateData'];
 //$GLOBALS['TL_HOOKS']['parseItems']['addPdfViewerToTemplate']   = ['huh.isotope.helper.product', 'addPdfViewerToTemplate'];
 
-$GLOBALS['TL_HOOKS']['getPageLayout'][] = ['huh.isotope.ajax_manager', 'ajaxActions'];
-$GLOBALS['TL_HOOKS']['loadDataContainer']['huh.isotope.productdata_fields'] = ['huh.isotope.listener.hooks','addMetaFields'];
+$GLOBALS['TL_HOOKS']['getPageLayout'][]                                     = ['huh.isotope.ajax_manager', 'ajaxActions'];
+$GLOBALS['TL_HOOKS']['loadDataContainer']['huh.isotope.productdata_fields'] = ['huh.isotope.listener.hooks', 'addMetaFields'];
 
 
 /**
@@ -69,8 +56,8 @@ $GLOBALS['FE_MOD']['isotopeBundle'] = [
 /**
  * Models
  */
-$GLOBALS['TL_MODELS']['tl_iso_product'] = \HeimrichHannot\IsotopeBundle\Model\ProductModel::class;
-$GLOBALS['TL_MODELS']['tl_iso_product_data'] = \HeimrichHannot\IsotopeBundle\Model\ProductDataModel::class;
+$GLOBALS['TL_MODELS']['tl_iso_product']                                 = \HeimrichHannot\IsotopeBundle\Model\ProductModel::class;
+$GLOBALS['TL_MODELS']['tl_iso_product_data']                            = \HeimrichHannot\IsotopeBundle\Model\ProductDataModel::class;
 $GLOBALS['TL_MODELS'][\Isotope\Model\ProductCollectionItem::getTable()] = \HeimrichHannot\IsotopeBundle\Model\ProductCollectionItemModel::class;
 
 /**
@@ -95,11 +82,10 @@ if (System::getContainer()->get('huh.utils.container')->isBackend()) {
  * JS
  */
 if (System::getContainer()->get('huh.utils.container')->isFrontend()) {
-    $GLOBALS['TL_JAVASCRIPT']['tablesorter'] = 'assets/components/tablesorter/js/tablesorter.min.js|static';
+    $GLOBALS['TL_JAVASCRIPT']['tablesorter']               = 'assets/components/tablesorter/js/tablesorter.min.js|static';
     $GLOBALS['TL_JAVASCRIPT']['huh_contao-isotope-bundle'] = 'bundles/heimrichhannotcontaoisotope/js/contao.isotope-bundle.min.js|static';
 }
-if (\Contao\System::getContainer()->get('huh.utils.container')->isBackend())
-{
+if (\Contao\System::getContainer()->get('huh.utils.container')->isBackend()) {
     $GLOBALS['TL_JAVASCRIPT']['huh_isotope_backend'] = 'bundles/heimrichhannotcontaoisotope/js/huh.isotope.backend.js|static';
 }
 

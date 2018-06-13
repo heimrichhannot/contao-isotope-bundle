@@ -239,7 +239,6 @@ class ProductListPlus extends ProductList
             }
 
             $arrCSS = StringUtil::deserialize($product->cssID, true);
-
             $buffer[] = [
                 'cssID' => ('' != $arrCSS[0]) ? ' id="'.$arrCSS[0].'"' : '',
                 'class' => trim('product '.($product->isNew() ? 'new ' : '').$arrCSS[1]),

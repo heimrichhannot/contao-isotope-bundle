@@ -60,11 +60,11 @@ class IsotopeProductDelete extends DefaultDelete
             if (ReaderConfigElement::REDIRECTION_PARAM_TYPE_FIELD_VALUE !== $redirectParam['parameterType'] || !System::getContainer()->get('huh.request')->hasGet($redirectParam['name'])) {
                 continue;
             }
-            $columns[] = $redirectParam['name'];
-            $values[] = System::getContainer()->get('huh.request')->getGet($redirectParam['name']);
+            $columns = $redirectParam['name'];
+            $values = System::getContainer()->get('huh.request')->getGet($redirectParam['name']);
         }
         /** @var ProductModel $model */
-        $product = System::getContainer()->get('huh.utils.model')->findOneModelInstanceBy($readerConfig->dataContainer, $columns, $values);
+        $product = $this->framework->getAdapter(ProductModel::class)->findOneBy($columns, $values);
         if (null === $product) {
             return;
         }
