@@ -75,7 +75,7 @@ class ProductCallbackListener
      * Save Product data fields to product data table
      * Contao: onsave_callbak.
      *
-     * @param $value
+     * @param               $value
      * @param DataContainer $dc
      *
      * @return mixed

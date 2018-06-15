@@ -12,41 +12,39 @@ $GLOBALS['TL_DCA']['tl_iso_product_data'] = [
         ],
         'sql'               => [
             'keys' => [
-                'id' => 'primary'
-            ]
-        ]
+                'id' => 'primary',
+            ],
+        ],
     ],
     'list'     => [
         'label'             => [
             'fields' => ['id'],
-            'format' => '%s'
+            'format' => '%s',
         ],
         'sorting'           => [
             'mode'        => 0,
-            'panelLayout' => 'filter;sort,search,limit'
+            'panelLayout' => 'filter;sort,search,limit',
         ],
-        'global_operations' => [
-        ],
-        'operations'        => [
-        ]
+        'global_operations' => [],
+        'operations'        => [],
     ],
     'palettes' => [
         '__selector__' => [],
-        'default'      => ''
+        'default'      => '',
     ],
     'fields'   => [
         'id'                      => [
             'sql'  => "int(10) unsigned NOT NULL auto_increment",
-            'eval' => ['skipProductPalette' => true]
+            'eval' => ['skipProductPalette' => true],
         ],
         'pid'                     => [
             'sql'  => "int(10) unsigned NOT NULL default '0'",
-            'eval' => ['skipProductPalette' => true]
+            'eval' => ['skipProductPalette' => true],
         ],
         'tstamp'                  => [
             'label' => &$GLOBALS['TL_LANG']['tl_iso_product_data']['tstamp'],
             'sql'   => "int(10) unsigned NOT NULL default '0'",
-            'eval'  => ['skipProductPalette' => true]
+            'eval'  => ['skipProductPalette' => true],
         ],
         'dateAdded'               => [
             'label'   => &$GLOBALS['TL_LANG']['MSC']['dateAdded'],
@@ -263,7 +261,7 @@ $GLOBALS['TL_DCA']['tl_iso_product_data'] = [
             'attributes' => ['legend' => 'inventory_legend'],
             'sql'        => "varchar(8) NOT NULL default ''",
         ],
-        'bookingReservedDates' => [
+        'bookingReservedDates'    => [
             'label'        => &$GLOBALS['TL_LANG']['tl_iso_product']['bookingReservedDates'],
             'inputType'    => 'fieldpalette',
             'foreignKey'   => 'tl_fieldpalette.id',
@@ -306,24 +304,24 @@ $GLOBALS['TL_DCA']['tl_iso_product_data'] = [
                         'inputType' => 'text',
                         'eval'      => ['tl_class' => 'w50'],
                         'sql'       => "varchar(10) NOT NULL default '1'",
-                    ]
+                    ],
                 ],
 
-            ]
+            ],
         ],
-        "bookingOverview"      => [
-            'inputType' => 'huh_be_explanation',
-            'eval'      => [
+        "bookingOverview"         => [
+            'inputType'     => 'huh_be_explanation',
+            'eval'          => [
                 'text_callback' => ['huh.isotope.listener.callback.product', 'getBookingOverview'],
             ],
-            'attributes'   => ['legend' => 'inventory_legend'],
+            'attributes'    => ['legend' => 'inventory_legend'],
             'text_callback' => ['huh.isotope.listener.callback.product', 'getBookingOverview'],
         ],
-    ]
+    ],
 ];
 
 Controller::loadDataContainer('tl_iso_config');
-$arrDca = &$GLOBALS['TL_DCA']['tl_iso_product_data'];
+$arrDca                                                                    = &$GLOBALS['TL_DCA']['tl_iso_product_data'];
 $arrDca['fields']['skipStockValidation']                                   = $GLOBALS['TL_DCA']['tl_iso_config']['fields']['skipStockValidation'];
 $arrDca['fields']['skipStockValidation']['attributes']                     = ['legend' => 'shipping_legend'];
 $arrDca['fields']['skipStockEdit']                                         = $GLOBALS['TL_DCA']['tl_iso_config']['fields']['skipStockEdit'];

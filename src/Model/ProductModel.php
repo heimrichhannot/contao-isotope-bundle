@@ -66,17 +66,8 @@ class ProductModel extends Standard
      */
     protected $productDataChanged = false;
 
-    public function __construct(\Contao\Database\Result $objResult = null)
+    public function __construct(Database\Result $objResult = null)
     {
-        // Register model type
-        if (!isset($this->arrData['type'])) {
-            $strType = array_search(get_called_class(), static::$arrModelTypes, true);
-
-            if ('' != $strType) {
-                $this->arrData['type'] = $strType;
-            }
-        }
-
         parent::__construct($objResult);
         $container = System::getContainer();
         $this->framework = $container->get('contao.framework');
@@ -85,7 +76,7 @@ class ProductModel extends Standard
 
     public function __set($strKey, $varValue)
     {
-        if (in_array($strKey, $this->getProductDataManager()->getProductDataFields(), true)) {
+        if (array_key_exists($strKey, $this->getProductDataManager()->getProductDataFields())) {
             $this->getProductData()->$strKey = $varValue;
             $this->productDataChanged = true;
         }
@@ -94,7 +85,7 @@ class ProductModel extends Standard
 
     public function __get($strKey)
     {
-        if (in_array($strKey, $this->getProductDataManager()->getProductDataFields(), true)) {
+        if (array_key_exists($strKey, $this->getProductDataManager()->getProductDataFields())) {
             return $this->getProductData()->$strKey;
         }
 
@@ -103,7 +94,7 @@ class ProductModel extends Standard
 
     public function __isset($strKey)
     {
-        if (in_array($strKey, $this->getProductDataManager()->getProductDataFields(), true)) {
+        if (array_key_exists($strKey, $this->getProductDataManager()->getProductDataFields())) {
             return true;
         }
 

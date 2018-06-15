@@ -284,7 +284,7 @@ class ProductListPlus extends ProductList
             $columns[] = Product::getTable().'.id IN ('.implode(',', $cacheIds).')';
         }
 
-        $newProductLimit = $this->framework->get('contao.framework')->getAdapter(Isotope::class)->getConfig()->getNewProductLimit();
+        $newProductLimit = $this->framework->getAdapter(Isotope::class)->getConfig()->getNewProductLimit();
         // Apply new/old product filter
         if ('show_new' == $this->iso_newFilter) {
             $columns[] = Product::getTable().'.dateAdded>='.$newProductLimit;
