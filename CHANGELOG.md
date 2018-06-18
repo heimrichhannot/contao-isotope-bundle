@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.10.3] - 2018-06-18
+
+#### Fixed
+* wrong framework call in ProductListPlus module
+
 ## [0.10.2] - 2018-06-13
 
 #### Changed
