@@ -87,15 +87,15 @@ class IsotopeManager
 
         // Stock
         if (!$this->getOverridableStockProperty('skipStockValidation', $product)) {
-            $validateStock = $this->stockAttribute->validate($productData, $quantityTotal, $includeError);
-            if (true !== $validateStock) {
+            $validateStock = $this->stockAttribute->validate($product, $quantityTotal, $includeError);
+            if (true !== $validateStock[0]) {
                 return $this->validateQuantityErrorResult($validateStock[1], $includeError);
             }
         }
 
         // maxOrderSize
-        $validateMaxOrderSize = $this->maxOrderSizeAttribute->validate($productData, $quantityTotal);
-        if (true !== $validateMaxOrderSize) {
+        $validateMaxOrderSize = $this->maxOrderSizeAttribute->validate($product, $quantityTotal);
+        if (true !== $validateMaxOrderSize[0]) {
             return $this->validateQuantityErrorResult($validateMaxOrderSize[1], $includeError);
         }
 

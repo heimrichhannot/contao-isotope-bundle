@@ -21,7 +21,7 @@ class SingleImageProductEditor extends ProductEditor
      */
     protected function createImageProduct()
     {
-        foreach ($this->submission->uploadedFiles as $index => $upload) {
+        foreach (StringUtil::deserialize($this->submission->uploadedFiles, true) as $index => $upload) {
             if (!$this->checkFile($upload)) {
                 continue;
             }

@@ -8,10 +8,8 @@
 
 namespace HeimrichHannot\IsotopeBundle\Form;
 
-use Contao\FrontendUser;
 use Contao\System;
 use HeimrichHannot\FormHybrid\Form;
-use HeimrichHannot\IsotopeBundle\Model\BlankProductModel;
 use HeimrichHannot\IsotopeBundle\Model\ProductModel;
 use HeimrichHannot\RequestBundle\Component\HttpFoundation\Request;
 
@@ -27,13 +25,6 @@ class ProductFrontendEditorForm extends Form
 
     public function __construct($objModule = null, $instanceId = 0)
     {
-        if (0 === $instanceId || empty($instanceId)) {
-            $model = new BlankProductModel();
-            $model->addedBy = System::getContainer()->get('contao.framework')->createInstance(FrontendUser::class)->id;
-            $model = $model->save();
-            $instanceId = $model->id;
-        }
-
         parent::__construct($objModule, $instanceId);
     }
 

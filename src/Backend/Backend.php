@@ -22,13 +22,13 @@ class Backend
     {
         $container = System::getContainer();
         $framework = $container->get('contao.framework');
-        $objProduct = $framework->getAdapter(Product::class)->findByPk($row['id']);
+        $product = $framework->getAdapter(Product::class)->findByPk($row['id']);
 
         foreach ($GLOBALS['TL_DCA'][$dc->table]['list']['label']['fields'] as $i => $field) {
             switch ($field) {
                 // Add an image
                 case 'images':
-                    $arrImages = StringUtil::deserialize($objProduct->images);
+                    $arrImages = StringUtil::deserialize($product->images);
                     $args[$i] = '&nbsp;';
 
                     if (is_array($arrImages) && !empty($arrImages)) {
@@ -43,27 +43,30 @@ class Backend
 
                             $resizeImage = $container->get('contao.image.image_factory')->create($strImage, [50, 50, 'proportional']);
 
-                            $args[$i] = sprintf('<a href="%s" onclick="Backend.openModalImage({\'width\':%s,\'title\':\'%s\',\'url\':\'%s\'});return false"><img src="%s" alt="%s" align="left"></a>', TL_FILES_URL.$strImage, $size[0], str_replace("'", "\\'", $objProduct->name), TL_FILES_URL.$strImage, TL_ASSETS_URL.str_replace(TL_ROOT, '', $resizeImage->getPath()), $image['alt']);
+                            $args[$i] = sprintf('<a href="%s" onclick="Backend.openModalImage({\'width\':%s,\'title\':\'%s\',\'url\':\'%s\'});return false"><img src="%s" alt="%s" align="left"></a>', TL_FILES_URL.$strImage, $size[0], str_replace("'", "\\'", $product->name), TL_FILES_URL.$strImage, TL_ASSETS_URL.str_replace(TL_ROOT, '', $resizeImage->getPath()), $image['alt']);
                             break;
                         }
                     }
                     break;
                 case 'uploadedFiles':
-                    if (is_array($uploadedFiles = unserialize($row['uploadedFiles']))) {
-                        $row['uploadedFiles'] = $uploadedFiles[0];
+                    if (is_array($uploadedFiles = unserialize($product->uploadedFiles))) {
+                        $product->uploadedFiles = $uploadedFiles[0];
                     }
 
-                    if (\Validator::isUuid($row['uploadedFiles'])) {
-                        $image = $framework->getAdapter(FilesModel::class)->findByUuid($row['uploadedFiles']);
+                    if (\Validator::isUuid($product->uploadedFiles)) {
+                        $image = $framework->getAdapter(FilesModel::class)->findByUuid($product->uploadedFiles);
                         $size = @getimagesize(TL_ROOT.'/'.$image->path);
 
+                        if (!file_exists(TL_ROOT.$image->path)) {
+                            break;
+                        }
                         $resizeImage = $container->get('contao.image.image_factory')->create($image->path, [50, 50, 'proportional']);
 
-                        $args[$i] = sprintf('<a href="%s" onclick="Backend.openModalImage({\'width\':%s,\'title\':\'%s\',\'url\':\'%s\'});return false"><img src="%s" alt="%s" align="left"></a>', TL_FILES_URL.$image->path, $size[0], str_replace("'", "\\'", $objProduct->name), TL_FILES_URL.$image->path, TL_ASSETS_URL.str_replace(TL_ROOT, '', $resizeImage->getPath()), $image->alt);
+                        $args[$i] = sprintf('<a href="%s" onclick="Backend.openModalImage({\'width\':%s,\'title\':\'%s\',\'url\':\'%s\'});return false"><img src="%s" alt="%s" align="left"></a>', TL_FILES_URL.$image->path, $size[0], str_replace("'", "\\'", $product->name), TL_FILES_URL.$image->path, TL_ASSETS_URL.str_replace(TL_ROOT, '', $resizeImage->getPath()), $image->alt);
                     }
                     break;
                 case 'name':
-                    $args[$i] = $objProduct->name;
+                    $args[$i] = $product->name;
                     /** @var \Isotope\Model\ProductType $objProductType */
                     if (0 == $row['pid'] && null !== ($objProductType = $framework->getAdapter(ProductType::class)->findByPk($row['type'])) && $objProductType->hasVariants()) {
                         // Add a variants link
@@ -86,10 +89,13 @@ class Backend
                 case 'variantFields':
                     $attributes = [];
                     foreach ($GLOBALS['TL_DCA'][$dc->table]['list']['label']['variantFields'] as $variantField) {
-                        $attributes[] = '<strong>'.$framework->getAdapter(Format::class)->dcaLabel($dc->table, $variantField).':</strong>&nbsp;'.$framework->getAdapter(Format::class)->dcaValue($dc->table, $variantField, $objProduct->$variantField);
+                        $attributes[] = '<strong>'.$framework->getAdapter(Format::class)->dcaLabel($dc->table, $variantField).':</strong>&nbsp;'.$framework->getAdapter(Format::class)->dcaValue($dc->table, $variantField, $product->$variantField);
                     }
 
                     $args[$i] = ($args[$i] ? $args[$i].'<br>' : '').implode(', ', $attributes);
+                    break;
+                case 'stock':
+                    $args[$i] = $product->stock;
                     break;
             }
         }

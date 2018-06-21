@@ -81,7 +81,7 @@ class IsotopeHookListener
      * ['ISO_HOOKS']['preCheckout'].
      *
      * @param Order $order
-     * @param $checkout
+     * @param       $checkout
      *
      * @return bool
      */

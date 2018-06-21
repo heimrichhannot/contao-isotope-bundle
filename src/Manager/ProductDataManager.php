@@ -53,7 +53,7 @@ class ProductDataManager
             $metaFields = [];
             foreach ($fields as $key => $field) {
                 if (true !== $field['eval']['skipProductPalette']) {
-                    if (isset($field['sql']) && !empty($field['sql'])) {
+                    if (isset($field['sql']) && !empty($field['sql']) && !isset($field['eval']['skipPrepareForSave'])) {
                         $field['save_callback'][] = ['huh.isotope.listener.callback.product', 'saveMetaFields'];
                     }
                     $metaFields[$key] = $field;
@@ -81,8 +81,8 @@ class ProductDataManager
             return $this->productDataModelCache[$pid];
         }
 
-        $productData = ProductDataModel::findOneBy('pid', $pid);
-        if (!$productData) {
+        $productData = $this->framework->getAdapter(ProductDataModel::class)->findOneBy('pid', $pid);
+        if (null === $productData) {
             $productData = new ProductDataModel();
             $productData->pid = $pid;
             $productData->dateAdded = $productData->tstamp = time();
@@ -95,16 +95,16 @@ class ProductDataManager
     }
 
     /**
-     * Returns all product models bypassing findAll method from isotope TypeAgent.
+     * Returns all product models where bypassing findAll method from isotope TypeAgent.
      *
      * @return Collection|ProductModel[]
      */
-    public function getAllProducts()
+    public function getAllProducts(string $where = '')
     {
         $table = ProductModel::getTable();
         /** @var Database $db */
         $db = $this->framework->createInstance(Database::class);
-        $result = $db->query("SELECT * FROM $table");
+        $result = $db->query("SELECT * FROM $table $where");
 
         return $this->framework->getAdapter(Collection::class)->createFromDbResult($result, $table);
     }

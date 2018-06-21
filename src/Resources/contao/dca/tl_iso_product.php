@@ -12,7 +12,6 @@ $arrDca['list']['label']['label_callback'] = ['HeimrichHannot\IsotopeBundle\Back
 
 $arrDca['config']['onload_callback'][] = ['huh.isotope.listener.callback.product', 'updateRelevance'];
 
-
 if (\Contao\System::getContainer()->get('huh.utils.container')->isFrontend()) {
     $arrDca['fields']['type']['options_callback'] = ['huh.isotope.helper.product', 'getEditableCategories'];
 }

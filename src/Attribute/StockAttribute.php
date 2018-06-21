@@ -8,7 +8,7 @@
 
 namespace HeimrichHannot\IsotopeBundle\Attribute;
 
-use HeimrichHannot\IsotopeBundle\Model\ProductDataModel;
+use Isotope\Model\Product;
 
 /**
  * Class StockAttribute.
@@ -17,7 +17,14 @@ use HeimrichHannot\IsotopeBundle\Model\ProductDataModel;
  */
 class StockAttribute
 {
-    public function validate(ProductDataModel $product, int $quantityTotal, bool $includeError = false)
+    /**
+     * @param Product $product
+     * @param int     $quantityTotal
+     * @param bool    $includeError
+     *
+     * @return array
+     */
+    public function validate(Product $product, int $quantityTotal, bool $includeError = false)
     {
         if ('' != $product->stock && null !== $product->stock) {
             if ($product->stock <= 0) {
@@ -31,6 +38,6 @@ class StockAttribute
             }
         }
 
-        return true;
+        return [true, null];
     }
 }

@@ -46,16 +46,6 @@ class ProductDataModel extends Model
      * @var ProductDataManager
      */
     protected $productDataManager;
-    protected $productDataChanged = false;
-
-    public function __set($strKey, $varValue)
-    {
-        if (array_key_exists($strKey, $this->getProductDataManager()->getProductDataFields())) {
-            $this->getProductModel()->$strKey = $varValue;
-            $this->productDataChanged = true;
-        }
-        parent::__set($strKey, $varValue);
-    }
 
     /**
      * Returns the product model for the current product data instance.
@@ -94,24 +84,9 @@ class ProductDataModel extends Model
     public function syncWithProduct()
     {
         $product = $this->getProductModel();
-        foreach ($this->getProductDataManager()->getProductDataFields() as $key => $value) {
-            $this->$key = $product->$key;
-        }
+        $this->mergeRow($product->row());
         $this->tstamp = time();
 
         return $this;
-    }
-
-    public function save()
-    {
-        if ($this->productDataChanged) {
-            try {
-                $this->getProductModel()->save();
-                $this->productDataChanged = false;
-            } catch (\Exception $e) {
-            }
-        }
-
-        return parent::save();
     }
 }

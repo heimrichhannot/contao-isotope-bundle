@@ -109,10 +109,11 @@ class ProductHelper
     /**
      * @return array
      */
-    public function getTags()
+    public function getTags($obj)
     {
         $options = [];
-        if (null === ($tags = $this->framework->getAdapter(ProductDataModel::class)->findAll())) {
+
+        if (null === ($tags = $this->framework->getAdapter(ProductDataModel::class)->findBy(['tag IS NOT NULL'], null))) {
             return $options;
         }
 

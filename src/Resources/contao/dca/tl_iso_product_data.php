@@ -98,7 +98,7 @@ $GLOBALS['TL_DCA']['tl_iso_product_data'] = [
             'attributes' => ['legend' => 'shipping_legend'],
             'sql'        => "char(1) NOT NULL default ''",
         ],
-        'jumpTo' > [
+        'jumpTo'                  => [
             'label'      => &$GLOBALS['TL_LANG']['tl_iso_product']['jumpTo'],
             'exclude'    => true,
             'inputType'  => 'pageTree',
@@ -140,8 +140,7 @@ $GLOBALS['TL_DCA']['tl_iso_product_data'] = [
                 'mandatory'          => true,
             ],
             'attributes' => ['legend' => 'media_legend'],
-
-            'sql' => "blob NULL",
+            'sql'        => "blob NULL",
         ],
         'uploadedDownloadFiles'   => [
             'label'      => &$GLOBALS['TL_LANG']['tl_iso_product']['uploadedDownloadFiles'],
@@ -160,8 +159,7 @@ $GLOBALS['TL_DCA']['tl_iso_product_data'] = [
                 'maxUploadSize'      => \Contao\Config::get('maxFileSize'),
             ],
             'attributes' => ['legend' => 'media_legend'],
-
-            'sql' => "blob NULL",
+            'sql'        => "blob NULL",
         ],
         'tag'                     => [
             'label'            => &$GLOBALS['TL_LANG']['tl_iso_product']['tag'],
@@ -270,10 +268,10 @@ $GLOBALS['TL_DCA']['tl_iso_product_data'] = [
             'attributes'   => ['legend' => 'inventory_legend'],
             'sql'          => "blob NULL",
             'fieldpalette' => [
-                'config'   => [
+                'config'      => [
                     'hidePublished' => true,
                 ],
-                'list'     => [
+                'list'        => [
                     'label' => [
                         'fields' => ['start', 'stop'],
                         'format' => '%s - %s',
@@ -282,20 +280,20 @@ $GLOBALS['TL_DCA']['tl_iso_product_data'] = [
                 ],
                 'palettes'    => [
                     '__selector__' => ['useCount'],
-                    'default'      => '{block_legend},start,stop,useCount;'
+                    'default'      => '{block_legend},start,stop,useCount;',
                 ],
                 'subpalettes' => [
-                    'useCount' => 'count'
+                    'useCount' => 'count',
                 ],
-                'fields'   => [
-                    'start' => [
+                'fields'      => [
+                    'start'    => [
                         'label'     => &$GLOBALS['TL_LANG']['tl_iso_product']['start'],
                         'exclude'   => true,
                         'inputType' => 'text',
                         'eval'      => ['rgxp' => 'date', 'datepicker' => true, 'tl_class' => 'w50 wizard', 'mandatory' => true],
                         'sql'       => "varchar(10) NOT NULL default ''",
                     ],
-                    'stop'  => [
+                    'stop'     => [
                         'label'     => &$GLOBALS['TL_LANG']['tl_iso_product']['stop'],
                         'exclude'   => true,
                         'inputType' => 'text',
@@ -309,7 +307,7 @@ $GLOBALS['TL_DCA']['tl_iso_product_data'] = [
                         'eval'      => ['tl_class' => 'clr w50', 'submitOnChange' => true],
                         'sql'       => "char(1) NOT NULL default ''",
                     ],
-                    'count' => [
+                    'count'    => [
                         'label'     => &$GLOBALS['TL_LANG']['tl_iso_product']['count'],
                         'exclude'   => true,
                         'inputType' => 'text',

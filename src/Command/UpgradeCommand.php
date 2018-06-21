@@ -43,12 +43,7 @@ class UpgradeCommand extends AbstractLockedCommand
         $this->setName('huh:isotope:upgrade')
             ->setDescription('Setup Isotope Bundle product data from older bundle version or module install.')
             ->setHelp('This command import data from product table to product data table. This must be done when upgrading from older bundle version or module.')
-            ->addOption(
-                'overwriteExistingEntries',
-                'o',
-                InputOption::VALUE_NONE,
-                'Also update data of existing entries. Attention: all existing data will be overwritten!')
-        ;
+            ->addOption('overwriteExistingEntries', 'o', InputOption::VALUE_NONE, 'Also update data of existing entries. Attention: all existing data will be overwritten!');
     }
 
     /**
@@ -64,8 +59,9 @@ class UpgradeCommand extends AbstractLockedCommand
         $io = new SymfonyStyle($input, $output);
         $io->title('Starting import product data.');
         $this->framework->initialize();
+
         /** @var ProductDataModel[]|Collection|null $products */
-        $products = $this->productDataManager->getAllProducts();
+        $products = $this->productDataManager->getAllProducts('WHERE type != 0');
 
         $io->writeln('Found '.$products->count().' products.');
         $io->writeln('Updating product data:');
@@ -79,19 +75,21 @@ class UpgradeCommand extends AbstractLockedCommand
             $io->progressAdvance();
             /** @var ProductDataModel $productData */
             $productData = $this->framework->getAdapter(ProductDataModel::class)->findByPid($product->id);
-            if ($productData and !$input->getOption('overwriteExistingEntries')) {
+            if (null !== $productData && !$input->getOption('overwriteExistingEntries')) {
                 ++$dataSkipped;
                 continue;
             }
-            if (!$productData) {
+            if (null === $productData) {
                 ++$dataAdded;
                 $productData = new ProductDataModel();
+                $productArray = $product->row();
+                unset($productArray['id']);
+                $productData->mergeRow($productArray);
                 $productData->pid = $product->id;
                 $productData->tstamp = $productData->dateAdded = time();
             } else {
                 ++$dataUpdated;
             }
-            $productData->syncWithProduct();
             $productData->save();
         }
         $io->progressFinish();
@@ -99,11 +97,7 @@ class UpgradeCommand extends AbstractLockedCommand
         $io->newLine();
         $io->section('Result:');
 
-        $io->table(['ProductData', 'Count'], [
-            ['Added', $dataAdded],
-            ['Updated', $dataUpdated],
-            ['Skipped', $dataSkipped],
-        ]);
+        $io->table(['ProductData', 'Count'], [['Added', $dataAdded], ['Updated', $dataUpdated], ['Skipped', $dataSkipped]]);
 
         $io->success('Upgrade command finished.');
 

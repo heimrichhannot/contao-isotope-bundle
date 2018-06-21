@@ -56,6 +56,8 @@ class ModuleStockReport extends Module
 
             $arrProducts[$product->id] = $product->row();
             $arrProducts[$product->id]['stockPercent'] = '-';
+            $arrProducts[$product->id]['stock'] = $product->stock;
+            $arrProducts[$product->id]['initialStock'] = $product->initialStock;
 
             if ($product->initialStock > 0 && '' !== $product->initialStock) {
                 $percent = floor($product->stock * 100 / $product->initialStock);

@@ -22,6 +22,7 @@ use HeimrichHannot\IsotopeBundle\Backend\Callbacks;
 use HeimrichHannot\IsotopeBundle\Model\ProductModel;
 use HeimrichHannot\MultiFileUpload\FormMultiFileUpload;
 use Isotope\Model\Download;
+use Isotope\Model\ProductType;
 
 abstract class ProductEditor
 {
@@ -32,6 +33,11 @@ abstract class ProductEditor
     protected $file;
 
     protected static $strTable = 'tl_iso_product';
+
+    /**
+     * @var ProductModel
+     */
+    protected $submission;
 
     public function __construct($module, $submission, $dc)
     {
@@ -68,7 +74,7 @@ abstract class ProductEditor
         $this->createImageProduct();
 
         // delete submission since for all products an new model was created
-        $this->submission->delete();
+//        $this->submission->delete();
 
         return true;
     }
@@ -203,10 +209,13 @@ abstract class ProductEditor
             return false;
         }
 
-        $product = clone $this->submission;
-        $product->mergeRow($this->productData);
+        $this->submission->mergeRow($this->productData);
 
-        return $product->save();
+        foreach ($this->productData as $key => $value) {
+            $this->submission->markModified($key);
+        }
+
+        return $this->submission->save();
     }
 
     /**
@@ -297,19 +306,6 @@ abstract class ProductEditor
     }
 
     /**
-     * set productData values from submission.
-     */
-    protected function prepareDataFromForm()
-    {
-        foreach (StringUtil::deserialize($this->module->formHybridEditable, true) as $value) {
-            if ($this->productData[$value]) {
-                continue;
-            }
-            $this->productData[$value] = $this->submission->{$value};
-        }
-    }
-
-    /**
      * join fields from submission into tag field (has to be set in module).
      */
     protected function prepareTagData()
@@ -322,9 +318,9 @@ abstract class ProductEditor
         $tags = [];
 
         foreach (StringUtil::deserialize($this->module->iso_tagFields, true) as $tagValueField) {
-            //			if ($tagValueField == 'type') {
-            //				$data[$tagValueField] = ProductType::findByPk($this->submission->type)->name;
-            //			}
+            if ('type' == $tagValueField) {
+                $data[$tagValueField] = System::getContainer()->get('contao.framework')->getAdapter(ProductType::class)->findByPk($this->submission->type)->name;
+            }
 
             if ('' == $data[$tagValueField]) {
                 continue;
@@ -346,6 +342,19 @@ abstract class ProductEditor
 
         // add tag-array to field
         $this->productData[$this->module->iso_tagField] = serialize($tags);
+    }
+
+    /**
+     * set productData values from submission.
+     */
+    protected function prepareDataFromForm()
+    {
+        foreach (StringUtil::deserialize($this->module->formHybridEditable, true) as $value) {
+            if ($this->productData[$value]) {
+                continue;
+            }
+            $this->productData[$value] = $this->submission->$value == null ? '' : $this->submission->$value;
+        }
     }
 
     /**
@@ -397,7 +406,7 @@ abstract class ProductEditor
         $defaultValues = StringUtil::deserialize($this->module->formHybridDefaultValues, true);
 
         foreach ($defaultValues as $value) {
-            if (!in_array($value['field'], $dcaFields, true)) {
+            if (!array_key_exists($value['field'], $dcaFields)) {
                 continue;
             }
 

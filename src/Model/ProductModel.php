@@ -11,6 +11,7 @@ namespace HeimrichHannot\IsotopeBundle\Model;
 use Contao\Database;
 use Contao\System;
 use Isotope\Model\Product\Standard;
+use Isotope\Model\ProductType;
 
 /**
  * Class ProductModel.
@@ -54,6 +55,10 @@ use Isotope\Model\Product\Standard;
 class ProductModel extends Standard
 {
     protected static $strTable = 'tl_iso_product';
+
+    /**
+     * @var \HeimrichHannot\IsotopeBundle\Manager\ProductDataManager|object
+     */
     protected $productDataManager;
     /**
      * @var ProductDataModel
@@ -65,40 +70,58 @@ class ProductModel extends Standard
      * @var bool
      */
     protected $productDataChanged = false;
+    /**
+     * @var bool
+     */
+    protected $blankProduct = false;
+    /**
+     * @var BlankProductModel
+     */
+    protected $blankProductModel;
 
-    public function __construct(Database\Result $objResult = null)
+    public function __construct(Database\Result $result = null)
     {
-        parent::__construct($objResult);
-        $container = System::getContainer();
-        $this->framework = $container->get('contao.framework');
-        $this->productDataManager = $container->get('huh.isotope.manager.productdata');
+        if (null === $result) {
+            $this->blankProductModel = new BlankProductModel();
+            $this->blankProduct = true;
+            $this->arrRelations = $this->blankProductModel->arrRelations;
+            $this->productData = new ProductDataModel();
+        } else {
+            parent::__construct($result);
+        }
+
+        $this->productDataManager = System::getContainer()->get('huh.isotope.manager.productdata');
     }
 
-    public function __set($strKey, $varValue)
+    public function __set($key, $value)
     {
-        if (array_key_exists($strKey, $this->getProductDataManager()->getProductDataFields())) {
-            $this->getProductData()->$strKey = $varValue;
+        if (array_key_exists($key, $this->getProductDataManager()->getProductDataFields()) && null !== $this->getProductData()) {
+            $this->getProductData()->$key = $value;
             $this->productDataChanged = true;
         }
-        parent::__set($strKey, $varValue);
+        if ($this->blankProduct) {
+            $this->blankProductModel->$key = $value;
+        } else {
+            parent::__set($key, $value);
+        }
     }
 
-    public function __get($strKey)
+    public function __get($key)
     {
-        if (array_key_exists($strKey, $this->getProductDataManager()->getProductDataFields())) {
-            return $this->getProductData()->$strKey;
+        if (array_key_exists($key, $this->getProductDataManager()->getProductDataFields()) && null !== $this->getProductData()) {
+            return $this->getProductData()->$key;
         }
 
-        return parent::__get($strKey);
+        return parent::__get($key);
     }
 
-    public function __isset($strKey)
+    public function __isset($key)
     {
-        if (array_key_exists($strKey, $this->getProductDataManager()->getProductDataFields())) {
+        if (array_key_exists($key, $this->getProductDataManager()->getProductDataFields())) {
             return true;
         }
 
-        return parent::__isset($strKey);
+        return parent::__isset($key);
     }
 
     /**
@@ -160,16 +183,45 @@ class ProductModel extends Standard
     public function syncWithProductData()
     {
         $productData = $this->getProductData();
-        foreach ($this->getProductDataManager()->getProductDataFields() as $key => $value) {
-            $this->$key = $productData->$key;
-        }
+        $this->mergeRow($productData->row());
         $this->tstamp = time();
 
         return $this;
     }
 
+    /**
+     * @param array $data
+     *
+     * @return Standard
+     */
+    public function setRow(array $data)
+    {
+        try {
+            // set random type if creating new product to avoid error
+            if ('0' === $data['type']) {
+                $data['type'] = ProductType::findAll()->current()->id;
+            }
+
+            return parent::setRow($data);
+        } catch (\UnderflowException $exception) {
+            return $this;
+        }
+    }
+
     public function save()
     {
+        if ($this->blankProduct) {
+            $blankModel = $this->blankProductModel->save();
+            $this->arrData['id'] = $blankModel->id;
+
+            if ($this->productDataChanged) {
+                $this->getProductData()->pid = $blankModel->id;
+                $this->getProductData()->save();
+                $this->productDataChanged = false;
+            }
+
+            return $blankModel;
+        }
         if ($this->productDataChanged) {
             $this->getProductData()->save();
             $this->productDataChanged = false;

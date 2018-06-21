@@ -10,6 +10,7 @@ namespace HeimrichHannot\IsotopeBundle\Module;
 
 use Contao\BackendTemplate;
 use Contao\Controller;
+use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Database;
 use Contao\Environment;
@@ -20,6 +21,7 @@ use Haste\Haste;
 use Haste\Http\Response\HtmlResponse;
 use HeimrichHannot\IsotopeBundle\Model\RequestCacheOrFilter;
 use Isotope\Isotope;
+use Isotope\Message;
 use Isotope\Model\Product;
 use Isotope\Model\ProductCache;
 use Isotope\Model\RequestCache;
@@ -107,6 +109,7 @@ class ProductListPlus extends ProductList
         $intPage = ('article' == $this->iso_category_scope ? $GLOBALS['ISO_CONFIG']['current_article']['pid'] : $objPage->id);
         $products = null;
         $cacheIds = null;
+        $this->cacheProducts = System::getContainer()->getParameter('kernel.debug') ? false : true;
 
         $cacheKey = $this->getCacheKey();
         /** @var ProductCache $cache Try to load the products from cache */
@@ -220,15 +223,20 @@ class ProductListPlus extends ProductList
 
             if (Environment::get('isAjaxRequest') && $this->request->getPost('AJAX_MODULE') == $this->id && $this->request->getPost('AJAX_PRODUCT') == $product->getProductId()) {
                 $arrCheck = System::getContainer()->get('huh.isotope.manager')->validateQuantity($product, $this->request->getPost('quantity_requested'), Isotope::getCart()->getItemForProduct($product), true);
-                if (isset($arrCheck[0])) {
+                if (isset($arrCheck[0]) && !$arrCheck[0]) {
                     // remove synchronous error messages in case of ajax
                     unset($_SESSION['ISO_ERROR']);
-                    $objResponse = new HtmlResponse($arrCheck[1], 400);
+                    $response = new HtmlResponse($arrCheck[1], 400);
                 } else {
-                    $objResponse = new HtmlResponse($product->generate($arrConfig));
+                    try {
+                        $product->generate($arrConfig);
+                    } catch (AjaxRedirectResponseException $exception) {
+                    }
+                    $response = new HtmlResponse();
                 }
-
-                $objResponse->send();
+                // reset message on ajax call
+                Message::reset();
+                $response->send();
             }
 
             $product->mergeRow($defaultProductOptions);

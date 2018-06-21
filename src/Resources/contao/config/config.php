@@ -36,7 +36,6 @@ $GLOBALS['ISO_HOOKS']['generateProduct']['updateTemplateData'] = ['HeimrichHanno
 $GLOBALS['TL_HOOKS']['getPageLayout'][]                                     = ['huh.isotope.ajax_manager', 'ajaxActions'];
 $GLOBALS['TL_HOOKS']['loadDataContainer']['huh.isotope.productdata_fields'] = ['huh.isotope.listener.hooks', 'addMetaFields'];
 
-
 /**
  * Frontend modules
  */

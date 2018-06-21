@@ -8,11 +8,17 @@
 
 namespace HeimrichHannot\IsotopeBundle\Attribute;
 
-use HeimrichHannot\IsotopeBundle\Model\ProductDataModel;
+use Isotope\Model\Product;
 
 class MaxOrderSizeAttribute
 {
-    public function validate(ProductDataModel $product, int $quantityTotal)
+    /**
+     * @param Product $product
+     * @param int     $quantityTotal
+     *
+     * @return array
+     */
+    public function validate(Product $product, int $quantityTotal)
     {
         if (!empty($product->maxOrderSize)) {
             if ($quantityTotal > $product->maxOrderSize) {
@@ -22,6 +28,6 @@ class MaxOrderSizeAttribute
             }
         }
 
-        return true;
+        return [true, null];
     }
 }
