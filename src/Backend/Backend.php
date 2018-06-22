@@ -52,12 +52,12 @@ class Backend
                     if (is_array($uploadedFiles = unserialize($product->uploadedFiles))) {
                         $product->uploadedFiles = $uploadedFiles[0];
                     }
-
                     if (\Validator::isUuid($product->uploadedFiles)) {
                         $image = $framework->getAdapter(FilesModel::class)->findByUuid($product->uploadedFiles);
                         $size = @getimagesize(TL_ROOT.'/'.$image->path);
 
                         if (!file_exists(TL_ROOT.$image->path)) {
+                            $args[$i] = '-';
                             break;
                         }
                         $resizeImage = $container->get('contao.image.image_factory')->create($image->path, [50, 50, 'proportional']);
