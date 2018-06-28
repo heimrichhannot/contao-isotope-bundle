@@ -110,7 +110,7 @@ class BookingAttributes
     {
         /** @var ProductCollectionItemModel|Collection|null $collectionItems */
         if (null === ($collectionItems = $this->framework->getAdapter(ProductCollectionItemModel::class)->findByItem($product->id))) {
-            return [];
+            return $this->getBlockedDatesByProduct($product, $quantity);
         }
 
         return $this->getBlockedDatesByItems($collectionItems, $product, $quantity);
@@ -214,6 +214,19 @@ class BookingAttributes
         return $this->getLockedDates($bookings, $stock, $quantity);
     }
 
+    public function getBlockedDatesByProduct($product, $quantity)
+    {
+        $stock = $this->productDataManager->getProductData($product)->stock - $quantity;
+
+        $reservedDates = $this->getReservedDates($product);
+
+        if (empty($reservedDates)) {
+            return [];
+        }
+
+        return $this->getLockedDates($reservedDates, $stock, $quantity);
+    }
+
     /**
      * calculate the bookingRange of a product
      * if the product has a bookingBlock it as to be added to the bookingStop and subtracted from the bookingStart
@@ -313,7 +326,7 @@ class BookingAttributes
             return [];
         }
 
-        if (empty($reserved = StringUtil::deserialize($product->bookingReservedDates))) {
+        if (empty($reserved = StringUtil::deserialize($product->bookingReservedDates, true))) {
             return [];
         }
 
