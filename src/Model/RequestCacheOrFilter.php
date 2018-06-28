@@ -21,35 +21,35 @@ class RequestCacheOrFilter
     /**
      * Generate query string for native filters.
      *
-     * @param array $arrFilters
+     * @param array $filters
      *
      * @return array
      */
-    public function buildSqlFilters(array $arrFilters)
+    public function buildSqlFilters(array $filters)
     {
-        $strWhere = '';
+        $where = '';
         $arrWhere = [];
-        $arrValues = [];
-        $arrGroups = [];
+        $values = [];
+        $groups = [];
 
         // Initiate native SQL filtering
         /** @var \Isotope\RequestCache\Filter $objFilter */
-        foreach ($arrFilters as $k => $objFilter) {
-            if ($objFilter->hasGroup() && false !== $arrGroups[$objFilter->getGroup()]) {
+        foreach ($filters as $k => $objFilter) {
+            if ($objFilter->hasGroup() && false !== $groups[$objFilter->getGroup()]) {
                 if ($objFilter->isDynamicAttribute()) {
-                    $arrGroups[$objFilter->getGroup()] = false;
+                    $groups[$objFilter->getGroup()] = false;
                 } else {
-                    $arrGroups[$objFilter->getGroup()][] = $k;
+                    $groups[$objFilter->getGroup()][] = $k;
                 }
             } elseif (!$objFilter->hasGroup() && !$objFilter->isDynamicAttribute()) {
                 $arrWhere[] = $objFilter->sqlWhere();
-                $arrValues[] = $objFilter->sqlValue();
-                unset($arrFilters[$k]);
+                $values[] = $objFilter->sqlValue();
+                unset($filters[$k]);
             }
         }
 
-        if (!empty($arrGroups)) {
-            foreach ($arrGroups as $arrGroup) {
+        if (!empty($groups)) {
+            foreach ($groups as $arrGroup) {
                 $arrGroupWhere = [];
 
                 // Skip dynamic attributes
@@ -58,11 +58,11 @@ class RequestCacheOrFilter
                 }
 
                 foreach ($arrGroup as $k) {
-                    $objFilter = $arrFilters[$k];
+                    $objFilter = $filters[$k];
 
                     $arrGroupWhere[] = $objFilter->sqlWhere();
-                    $arrValues[] = $objFilter->sqlValue();
-                    unset($arrFilters[$k]);
+                    $values[] = $objFilter->sqlValue();
+                    unset($filters[$k]);
                 }
 
                 $arrWhere[] = '('.implode(' OR ', $arrGroupWhere).')';
@@ -81,7 +81,7 @@ class RequestCacheOrFilter
             }
             $strTemp .= '('.implode(' OR ', $arrTemp).')';
 
-            $strWhere = '
+            $where = '
                 (
                 ('.$strTemp.")
                     OR $t.id IN (SELECT $t.pid FROM tl_iso_product AS $t WHERE $t.language='' AND ".implode(' AND ', $arrWhere).(BE_USER_LOGGED_IN === true ? '' : " AND $t.published='1' AND ($t.start='' OR $t.start<$time) AND ($t.stop='' OR $t.stop>$time)").")
@@ -89,9 +89,9 @@ class RequestCacheOrFilter
                 )
             ';
 
-            $arrValues = array_merge($arrValues, $arrValues, $arrValues);
+            $values = array_merge($values, $values, $values);
         }
 
-        return [$arrFilters, $strWhere, $arrValues];
+        return [$filters, $where, $values];
     }
 }
