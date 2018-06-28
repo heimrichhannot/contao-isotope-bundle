@@ -13,10 +13,8 @@ $GLOBALS['ISO_HOOKS']['addProductToCollection']['validateStockCollectionAdd'] = 
 $GLOBALS['ISO_HOOKS']['postAddProductToCollection']['huh_isotope_bundle'] = ['huh.isotope.listener.hooks.isotope', 'validateStockCollectionAdd'];
 $GLOBALS['ISO_HOOKS']['postAddProductToCollection']['huh_isotope_bundle'] = ['huh.isotope.listener.hooks.isotope', 'addBookingInformationToItem'];
 
-$GLOBALS['ISO_HOOKS']['preCheckout']['validateStockCheckout'] = ['huh.isotope.listener.hooks.isotope', 'validateStockPreCheckout'];
-
+$GLOBALS['ISO_HOOKS']['preCheckout']['validateStockCheckout']  = ['huh.isotope.listener.hooks.isotope', 'validateStockPreCheckout'];
 $GLOBALS['ISO_HOOKS']['postCheckout']['validateStockCheckout'] = ['huh.isotope.listener.hooks.isotope', 'validateStockPostCheckout'];
-
 $GLOBALS['ISO_HOOKS']['postCheckout']['sendOrderNotification'] = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'sendOrderNotification'];
 
 $GLOBALS['ISO_HOOKS']['postCheckout']['setSetQuantity']                          = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'setSetQuantity'];

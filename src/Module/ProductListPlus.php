@@ -110,7 +110,6 @@ class ProductListPlus extends ProductList
         $products = null;
         $cacheIds = null;
         $this->cacheProducts = System::getContainer()->getParameter('kernel.debug') ? false : true;
-
         $cacheKey = $this->getCacheKey();
         /** @var ProductCache $cache Try to load the products from cache */
         if ($this->cacheProducts && null !== ($cache = $this->framework->getAdapter(ProductCache::class)->findByUniqid($cacheKey))) {
@@ -133,7 +132,6 @@ class ProductListPlus extends ProductList
                 }
             }
         }
-
         if (!is_array($products)) {
             // Display "loading products" message and add cache flag
             if ($this->cacheProducts) {
