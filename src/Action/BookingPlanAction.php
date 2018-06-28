@@ -43,6 +43,12 @@ class BookingPlanAction extends CartAction
 
     public function generate(IsotopeProduct $product, array $config = [])
     {
+        foreach ([1533765600, 1533852000, 1533938400, 1534024800, 1534111200, 1534197600, 1534284000, 1534370400, 1534456800, 1534543200, 1534629600, 1534716000, 1534802400, 1534888800, 1534975200, 1535061600, 1535148000, 1535234400, 1535320800, 1535407200, 1535493600, 1535580000, 1535666400, 1535752800, 1535839200, 1535925600, 1536012000, 1536098400, 1536184800, 1536271200, 1536357600, 1536444000, 1536530400, 1536616800, 1536703200, 1536789600, 1536876000, 1536962400, 1530136800] as $day) {
+            echo '<pre>';
+            var_dump(date('d.m.Y', $day));
+            echo '</pre>';
+        }
+
         $url = $this->actionManager->generateUrl(AjaxManager::ISOTOPE_AJAX_GROUP, AjaxManager::ISOTOPE_AJAX_BOOKING_PLAN_UPDATE);
 
         return sprintf(

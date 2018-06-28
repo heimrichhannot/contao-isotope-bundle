@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.10.4] - 2018-06-28
+
+#### Fixed
+* date comparasion in 
+
 ## [0.10.3] - 2018-06-18
 
 #### Fixed

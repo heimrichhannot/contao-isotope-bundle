@@ -143,7 +143,8 @@
 
                     var dateString = isotopeBundle.getComparableDate(date.getTime());
                     $.each(blocked,function(key,value){
-                        if(value == dateString) {
+                        // need to convert to date string since tstamps could be in different timezone format
+                        if(moment.unix(value).format("DD.MM.YYYY") == moment.unix(dateString).format("DD.MM.YYYY")) {
                             dayElem.className += ' disabled blocked';
                         }
                     });
