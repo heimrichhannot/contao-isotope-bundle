@@ -6,33 +6,24 @@ define('ISO_PRODUCT_CREATOR_MULTI_IMAGE_PRODUCT', 'HeimrichHannot\IsotopeBundle\
 /**
  * Isotope Hooks
  */
-
-$GLOBALS['ISO_HOOKS']['generateProduct'][]                                    = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'generateProductHook'];
-$GLOBALS['ISO_HOOKS']['addProductToCollection']['validateStockCollectionAdd'] = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'validateStockCollectionAdd'];
-
-$GLOBALS['ISO_HOOKS']['postAddProductToCollection']['huh_isotope_bundle'] = ['huh.isotope.listener.hooks.isotope', 'validateStockCollectionAdd'];
-$GLOBALS['ISO_HOOKS']['postAddProductToCollection']['huh_isotope_bundle'] = ['huh.isotope.listener.hooks.isotope', 'addBookingInformationToItem'];
-
-$GLOBALS['ISO_HOOKS']['preCheckout']['validateStockCheckout']  = ['huh.isotope.listener.hooks.isotope', 'validateStockPreCheckout'];
-$GLOBALS['ISO_HOOKS']['postCheckout']['validateStockCheckout'] = ['huh.isotope.listener.hooks.isotope', 'validateStockPostCheckout'];
-$GLOBALS['ISO_HOOKS']['postCheckout']['sendOrderNotification'] = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'sendOrderNotification'];
-
+$GLOBALS['ISO_HOOKS']['postAddProductToCollection']['huh_isotope_bundle']        = ['huh.isotope.listener.hooks.isotope', 'validateStockCollectionAdd'];
+$GLOBALS['ISO_HOOKS']['postAddProductToCollection']['huh_isotope_bundle']        = ['huh.isotope.listener.hooks.isotope', 'addBookingInformationToItem'];
+$GLOBALS['ISO_HOOKS']['preCheckout']['validateStockCheckout']                    = ['huh.isotope.listener.hooks.isotope', 'validateStockPreCheckout'];
+$GLOBALS['ISO_HOOKS']['postCheckout']['validateStockCheckout']                   = ['huh.isotope.listener.hooks.isotope', 'validateStockPostCheckout'];
+$GLOBALS['ISO_HOOKS']['generateProduct'][]                                       = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'generateProductHook'];
+$GLOBALS['ISO_HOOKS']['addProductToCollection']['validateStockCollectionAdd']    = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'validateStockCollectionAdd'];
+$GLOBALS['ISO_HOOKS']['postCheckout']['sendOrderNotification']                   = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'sendOrderNotification'];
 $GLOBALS['ISO_HOOKS']['postCheckout']['setSetQuantity']                          = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'setSetQuantity'];
 $GLOBALS['ISO_HOOKS']['updateItemInCollection']['validateStockCollectionUpdate'] = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'validateStockCollectionUpdate'];
 $GLOBALS['ISO_HOOKS']['buttons'][]                                               = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'addDownloadSingleProductButton'];
 $GLOBALS['ISO_HOOKS']['buttons'][]                                               = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'defaultButtons'];
 $GLOBALS['ISO_HOOKS']['preOrderStatusUpdate']['updateStock']                     = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'updateStock'];
-/**
- * Hooks
- */
-
-$GLOBALS['TL_HOOKS']['replaceDynamicScriptTags'][]             = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'hookReplaceDynamicScriptTags'];
-$GLOBALS['TL_HOOKS']['postDownload']['downloadCounter']        = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'updateDownloadCounter'];
-$GLOBALS['ISO_HOOKS']['generateProduct']['updateTemplateData'] = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'updateTemplateData'];
+$GLOBALS['TL_HOOKS']['replaceDynamicScriptTags'][]                               = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'hookReplaceDynamicScriptTags'];
+$GLOBALS['TL_HOOKS']['postDownload']['downloadCounter']                          = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'updateDownloadCounter'];
+$GLOBALS['ISO_HOOKS']['generateProduct']['updateTemplateData']                   = ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'updateTemplateData'];
+$GLOBALS['TL_HOOKS']['getPageLayout'][]                                          = ['huh.isotope.ajax_manager', 'ajaxActions'];
+$GLOBALS['TL_HOOKS']['loadDataContainer']['huh.isotope.productdata_fields']      = ['huh.isotope.listener.hooks', 'addMetaFields'];
 //$GLOBALS['TL_HOOKS']['parseItems']['addPdfViewerToTemplate']   = ['huh.isotope.helper.product', 'addPdfViewerToTemplate'];
-
-$GLOBALS['TL_HOOKS']['getPageLayout'][]                                     = ['huh.isotope.ajax_manager', 'ajaxActions'];
-$GLOBALS['TL_HOOKS']['loadDataContainer']['huh.isotope.productdata_fields'] = ['huh.isotope.listener.hooks', 'addMetaFields'];
 
 /**
  * Frontend modules

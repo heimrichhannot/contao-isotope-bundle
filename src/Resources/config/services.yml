@@ -28,6 +28,11 @@ services:
   huh.isotope.ajax_manager:
     class: HeimrichHannot\IsotopeBundle\Manager\AjaxManager
     public: true
+  huh.isotope.manager.list:
+    class: HeimrichHannot\IsotopeBundle\Manager\ProductListManager
+    public: true
+    arguments:
+      - '@contao.framework'
 
 # Event Listener
 
