@@ -60,13 +60,16 @@ $arrLang['iso_uploadFolder']         = ['Upload-Ordner', 'Wählen Sie hier den O
 
 $arrLang['iso_useFieldDependendUploadFolder'] = ['Feldabhängiger Upload-Ordner', 'Wählen Sie diese Option, wenn der Upload-Ordner von einem Feld-Wert im Formular abhängen soll.'];
 $arrLang['iso_fieldForUploadFolder']          = ['Feld', 'Wählen Sie hier das Feld, das zur Bestimmung des Upload-Ordners genutzt werden soll.'];
-
+$arrLang['productTypeDependantOrderConditions'] = ['produkttypabhängig','Wählen Sie diese Option, wenn das Bestellbedingungsformular nur für bestimmte Produkttypen angezeigt werden soll.'];
+$arrLang['dependantTypes'] = ['Produkttyp','Wählen Sie hier die Produkttypen aus, für die das Bestellbedingungsformular angezeigt werden soll.'];
+$arrLang['productDependantOrderConditions'] = ['produktabhängig','Wählen Sie diese Option, wenn das Bestellbedingungsformular nur für bestimmte Produkte angezeigt werden soll.'];
+$arrLang['dependantProducts'] = ['Produkte','Wählen Sie hier die Produkte aus, für die das Bestellbedingungsformular angezeigt werden soll.'];
+$arrLang['iso_order_conditions_text'] = ['Text', 'Tragen Sie hier einen Text ein, der als Einleitung für das Bestellbedingungsformular dienen soll.'];
 /**
  * Legends
  */
 $arrLang['creator_legend'] = 'Produktersteller';
 $arrLang['product_legend'] = 'Produkteinstellungen';
-
 
 /**
  * Misc

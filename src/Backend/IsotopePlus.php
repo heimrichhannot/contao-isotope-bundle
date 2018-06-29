@@ -535,6 +535,15 @@ class IsotopePlus extends \Isotope\Isotope
         return $arrButtons;
     }
 
+    public function getProductLabels()
+    {
+        if (null === ($products = System::getContainer()->get('huh.utils.model')->findModelInstancesBy('tl_iso_product', ['tl_iso_product.sku!=""'], []))) {
+            return [];
+        }
+
+        return $products->fetchEach('name');
+    }
+
     // copy of code in ProductCollection->generateItem
     protected function generateItem(ProductCollectionItem $item)
     {

@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.11.0] - 2018-06-29
+
+#### Added
+* order conditions can now me dependent on certain product types or products
+
 ## [0.10.4] - 2018-06-28
 
 #### Fixed
