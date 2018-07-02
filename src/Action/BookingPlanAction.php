@@ -78,7 +78,12 @@ class BookingPlanAction extends CartAction
             if (!$config['module']->iso_addProductJumpTo) {
                 Controller::reload();
             }
-            System::getContainer()->get('huh.utils.url')->redirect($config['module']->iso_addProductJumpTo);
+
+            if (null === ($jumpToPage = System::getContainer()->get('huh.utils.url')->getJumpToPageObject($config['module']->iso_addProductJumpTo))) {
+                Controller::reload();
+            }
+
+            System::getContainer()->get('huh.utils.url')->redirect($jumpToPage->alias);
         } else {
             return false;
         }

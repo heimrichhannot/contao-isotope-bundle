@@ -65,6 +65,7 @@ $arrLang['dependantTypes'] = ['Produkttyp','Wählen Sie hier die Produkttypen au
 $arrLang['productDependantOrderConditions'] = ['produktabhängig','Wählen Sie diese Option, wenn das Bestellbedingungsformular nur für bestimmte Produkte angezeigt werden soll.'];
 $arrLang['dependantProducts'] = ['Produkte','Wählen Sie hier die Produkte aus, für die das Bestellbedingungsformular angezeigt werden soll.'];
 $arrLang['iso_order_conditions_text'] = ['Text', 'Tragen Sie hier einen Text ein, der als Einleitung für das Bestellbedingungsformular dienen soll.'];
+
 /**
  * Legends
  */

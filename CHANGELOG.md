@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.11.1] - 2018-07-02
+
+#### Fixed
+* correct redirect after adding a booking product to cart
+
 ## [0.11.0] - 2018-06-29
 
 #### Added
