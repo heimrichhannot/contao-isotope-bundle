@@ -11,3 +11,4 @@ $GLOBALS['TL_LANG']['FMD']['iso_cart_link']               = ['Warenkorbverknüpf
 $GLOBALS['TL_LANG']['FMD']['iso_orderdetails_plus']       = ['Bestellungsdetails Plus', ''];
 $GLOBALS['TL_LANG']['FMD']['iso_direct_checkout']         = ['Direktbestellung', 'Schicken Sie Bestellungen ohne Login und Kasse ganz einfach über ein Formular ab.'];
 $GLOBALS['TL_LANG']['FMD']['iso_product_ranking']         = ['Produktranking', 'Zeigt die Entwicklung der Verkaufszahlen für bestimmte Produkte in einer sortierbaren Liste an.'];
+$GLOBALS['TL_LANG']['FMD']['iso_checkout_plus']           = ['Kasse Plus', 'Erweitert die Funktionalität des Core-Kassen Moduls.'];

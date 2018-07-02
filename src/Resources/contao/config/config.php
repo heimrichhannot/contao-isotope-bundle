@@ -38,6 +38,7 @@ $GLOBALS['FE_MOD']['isotopeBundle'] = [
     'iso_stockreport'             => 'HeimrichHannot\IsotopeBundle\Module\ModuleStockReport',
     'iso_orderreport'             => 'HeimrichHannot\IsotopeBundle\Module\ModuleOrderReport',
     'iso_productlistslick'        => 'HeimrichHannot\IsotopeBundle\Module\ProductListSlick',
+    'iso_checkout_plus'           => 'HeimrichHannot\IsotopeBundle\Module\CheckoutPlus'
 ];
 
 
