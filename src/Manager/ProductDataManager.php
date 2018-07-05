@@ -85,8 +85,8 @@ class ProductDataManager
         if (null === $productData) {
             $productData = new ProductDataModel();
             $productData->pid = $pid;
-            $productData->dateAdded = $productData->tstamp = time();
             $productData->syncWithProduct();
+            $productData->dateAdded = $productData->tstamp = time();
         } else {
             $this->productDataModelCache[$productData->pid] = $productData;
         }

@@ -56,15 +56,9 @@ class IsotopeCollectionItem extends DefaultItem
             return null;
         }
 
-        $customer = System::getContainer()->get('contao.framework')->getAdapter(MemberModel::class)->findByPk($this->_raw['member']);
-
-        if (null === $customer) {
-            return null;
-        }
-
         $jumpTo = System::getContainer()->get('huh.utils.url')->getJumpToPageObject(131);
 
-        return $jumpTo->getFrontendUrl('/'.$customer->username);
+        return $jumpTo->getFrontendUrl('/'.$this->_raw['member']);
     }
 
     public function getGrandTotal()

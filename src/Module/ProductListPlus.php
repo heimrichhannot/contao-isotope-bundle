@@ -303,7 +303,7 @@ class ProductListPlus extends ProductList
 
         /** @var \Isotope\Model\Product\Standard $product */
         foreach ($this->products as $product) {
-            $arrConfig = [
+            $config = [
                 'module' => $this,
                 'template' => ($this->iso_list_layout ?: $product->getRelated('type')->list_template),
                 'gallery' => ($this->iso_gallery ?: $product->getRelated('type')->list_gallery),
@@ -321,7 +321,7 @@ class ProductListPlus extends ProductList
                     $response = new HtmlResponse($arrCheck[1], 400);
                 } else {
                     try {
-                        $product->generate($arrConfig);
+                        $product->generate($config);
                     } catch (AjaxRedirectResponseException $exception) {
                     }
                     $response = new HtmlResponse();
@@ -335,14 +335,14 @@ class ProductListPlus extends ProductList
 
             // Must be done after setting options to generate the variant config into the URL
             if ($this->iso_jump_first && '' == \Haste\Input\Input::getAutoItem('product', false, true)) {
-                $this->framework->getAdapter(Controller::class)->redirect($product->generateUrl($arrConfig['jumpTo']));
+                $this->framework->getAdapter(Controller::class)->redirect($product->generateUrl($config['jumpTo']));
             }
 
             $arrCSS = StringUtil::deserialize($product->cssID, true);
             $buffer[] = [
                 'cssID' => ('' != $arrCSS[0]) ? ' id="'.$arrCSS[0].'"' : '',
                 'class' => trim('product '.($product->isNew() ? 'new ' : '').$arrCSS[1]),
-                'html' => $product->generate($arrConfig),
+                'html' => $product->generate($config),
                 'product' => $product,
             ];
         }

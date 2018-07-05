@@ -29,6 +29,7 @@ $GLOBALS['TL_HOOKS']['loadDataContainer']['huh.isotope.productdata_fields']     
  * Frontend modules
  */
 $GLOBALS['FE_MOD']['isotopeBundle'] = [
+    'iso_productfilterplus'       => 'HeimrichHannot\IsotopeBundle\Module\ProductFilterPlus',
     'iso_cart_link'               => 'HeimrichHannot\IsotopeBundle\Module\CartLink',
     'iso_product_ranking'         => 'HeimrichHannot\IsotopeBundle\Module\ProductRanking',
     'iso_orderdetails_plus'       => 'HeimrichHannot\IsotopeBundle\Module\OrderDetailsPlus',
@@ -38,7 +39,7 @@ $GLOBALS['FE_MOD']['isotopeBundle'] = [
     'iso_stockreport'             => 'HeimrichHannot\IsotopeBundle\Module\ModuleStockReport',
     'iso_orderreport'             => 'HeimrichHannot\IsotopeBundle\Module\ModuleOrderReport',
     'iso_productlistslick'        => 'HeimrichHannot\IsotopeBundle\Module\ProductListSlick',
-    'iso_checkout_plus'           => 'HeimrichHannot\IsotopeBundle\Module\CheckoutPlus'
+    'iso_checkout_plus'           => 'HeimrichHannot\IsotopeBundle\Module\CheckoutPlus',
 ];
 
 

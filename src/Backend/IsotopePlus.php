@@ -9,11 +9,11 @@
 namespace HeimrichHannot\IsotopeBundle\Backend;
 
 use Contao\Controller;
+use Contao\Model;
 use Contao\StringUtil;
 use Contao\System;
 use Haste\Generator\RowClass;
 use Haste\Haste;
-use HeimrichHannot\HastePlus\Environment;
 use HeimrichHannot\HastePlus\Files;
 use HeimrichHannot\Request\Request;
 use Isotope\Frontend;
@@ -222,7 +222,8 @@ class IsotopePlus extends \Isotope\Isotope
             && $strPath = $framework->getAdapter(Files::class)->getPathFromUuid($objDownload->singleSRC)) {
             // TODO count downloads
             // start downloading the file (protected folders also supported)
-            $framework->getAdapter(Controller::class)->redirect(Environment::getUrl().'?file='.$strPath);
+            System::getContainer()->get('huh.utils.url')->addQueryString('file='.$strPath);
+            $framework->getAdapter(Controller::class)->redirect(System::getContainer()->get('huh.utils.url')->addQueryString('file='.$strPath));
         }
     }
 
@@ -502,7 +503,8 @@ class IsotopePlus extends \Isotope\Isotope
             return;
         }
 
-        if (null !== ($product = $framework->getAdapter(Product::class)->findByPk($download->pid))) {
+        /** @var Model $product */
+        if (null !== ($product = System::getContainer()->get('huh.utils.model')->findModelInstanceByPk(Product::getTable(), $download->pid))) {
             ++$product->downloadCount;
             $product->save();
         }

@@ -84,7 +84,16 @@ class ProductDataModel extends Model
     public function syncWithProduct()
     {
         $product = $this->getProductModel();
-        $this->mergeRow($product->row());
+
+        if (null === $product) {
+            return $this;
+        }
+
+        $data = $product->row();
+        // unset id and pid to avoid overwriting
+        unset($data['id'], $data['pid']);
+
+        $this->mergeRow($data);
         $this->tstamp = time();
 
         return $this;
