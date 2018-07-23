@@ -285,6 +285,31 @@ class IsotopeManager
     }
 
     /**
+     * get the isotope image by product.
+     *
+     * @param        $template
+     * @param        $product
+     * @param string $size
+     *
+     * @return string
+     */
+    public function getIsotopeImage($product, string $size = '')
+    {
+        $data['name'] = $product->name;
+        $data['images'] = $product->images;
+        $data['src'] = $product->src;
+        $data['uploadedFiles'] = $product->uploadedFiles;
+        $data['size'] = $product->size;
+
+        $img = [];
+        $this->addImageToTemplateData($data, $size, $img);
+
+        $img['image']['picture']['image'] = $img['image']['images'];
+
+        return System::getContainer()->get('twig')->render('HeimrichHannotBegBundle:image:iso_gallery_standard.html.twig', $img['image']['picture']);
+    }
+
+    /**
      * Formats the return message of validateQuantity if an error occurred.
      *
      * @param string $errorMessage

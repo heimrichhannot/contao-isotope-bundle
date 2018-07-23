@@ -18,12 +18,6 @@ use Isotope\Module\OrderDetails;
 
 /**
  * Class OrderDetailsPlus.
- *
- * Adds a switch to display all orders (not only the ones of the currently logged in user)
- *
- * @copyright  Isotope eCommerce Workgroup 2009-2012
- * @author     Andreas Schempp <andreas.schempp@terminal42.ch>
- * @author     Fred Bliss <fred.bliss@intelligentspark.com>
  */
 class OrderDetailsPlus extends OrderDetails
 {

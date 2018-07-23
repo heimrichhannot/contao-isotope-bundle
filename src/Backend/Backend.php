@@ -11,6 +11,7 @@ namespace HeimrichHannot\IsotopeBundle\Backend;
 use Contao\FilesModel;
 use Contao\StringUtil;
 use Contao\System;
+use Contao\Validator;
 use Haste\Util\Format;
 use Isotope\Model\Product;
 use Isotope\Model\ProductPrice;
@@ -52,17 +53,19 @@ class Backend
                     if (is_array($uploadedFiles = unserialize($product->uploadedFiles))) {
                         $product->uploadedFiles = $uploadedFiles[0];
                     }
-                    if (\Validator::isUuid($product->uploadedFiles)) {
+                    if (Validator::isUuid($product->uploadedFiles)) {
                         $image = $framework->getAdapter(FilesModel::class)->findByUuid($product->uploadedFiles);
                         $size = @getimagesize(TL_ROOT.'/'.$image->path);
 
-                        if (!file_exists(TL_ROOT.$image->path)) {
+                        if (!file_exists(TL_ROOT.'/'.$image->path)) {
                             $args[$i] = '-';
                             break;
                         }
                         $resizeImage = $container->get('contao.image.image_factory')->create($image->path, [50, 50, 'proportional']);
 
                         $args[$i] = sprintf('<a href="%s" onclick="Backend.openModalImage({\'width\':%s,\'title\':\'%s\',\'url\':\'%s\'});return false"><img src="%s" alt="%s" align="left"></a>', TL_FILES_URL.$image->path, $size[0], str_replace("'", "\\'", $product->name), TL_FILES_URL.$image->path, TL_ASSETS_URL.str_replace(TL_ROOT, '', $resizeImage->getPath()), $image->alt);
+                    } else {
+                        $args[$i] = '-';
                     }
                     break;
                 case 'name':

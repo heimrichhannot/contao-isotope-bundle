@@ -10,6 +10,7 @@ namespace HeimrichHannot\IsotopeBundle\ConfigElementType;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\System;
+use HeimrichHannot\IsotopeBundle\Model\ProductModel;
 use HeimrichHannot\ListBundle\ConfigElementType\ConfigElementType;
 use HeimrichHannot\ListBundle\Item\ItemInterface;
 use HeimrichHannot\ListBundle\Model\ListConfigElementModel;
@@ -28,8 +29,17 @@ class IsotopeImageListConfigElementType implements ConfigElementType
 
     public function addToItemData(ItemInterface $item, ListConfigElementModel $listConfigElement)
     {
+        $product = $this->framework->getAdapter(ProductModel::class)->findById($item->getFormattedValue('id'));
+
+        $data = [];
+        $data['name'] = $product->name;
+        $data['images'] = $product->images;
+        $data['src'] = $product->src;
+        $data['uploadedFiles'] = $product->uploadedFiles;
+        $data['size'] = $product->size;
+
         $templateData['isotopeImages'] = [];
-        System::getContainer()->get('huh.isotope.manager')->addImageToTemplateData($item->getRaw(), $listConfigElement->imgSize, $templateData, 'isotopeImages');
+        System::getContainer()->get('huh.isotope.manager')->addImageToTemplateData($data, $listConfigElement->imgSize, $templateData, 'isotopeImages');
         $item->setFormattedValue('isotopeImages', $templateData['isotopeImages']);
     }
 }

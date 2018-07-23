@@ -73,9 +73,6 @@ abstract class ProductEditor
         // image data
         $this->createImageProduct();
 
-        // delete submission since for all products an new model was created
-//        $this->submission->delete();
-
         return true;
     }
 

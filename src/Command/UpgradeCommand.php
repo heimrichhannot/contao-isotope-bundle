@@ -10,9 +10,10 @@ namespace HeimrichHannot\IsotopeBundle\Command;
 
 use Contao\CoreBundle\Command\AbstractLockedCommand;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\Model\Collection;
+use Contao\Database;
 use HeimrichHannot\IsotopeBundle\Manager\ProductDataManager;
 use HeimrichHannot\IsotopeBundle\Model\ProductDataModel;
+use HeimrichHannot\IsotopeBundle\Model\ProductModel;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -60,21 +61,23 @@ class UpgradeCommand extends AbstractLockedCommand
         $io->title('Starting import product data.');
         $this->framework->initialize();
 
-        /** @var ProductDataModel[]|Collection|null $products */
-        $products = $this->productDataManager->getAllProducts('WHERE type != 0');
+        $table = ProductModel::getTable();
+        /** @var Database $db */
+        $db = $this->framework->createInstance(Database::class);
+        $result = $db->query("SELECT * FROM $table WHERE type != 0");
 
-        $io->writeln('Found '.$products->count().' products.');
+        $io->writeln('Found '.$result->count().' products.');
         $io->writeln('Updating product data:');
 
         $io->newLine();
-        $io->progressStart($products->count());
+        $io->progressStart($result->count());
         $dataAdded = 0;
         $dataUpdated = 0;
         $dataSkipped = 0;
-        foreach ($products as $product) {
+        foreach ($result->fetchAllAssoc() as $product) {
             $io->progressAdvance();
             /** @var ProductDataModel $productData */
-            $productData = $this->framework->getAdapter(ProductDataModel::class)->findByPid($product->id);
+            $productData = $this->framework->getAdapter(ProductDataModel::class)->findByPid($product['id']);
             if (null !== $productData && !$input->getOption('overwriteExistingEntries')) {
                 ++$dataSkipped;
                 continue;
@@ -82,10 +85,10 @@ class UpgradeCommand extends AbstractLockedCommand
             if (null === $productData) {
                 ++$dataAdded;
                 $productData = new ProductDataModel();
-                $productArray = $product->row();
+                $productArray = $product;
                 unset($productArray['id']);
                 $productData->mergeRow($productArray);
-                $productData->pid = $product->id;
+                $productData->pid = $product['id'];
                 $productData->tstamp = $productData->dateAdded = time();
             } else {
                 ++$dataUpdated;
