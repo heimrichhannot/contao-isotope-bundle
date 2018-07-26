@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [DEV] - 2018-07-26
+
+#### Fixed
+* fieldpalette version constraint
+
 ## [0.11.1] - 2018-07-02
 
 #### Fixed
