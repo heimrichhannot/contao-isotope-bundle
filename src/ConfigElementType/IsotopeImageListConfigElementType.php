@@ -40,6 +40,8 @@ class IsotopeImageListConfigElementType implements ConfigElementType
 
         $templateData['isotopeImages'] = [];
         System::getContainer()->get('huh.isotope.manager')->addImageToTemplateData($data, $listConfigElement->imgSize, $templateData, 'isotopeImages');
-        $item->setFormattedValue('isotopeImages', $templateData['isotopeImages']);
+        if (0 < $templateData['isotopeImages']['picture']['img']['width'] && 0 < $templateData['isotopeImages']['picture']['img']['height']) {
+            $item->setFormattedValue('isotopeImages', $templateData['isotopeImages']);
+        }
     }
 }
