@@ -14,6 +14,7 @@ use Contao\FilesModel;
 use Contao\FrontendUser;
 use Contao\System;
 use Isotope\Frontend\ProductAction\Registry;
+use Isotope\Model\Product;
 
 class Callbacks
 {
@@ -93,5 +94,36 @@ class Callbacks
         }
 
         return $arrOptions;
+    }
+
+    public function getUploadedFiles($value, DataContainer $dc)
+    {
+        return $this->getLoadCallbackValueByField('uploadedFiles', $value, $dc);
+    }
+
+    public function getLoadCallbackValueByField(string $field, $value, DataContainer $dc)
+    {
+        $productModel = System::getContainer()->get('contao.framework')->getAdapter(Product::class)->findByPk($dc->activeRecord->id);
+
+        if (null === $productModel) {
+            return $value;
+        }
+
+        return $productModel->$field;
+    }
+
+    public function getUploadedDownloadFiles($value, DataContainer $dc)
+    {
+        return $this->getLoadCallbackValueByField('uploadedDownloadFiles', $value, $dc);
+    }
+
+    public function getTag($value, DataContainer $dc)
+    {
+        return $this->getLoadCallbackValueByField('tag', $value, $dc);
+    }
+
+    public function getLicence($value, DataContainer $dc)
+    {
+        return $this->getLoadCallbackValueByField('licence', $value, $dc);
     }
 }

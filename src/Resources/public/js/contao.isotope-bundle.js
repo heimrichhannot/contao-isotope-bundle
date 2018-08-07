@@ -1,18 +1,19 @@
-(function($)
-{
+(function($) {
     window.ISOTOPE_BUNDLE = {
-        init: function () {
+        init: function() {
             this.initPDFViewer();
             this.initBookingPlan();
+            this.initRankingTableSorter();
             this.registerEvents();
         },
-        registerEvents: function () {
+        registerEvents: function() {
             $(document).keydown(function(e) {
                 if (e.which == 13) {
                     e.preventDefault();
                     pageNum = parseInt($('#ctrl-pageNum_' + activeID).val());
 
-                    if ($('#ctrl-pageNum_' + activeID + ':focus').length && pageNum <= pdfDoc.numPages && pageNum >= 1) {
+                    if ($('#ctrl-pageNum_' + activeID + ':focus').length && pageNum <= pdfDoc.numPages && pageNum >=
+                        1) {
                         isotopeBundle.queueRenderPage(pageNum);
                     }
                 }
@@ -35,6 +36,9 @@
                 }
             });
 
+        },
+        initRankingTableSorter: function() {
+            $('.mod_iso_product_ranking table').tablesorter();
         },
         initPDFViewer: function() {
             // activeID = $('.tabs_pdfViewer li.active').data('target');
@@ -142,20 +146,20 @@
                     var date = dayElem.dateObj;
 
                     var dateString = isotopeBundle.getComparableDate(date.getTime());
-                    $.each(blocked,function(key,value){
+                    $.each(blocked, function(key, value) {
                         // need to convert to date string since tstamps could be in different timezone format
-                        if(moment.unix(value).format("DD.MM.YYYY") == moment.unix(dateString).format("DD.MM.YYYY")) {
+                        if (moment.unix(value).format('DD.MM.YYYY') == moment.unix(dateString).format('DD.MM.YYYY')) {
                             dayElem.className += ' disabled blocked';
                         }
                     });
-                }
+                },
             });
         },
         getComparableDate: function(date) {
-            str = str.toString().substring(0,10);
+            str = str.toString().substring(0, 10);
             str = parseInt(str);
-            return str+7200;
-        }
+            return str + 7200;
+        },
     };
 
     $(document).ready(function() {

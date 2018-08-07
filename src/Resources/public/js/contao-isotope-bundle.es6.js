@@ -1,45 +1,22 @@
 let jQuery = require('jquery');
+let flatpickr = require('flatpickr');
+let tablesorter = require('tablesorter');
 
 ($ => {
     let isotopeBundle = {
-        init: function () {
+        init: function() {
             // this.initPDFViewer();
             this.initBookingPlan();
             this.registerEvents();
+            this.initRankingTableSorter();
         },
-        registerEvents: function () {
-            // $(document).keydown(function(e) {
-            //     if (e.which == 13) {
-            //         e.preventDefault();
-            //         pageNum = parseInt($('#ctrl-pageNum_' + activeID).val());
-            //
-            //         if ($('#ctrl-pageNum_' + activeID + ':focus').length && pageNum <= pdfDoc.numPages && pageNum >= 1) {
-            //             isotopeBundle.queueRenderPage(pageNum);
-            //         }
-            //     }
-            // });
-            //
-            // $('#ctrl-prev_' + activeID).on('click', function() {
-            //     isotopeBundle.onPrevPage();
-            // });
-            //
-            // $('#ctrl-next_' + activeID).on('click', function() {
-            //     isotopeBundle.onNextPage();
-            // });
-            //
-            // $('.tabs').on('click', function() {
-            //     activeID = $(this).data('target');
-            //     pageNum = parseInt($('#ctrl-pageNum_' + activeID).val());
-            //
-            //     if (!$('#pdfViewer_' + activeID).hasClass('loaded')) {
-            //         isotopeBundle.initPDFViewer();
-            //     }
-            // });
-
-
-            $(document).on('change', '.quantity_container input',function(){
+        registerEvents: function() {
+            $(document).on('change', '.quantity_container input', function() {
                 isotopeBundle.updateBookingPlan($(this));
             });
+        },
+        initRankingTableSorter: function() {
+            $('.mod_iso_product_ranking table').tablesorter();
         },
         initPDFViewer: function() {
             // activeID = $('.tabs_pdfViewer li.active').data('target');
@@ -146,20 +123,20 @@ let jQuery = require('jquery');
                 dateFormat: 'd.m.Y',
                 minDate: 'today',
                 mode: 'range',
-                inline:true,
-                locale:"de",
+                inline: true,
+                locale: 'de',
                 onDayCreate: function(dObj, dStr, fp, dayElem) {
                     var date = dayElem.dateObj;
 
                     var dateString = isotopeBundle.getComparableDate(date.getTime());
 
-                    $.each(blocked,function(key,value){
+                    $.each(blocked, function(key, value) {
                         // need to convert to date string since tstamps could be in different timezone format
-                        if(moment.unix(value).format("DD.MM.YYYY") == moment.unix(dateString).format("DD.MM.YYYY")) {
+                        if (moment.unix(value).format('DD.MM.YYYY') == moment.unix(dateString).format('DD.MM.YYYY')) {
                             dayElem.className += ' disabled blocked';
                         }
                     });
-                }
+                },
             });
         },
         updateBookingPlan: function(elem) {
@@ -168,30 +145,30 @@ let jQuery = require('jquery');
                 qantity = elem.val();
 
             $.ajax({
-                url:url,
-                dataType:'JSON',
-                method:'POST',
-                data: {'productId':productId,'quantity' : qantity},
+                url: url,
+                dataType: 'JSON',
+                method: 'POST',
+                data: {'productId': productId, 'quantity': qantity},
                 success: function(data) {
-                    if(undefined !== data.result.data.blocked) {
+                    if (undefined !== data.result.data.blocked) {
                         isotopeBundle.initFlatpickr(data.result.data.blocked);
                     }
                     else {
                         alert('Ein Fehler ist aufgetreten!');
                     }
-                }
+                },
             });
         },
         getComparableDate: function(date) {
-            date = date.toString().substring(0,10);
+            date = date.toString().substring(0, 10);
             date = parseInt(date);
-            return date+7200;
-        }
+            return date + 7200;
+        },
     };
 
     module.exports = isotopeBundle;
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         isotopeBundle.init();
     });
 })(jQuery);

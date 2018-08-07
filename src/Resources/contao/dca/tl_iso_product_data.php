@@ -121,10 +121,10 @@ $GLOBALS['TL_DCA']['tl_iso_product_data'] = [
             'sql'        => "int(10) unsigned NOT NULL default '0'",
         ],
         'uploadedFiles'           => [
-            'label'      => &$GLOBALS['TL_LANG']['tl_iso_product']['uploadedFiles'],
-            'exclude'    => true,
-            'inputType'  => 'multifileupload',
-            'eval'       => [
+            'label'         => &$GLOBALS['TL_LANG']['tl_iso_product']['uploadedFiles'],
+            'exclude'       => true,
+            'inputType'     => 'multifileupload',
+            'eval'          => [
                 'tl_class'           => 'clr',
                 'extensions'         => \Contao\Config::get('validImageTypes'),
                 'filesOnly'          => true,
@@ -141,14 +141,15 @@ $GLOBALS['TL_DCA']['tl_iso_product_data'] = [
                 'maxUploadSize'      => \Contao\Config::get('maxFileSize'),
                 'mandatory'          => true,
             ],
-            'attributes' => ['legend' => 'media_legend'],
-            'sql'        => "blob NULL",
+            'load_callback' => [['HeimrichHannot\IsotopeBundle\Backend\Callbacks', 'getUploadedFiles']],
+            'attributes'    => ['legend' => 'media_legend'],
+            'sql'           => "blob NULL",
         ],
         'uploadedDownloadFiles'   => [
-            'label'      => &$GLOBALS['TL_LANG']['tl_iso_product']['uploadedDownloadFiles'],
-            'exclude'    => true,
-            'inputType'  => 'multifileupload',
-            'eval'       => [
+            'label'         => &$GLOBALS['TL_LANG']['tl_iso_product']['uploadedDownloadFiles'],
+            'exclude'       => true,
+            'inputType'     => 'multifileupload',
+            'eval'          => [
                 'tl_class'           => 'clr',
                 'extensions'         => \Contao\Config::get('uploadTypes'),
                 'filesOnly'          => true,
@@ -160,8 +161,9 @@ $GLOBALS['TL_DCA']['tl_iso_product_data'] = [
                 'multipleFiles'      => true,
                 'maxUploadSize'      => \Contao\Config::get('maxFileSize'),
             ],
-            'attributes' => ['legend' => 'media_legend'],
-            'sql'        => "blob NULL",
+            'load_callback' => [['HeimrichHannot\IsotopeBundle\Backend\Callbacks', 'getUploadedDownloadFiles']],
+            'attributes'    => ['legend' => 'media_legend'],
+            'sql'           => "blob NULL",
         ],
         'tag'                     => [
             'label'            => &$GLOBALS['TL_LANG']['tl_iso_product']['tag'],
@@ -179,6 +181,7 @@ $GLOBALS['TL_DCA']['tl_iso_product_data'] = [
                 'helpwizard'     => true,
                 'highlight'      => true,
             ],
+            'load_callback'    => [['HeimrichHannot\IsotopeBundle\Backend\Callbacks', 'getTag']],
             'attributes'       => ['legend' => 'general_legend', 'multilingual' => true, 'fixed' => true, 'fe_sorting' => true, 'fe_search' => true],
             'sql'              => "blob NULL",
         ],
@@ -193,6 +196,7 @@ $GLOBALS['TL_DCA']['tl_iso_product_data'] = [
             'eval'             => ['mandatory' => true, 'tl_class' => 'clr w50', 'includeBlankOption' => true],
             'attributes'       => ['legend' => 'general_legend', 'fe_sorting' => true, 'fe_search' => true],
             'sql'              => "varchar(255) NOT NULL default ''",
+            'load_callback'    => [['HeimrichHannot\IsotopeBundle\Backend\Callbacks', 'getLicence']],
         ],
         'createMultiImageProduct' => [
             'label'      => &$GLOBALS['TL_LANG']['tl_iso_product']['createMultiImageProduct'],
