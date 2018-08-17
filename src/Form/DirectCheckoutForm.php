@@ -8,7 +8,12 @@
 
 namespace HeimrichHannot\IsotopeBundle\Form;
 
-use HeimrichHannot\FieldPalette\FieldPaletteModel;
+use Contao\Controller;
+use Contao\ModuleLoader;
+use Contao\PageModel;
+use Contao\StringUtil;
+use Contao\System;
+use HeimrichHannot\FieldpaletteBundle\Model\FieldPaletteModel;
 use HeimrichHannot\FormHybrid\Form;
 use HeimrichHannot\StatusMessages\StatusMessage;
 use Isotope\CheckoutStep\BillingAddress;
@@ -26,14 +31,44 @@ use Isotope\RequestCache\Sort;
 
 class DirectCheckoutForm extends Form
 {
+    /**
+     * @var string
+     */
     protected $strMethod = FORMHYBRID_METHOD_POST;
+
+    /**
+     * @var array
+     */
     protected $arrBillingAddressFields = [];
+
+    /**
+     * @var array
+     */
     protected $arrShippingAddressFields = [];
+
+    /**
+     * @var array
+     */
     protected $arrProducts = [];
+
+    /**
+     * @var null
+     */
     protected $objCheckoutModule;
+
+    /**
+     * @var int
+     */
     protected $productCount = 0;
+
+    /**
+     * @var int
+     */
     protected $typeCount = 0;
 
+    /**
+     * @var bool
+     */
     protected $noEntity = true;
 
     public function __construct($objModule = null, $instanceId = 0)
@@ -44,10 +79,11 @@ class DirectCheckoutForm extends Form
 
     public function modifyDC(&$arrDca = null)
     {
+        $framework = System::getContainer()->get('contao.framework');
         // get the product
         switch ($this->iso_direct_checkout_product_mode) {
             case 'product_type':
-                if (null !== ($objTypes = FieldPaletteModel::findByPidAndTableAndField($this->objModule->id, 'tl_module', 'iso_direct_checkout_product_types'))) {
+                if (null !== ($objTypes = $framework->getAdapter(FieldPaletteModel::class)->findByPidAndTableAndField($this->objModule->id, 'tl_module', 'iso_direct_checkout_product_types'))) {
                     while ($objTypes->next()) {
                         $arrColumns = [
                             'type=?',
@@ -83,7 +119,7 @@ class DirectCheckoutForm extends Form
                 }
                 break;
             default:
-                if (null !== ($objProducts = FieldPaletteModel::findByPidAndTableAndField($this->objModule->id, 'tl_module', 'iso_direct_checkout_products'))) {
+                if (null !== ($objProducts = $framework->getAdapter(FieldPaletteModel::class)->findByPidAndTableAndField($this->objModule->id, 'tl_module', 'iso_direct_checkout_products'))) {
                     while ($objProducts->next()) {
                         $objProduct = Product::findByPk($objProducts->iso_direct_checkout_product);
 
@@ -98,10 +134,10 @@ class DirectCheckoutForm extends Form
         }
 
         // add address fields
-        \Controller::loadDataContainer('tl_iso_address');
-        \System::loadLanguageFile('tl_iso_address');
+        Controller::loadDataContainer('tl_iso_address');
+        System::loadLanguageFile('tl_iso_address');
 
-        $arrAddressFields = deserialize(Config::findByPk($this->iso_config_id)->address_fields, true);
+        $arrAddressFields = StringUtil::deserialize(Config::findByPk($this->iso_config_id)->address_fields, true);
 
         // add billing address fields
         foreach ($arrAddressFields as $strName => $arrAddressField) {
@@ -251,7 +287,7 @@ class DirectCheckoutForm extends Form
                 $arrDca['subpalettes']['product_'.$objProduct->id] = 'quantity_'.$objProduct->id;
             }
 
-            if (in_array('isotope_subscriptions', \ModuleLoader::getActive(), true) && $blnAddSubscriptionCheckbox) {
+            if (in_array('isotope_subscriptions', ModuleLoader::getActive(), true) && $blnAddSubscriptionCheckbox) {
                 $arrDca['subpalettes']['product_'.$objProduct->id] .= ',subscribeToProduct_'.$objProduct->id;
             }
         }
@@ -266,7 +302,7 @@ class DirectCheckoutForm extends Form
             $this->addFieldsToDefaultPalette('quantity_'.$objProduct->id);
         }
 
-        if (in_array('isotope_subscriptions', \ModuleLoader::getActive(), true) && $blnAddSubscriptionCheckbox) {
+        if (in_array('isotope_subscriptions', ModuleLoader::getActive(), true) && $blnAddSubscriptionCheckbox) {
             $this->addEditableField('subscribeToProduct_'.$objProduct->id, [
                 'label' => ' ',
                 'inputType' => 'checkbox',
@@ -290,6 +326,7 @@ class DirectCheckoutForm extends Form
 
     protected function processForm()
     {
+        $framework = System::getContainer()->get('contao.framework');
         // get a product collection (aka cart)
         global $objPage;
 
@@ -301,7 +338,7 @@ class DirectCheckoutForm extends Form
             'member' => 0,
             'uniqid' => null,
             'config_id' => $this->iso_config_id,
-            'store_id' => (int) \PageModel::findByPk($objPage->rootId)->iso_store_id,
+            'store_id' => (int) $framework->getAdapter(PageModel::class)->findByPk($objPage->rootId)->iso_store_id,
         ]));
 
         $objSubmission = $this->getSubmission(false);
@@ -327,8 +364,8 @@ class DirectCheckoutForm extends Form
         $objOrder = $objCart->getDraftOrder();
 
         // temporarily override the cart for generating the reviews...
-        $objCartTmp = Isotope::getCart();
-        Isotope::setCart($objCart);
+        $objCartTmp = $framework->getAdapter(Isotope::class)->getCart();
+        $framework->getAdapter(Isotope::class)->setCart($objCart);
 
         // create steps
         $arrSteps = [];
@@ -348,11 +385,11 @@ class DirectCheckoutForm extends Form
         $arrCheckoutInfo['billing_address'] = $objBillingAddressStep->review()['billing_address'];
 
         // check if shipping method is group
-        $shippingMethod = Shipping::findByPk($this->objCheckoutModule->iso_shipping_modules);
+        $shippingMethod = $framework->getAdapter(Shipping::class)->findByPk($this->objCheckoutModule->iso_shipping_modules);
         if ('group' == $shippingMethod->type) {
             $quantity = $objCart->sumItemsQuantity();
             foreach (deserialize($shippingMethod->group_methods) as $method) {
-                $groupMethod = Shipping::findByPk($method);
+                $groupMethod = $framework->getAdapter(Shipping::class)->findByPk($method);
 
                 if ($groupMethod->minimum_quantity <= $quantity && $groupMethod->maximum_quantity >= $quantity) {
                     $this->objCheckoutModule->iso_shipping_modules = $groupMethod->id;
@@ -380,7 +417,7 @@ class DirectCheckoutForm extends Form
         $arrCheckoutInfo['shipping_address'] = $objShippingAddressStep->review()['shipping_address'];
 
         // add shipping method
-        $objIsotopeShipping = Flat::findByPk($this->iso_shipping_modules);
+        $objIsotopeShipping = $framework->getAdapter(Flat::class)->findByPk($this->iso_shipping_modules);
         $objOrder->setShippingMethod($objIsotopeShipping);
         $objShippingMethodStep = new ShippingMethod($this->objCheckoutModule);
         $arrSteps[] = $objShippingMethodStep;
@@ -393,7 +430,7 @@ class DirectCheckoutForm extends Form
         $objOrder->notes = $objSubmission->notes;
 
         //... restore the former cart again
-        Isotope::setCart($objCartTmp);
+        $framework->getAdapter(Isotope::class)->setCart($objCartTmp);
 
         $objOrder->nc_notification = $this->nc_notification;
         $objOrder->email_data = $this->getNotificationTokensFromSteps($arrSteps, $objOrder);
@@ -404,7 +441,7 @@ class DirectCheckoutForm extends Form
                 $this->import($callback[0]);
 
                 if ($this->{$callback[0]}->{$callback[1]}($objOrder, $this->objCheckoutModule) === false) {
-                    \System::log('Callback '.$callback[0].'::'.$callback[1].'() cancelled checkout for Order ID '.$this->id, __METHOD__, TL_ERROR);
+                    System::log('Callback '.$callback[0].'::'.$callback[1].'() cancelled checkout for Order ID '.$this->id, __METHOD__, TL_ERROR);
 
                     $this->objCheckoutModule->redirectToStep('failed');
                 }
@@ -452,9 +489,7 @@ class DirectCheckoutForm extends Form
 
         // Run trough all steps to collect checkout information
         foreach ($arrSteps as $objModule) {
-            // foreach ($arrModules as $objModule) {
             $arrTokens = array_merge($arrTokens, $objModule->getNotificationTokens($objOrder));
-            // }
         }
 
         return $arrTokens;

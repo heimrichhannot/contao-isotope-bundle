@@ -9,6 +9,8 @@
 namespace HeimrichHannot\IsotopeBundle\Module;
 
 use Contao\Module;
+use Contao\System;
+use HeimrichHannot\IsotopeBundle\Form\DirectCheckoutForm;
 use Isotope\Module\Checkout;
 
 /**
@@ -25,7 +27,7 @@ class DirectCheckout extends Checkout
 
     public function generate()
     {
-        if (TL_MODE == 'BE') {
+        if (System::getContainer()->get('huh.utils.container')->isBackend()) {
             $objTemplate = new \BackendTemplate('be_wildcard');
 
             $objTemplate->wildcard = '### ISOTOPE ECOMMERCE: DIRECT CHECKOUT ###';
@@ -44,7 +46,6 @@ class DirectCheckout extends Checkout
     protected function compile()
     {
         $this->formHybridDataContainer = 'tl_iso_product_collection';
-
         $objForm = new DirectCheckoutForm($this);
         $this->Template->checkoutForm = $objForm->generate();
     }

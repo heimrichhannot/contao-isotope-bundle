@@ -67,14 +67,14 @@ class IsotopeManager
 
     /**
      * @param Product               $product
-     * @param int                   $quantity
+     * @param                       $quantity
      * @param ProductCollectionItem $cartItem
      * @param bool                  $includeError
      * @param int                   $setQuantity
      *
      * @return array|bool
      */
-    public function validateQuantity(Product $product, int $quantity, ProductCollectionItem $cartItem = null, bool $includeError = false, int $setQuantity = null)
+    public function validateQuantity(Product $product, $quantity, ProductCollectionItem $cartItem = null, bool $includeError = false, int $setQuantity = null)
     {
         // no quantity at all
         if (null === $quantity) {
