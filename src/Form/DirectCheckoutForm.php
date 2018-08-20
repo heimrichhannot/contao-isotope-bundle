@@ -13,7 +13,6 @@ use Contao\ModuleLoader;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
-use HeimrichHannot\FieldpaletteBundle\Model\FieldPaletteModel;
 use HeimrichHannot\FormHybrid\Form;
 use HeimrichHannot\StatusMessages\StatusMessage;
 use Isotope\CheckoutStep\BillingAddress;
@@ -79,11 +78,12 @@ class DirectCheckoutForm extends Form
 
     public function modifyDC(&$arrDca = null)
     {
-        $framework = System::getContainer()->get('contao.framework');
+        $fieldPalette = System::getContainer()->get('huh.fieldpalette.manager');
+
         // get the product
         switch ($this->iso_direct_checkout_product_mode) {
             case 'product_type':
-                if (null !== ($objTypes = $framework->getAdapter(FieldPaletteModel::class)->findByPidAndTableAndField($this->objModule->id, 'tl_module', 'iso_direct_checkout_product_types'))) {
+                if (null !== ($objTypes = $fieldPalette->getInstance()->findByPidAndTableAndField($this->objModule->id, 'tl_module', 'iso_direct_checkout_product_types'))) {
                     while ($objTypes->next()) {
                         $arrColumns = [
                             'type=?',
@@ -119,7 +119,7 @@ class DirectCheckoutForm extends Form
                 }
                 break;
             default:
-                if (null !== ($objProducts = $framework->getAdapter(FieldPaletteModel::class)->findByPidAndTableAndField($this->objModule->id, 'tl_module', 'iso_direct_checkout_products'))) {
+                if (null !== ($objProducts = $fieldPalette->getInstance()->findByPidAndTableAndField($this->objModule->id, 'tl_module', 'iso_direct_checkout_products'))) {
                     while ($objProducts->next()) {
                         $objProduct = Product::findByPk($objProducts->iso_direct_checkout_product);
 
