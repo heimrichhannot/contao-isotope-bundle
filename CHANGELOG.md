@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.11.2] - 2018-08-29
+
+#### Changed
+* faster way to get copyrights and tags
+
 ## [DEV] - 2018-07-26
 
 #### Fixed
