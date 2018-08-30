@@ -9,6 +9,7 @@
 namespace HeimrichHannot\IsotopeBundle\Model;
 
 use Contao\Database;
+use Contao\StringUtil;
 use Contao\System;
 use Isotope\Model\Product\Standard;
 use Isotope\Model\ProductType;
@@ -131,14 +132,26 @@ class ProductModel extends Standard
      */
     public function getCopyrights()
     {
-        /** @var Database\Result $copyrights */
-        $copyrights = System::getContainer()->get('contao.framework')->createInstance(Database::class)->prepare("SELECT * FROM tl_iso_product_data WHERE copyright IS NOT NULL AND copyright != ''")->execute();
-
-        if (null !== ($copyrights)) {
-            return array_unique($copyrights->fetchEach('copyright'));
+        if (null === ($products = System::getContainer()->get('contao.framework')->getAdapter(ProductDataModel::class)->findBy(['copyright IS NOT NULL'], null))) {
+            return [];
         }
 
-        return [];
+        $result = [];
+
+        foreach ($products as $product) {
+            if (!$product->copyright || '' == $product->copyright) {
+                continue;
+            }
+
+            $options = StringUtil::deserialize($product->copyright, true);
+
+            foreach ($options as $option) {
+                $result[] = $option;
+            }
+        }
+
+        // do not use array_unique -> wrong copyright will be displayed as set copyright for this product
+        return $result;
     }
 
     public function getStock(int $id)

@@ -113,19 +113,25 @@ class ProductHelper
     {
         $options = [];
 
-        if (null === ($tags = $this->framework->getAdapter(ProductDataModel::class)->findBy(['tag IS NOT NULL'], null))) {
+        if (null === ($products = $this->framework->getAdapter(ProductDataModel::class)->findBy(['tag IS NOT NULL'], null))) {
             return $options;
         }
 
-        if (null === ($tags = $tags->fetchEach('tag'))) {
-            return $options;
+        $result = [];
+
+        foreach ($products as $product) {
+            if (!$product->tag || '' == $product->tag) {
+                continue;
+            }
+
+            $options = StringUtil::deserialize($product->tag, true);
+
+            foreach ($options as $option) {
+                $result[] = $option;
+            }
         }
 
-        foreach ($tags as $tag) {
-            $options = array_merge($options, StringUtil::deserialize($tag, true));
-        }
-
-        return $options;
+        return array_filter(array_unique($result));
     }
 
     public function getCopyrights()

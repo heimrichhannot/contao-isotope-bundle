@@ -12,6 +12,7 @@ use Contao\BackendUser;
 use Contao\DataContainer;
 use Contao\FilesModel;
 use Contao\FrontendUser;
+use Contao\StringUtil;
 use Contao\System;
 use Isotope\Frontend\ProductAction\Registry;
 use Isotope\Model\Product;
@@ -103,13 +104,18 @@ class Callbacks
 
     public function getLoadCallbackValueByField(string $field, $value, DataContainer $dc)
     {
-        $productModel = System::getContainer()->get('contao.framework')->getAdapter(Product::class)->findByPk($dc->activeRecord->id);
-
-        if (null === $productModel) {
+        if (null === ($productModel = System::getContainer()->get('contao.framework')->getAdapter(Product::class)->findByPk($dc->activeRecord->id))) {
             return $value;
         }
 
-        return $productModel->$field;
+//        $values = StringUtil::deserialize($productModel->{$field});
+//
+//        if(!empty($values))
+//        {
+//            return $values;
+//        }
+
+        return $productModel->{$field};
     }
 
     public function getUploadedDownloadFiles($value, DataContainer $dc)
