@@ -258,6 +258,9 @@ class IsotopeManager
             if (is_array($upload = unserialize($uploadedFiles))) {
                 $uploadedFiles = $upload[0];
             }
+            if (null === $uploadedFiles) {
+                return;
+            }
             if (\Validator::isUuid($uploadedFiles)) {
                 $imageFile = System::getContainer()->get('contao.framework')->getAdapter(FilesModel::class)->findByUuid($uploadedFiles);
                 if (null === $imageFile
