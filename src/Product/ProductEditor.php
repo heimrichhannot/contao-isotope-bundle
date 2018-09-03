@@ -8,6 +8,7 @@
 
 namespace HeimrichHannot\IsotopeBundle\Product;
 
+use Contao\Config;
 use Contao\Controller;
 use Contao\Dbafs;
 use Contao\File;
@@ -150,9 +151,18 @@ abstract class ProductEditor
         // create new File to enable moving the pdf to user folder
         $moveFile = new File($file->path);
 //        $moveFile->close();
-        $strTarget = $folder.'/'.$file->name;
+        $target = $folder.'/'.$file->name;
+        $strTarget = System::getContainer()->get('contao.framework')->getAdapter(Files::class)->getUniqueFileNameWithinTarget($target, FormMultiFileUpload::UNIQID_PREFIX);
 
-        $strTarget = System::getContainer()->get('contao.framework')->getAdapter(Files::class)->getUniqueFileNameWithinTarget($strTarget, FormMultiFileUpload::UNIQID_PREFIX);
+        if (!$strTarget && Config::get('iso_productFolderFallback')) {
+            $target = System::getContainer()->get('huh.utils.file')->getPathFromUuid(Config::get('iso_productFolderFallback')).DIRECTORY_SEPARATOR.$file->name;
+            $strTarget = System::getContainer()->get('contao.framework')->getAdapter(Files::class)->getUniqueFileNameWithinTarget($target, FormMultiFileUpload::UNIQID_PREFIX);
+        }
+
+        if (!$strTarget) {
+            $target = TL_ROOT.DIRECTORY_SEPARATOR.'files'.DIRECTORY_SEPARATOR.$file->name;
+            $strTarget = System::getContainer()->get('contao.framework')->getAdapter(Files::class)->getUniqueFileNameWithinTarget($target, FormMultiFileUpload::UNIQID_PREFIX);
+        }
 
         // move file to upload folder
         $moveFile->renameTo($strTarget);

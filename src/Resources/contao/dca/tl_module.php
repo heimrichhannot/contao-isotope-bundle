@@ -615,7 +615,7 @@ $arrDca['fields']['iso_uploadFolder'] = [
     'label'     => &$GLOBALS['TL_LANG']['tl_module']['iso_uploadFolder'],
     'exclude'   => true,
     'inputType' => 'fileTree',
-    'eval'      => ['fieldType' => 'radio', 'tl_class' => 'clr w50'],
+    'eval'      => ['fieldType' => 'radio', 'tl_class' => 'clr w50','mandatory'=>true],
     'sql'       => "binary(16) NULL",
 ];
 

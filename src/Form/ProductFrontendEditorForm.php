@@ -39,7 +39,7 @@ class ProductFrontendEditorForm extends Form
         if (isset($GLOBALS['TL_HOOKS']['modifyDCProductEditor']) && is_array($GLOBALS['TL_HOOKS']['modifyDCProductEditor'])) {
             foreach ($GLOBALS['TL_HOOKS']['modifyDCProductEditor'] as $callback) {
                 $this->import($callback[0]);
-                $this->{$callback[0]}->{$callback[1]}($this->dca, $this->objModule);
+                $this->{$callback[0]}->{$callback[1]}($arrDca, $this->objModule);
             }
         }
     }

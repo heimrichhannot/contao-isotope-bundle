@@ -103,22 +103,22 @@ class DownloadHelper
                 $download['class'] = 'isotope-download isotope-download-file';
 
                 // add thumbnail
-                $thumbnails = [];
-                foreach (StringUtil::deserialize($downloadFile->download_thumbnail, true) as $thumbnail) {
-                    $thumbnail = $this->framework->getAdapter(FilesModel::class)->findByUuid($thumbnail);
-                    if (null !== $thumbnail) {
-                        $thumbnails[] = ['path' => $thumbnail->path, 'title' => $thumbnail->title];
+                if (in_array($objFile->extension, ['jpg', 'jpeg', 'tiff', 'png', 'pdf'], true)) {
+                    $thumbnails = [];
+                    foreach (StringUtil::deserialize($downloadFile->download_thumbnail, true) as $thumbnail) {
+                        $thumbnail = $this->framework->getAdapter(FilesModel::class)->findByUuid($thumbnail);
+                        if (null !== $thumbnail) {
+                            $thumbnails[] = ['path' => $thumbnail->path, 'title' => $thumbnail->title];
+                        }
                     }
+                    $download['thumbnail'] = $thumbnails;
                 }
-                $download['thumbnail'] = $thumbnails;
 
                 // get width and height of download
                 if (in_array($objFile->extension, ['jpg', 'jpeg', 'tiff', 'png'], true)) {
                     $size = getimagesize($objFile->path);
                     $download['size'] = sprintf($GLOBALS['TL_LANG']['MSC']['downloadSize'], $size[0], $size[1], $download['filesize']);
-                }
-
-                if ('pdf' == $objFile->extension) {
+                } else {
                     $download['size'] = sprintf($GLOBALS['TL_LANG']['MSC']['downloadSizePdf'], $download['name'], $download['filesize']);
                 }
 
