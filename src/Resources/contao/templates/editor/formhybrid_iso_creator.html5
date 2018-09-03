@@ -20,6 +20,7 @@
                 <?php endif; ?>
             <?php endif; ?>
             <?= $this->hidden; ?>
+            
             <?php foreach ($this->fields as $name => $objField): ?>
             <?php if ($name == 'uploadedFiles' || $name == 'images' || $name == 'uploadedDownloadFiles'): ?>
             <div class="<?= $name ?> multifileupload-field form-group">
@@ -35,8 +36,9 @@
                 <?php if ($name == 'tag'): ?>
                 <div class="form-group tagsinput-container">
                     <?php endif; ?>
+                    
                     <?= $objField->parse(); ?>
-
+    
                     <?php if ($name == 'tag'): ?>
                         <div class="btn btn-primary add-trigger">
                             hinzufügen
