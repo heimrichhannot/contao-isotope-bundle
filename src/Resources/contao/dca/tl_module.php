@@ -31,41 +31,28 @@ $arrDca['palettes']['iso_productlistplus'] =
 
 $arrDca['palettes']['iso_productlist'] = str_replace('{config_legend}', '{config_legend},iso_description', $arrDca['palettes']['iso_productlist']);
 
-$arrDca['palettes']['iso_productreader'] =
-    str_replace('iso_buttons;', 'iso_buttons;{creator_legend},addEditCol,addDeleteCol,addPublishCol,addCreateButton;{bookings_legend},bp_months;',
-        $arrDca['palettes']['iso_productreader']);
+$arrDca['palettes']['iso_productreader'] = str_replace('iso_buttons;', 'iso_buttons;{creator_legend},addEditCol,addDeleteCol,addPublishCol,addCreateButton;{bookings_legend},bp_months;', $arrDca['palettes']['iso_productreader']);
 
 
-$arrDca['palettes']['iso_cart_link'] =
-    '{title_legend},name,headline,type;{config_legend},jumpTo,customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
+$arrDca['palettes']['iso_cart_link'] = '{title_legend},name,headline,type;{config_legend},jumpTo,customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
 
 $arrDca['palettes']['iso_direct_checkout'] =
-    '{title_legend},name,headline,type;'
-    . '{config_legend},jumpTo,formHybridAsync,formHybridResetAfterSubmission,iso_direct_checkout_product_mode,iso_direct_checkout_products,nc_notification,iso_shipping_modules,iso_use_notes,iso_useAgb,iso_useConsent;'
-    . '{template_legend},formHybridTemplate;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
+    '{title_legend},name,headline,type;' . '{config_legend},jumpTo,formHybridAsync,formHybridResetAfterSubmission,iso_direct_checkout_product_mode,iso_direct_checkout_products,nc_notification,iso_shipping_modules,iso_use_notes,iso_useAgb,iso_useConsent;' . '{template_legend},formHybridTemplate;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
 
-$arrDca['palettes']['iso_product_ranking'] =
-    '{title_legend},name,headline,type;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
+$arrDca['palettes']['iso_product_ranking'] = '{title_legend},name,headline,type;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
 
-$arrDca['palettes']['iso_orderdetails_plus'] =
-    str_replace('iso_loginRequired', 'iso_loginRequired,iso_show_all_orders', $arrDca['palettes']['iso_orderdetails']);
+$arrDca['palettes']['iso_orderdetails_plus'] = str_replace('iso_loginRequired', 'iso_loginRequired,iso_show_all_orders', $arrDca['palettes']['iso_orderdetails']);
 
-$arrDca['palettes']['iso_product_frontend_editor'] = '{title_legend},name,headline,type;'
-                                                     . '{creator_legend},formHybridDataContainer,formHybridForcePaletteRelation,formHybridEditable,formHybridAddEditableRequired,formHybridAddReadOnly,formHybridAddPermanentFields;'
+$arrDca['palettes']['iso_product_frontend_editor'] = '{title_legend},name,headline,type;' . '{creator_legend},formHybridDataContainer,formHybridForcePaletteRelation,formHybridEditable,formHybridAddEditableRequired,formHybridAddReadOnly,formHybridAddPermanentFields;'
                                                      . '{product_legend},iso_editableCategories,iso_productEditor_editableTypeFields,iso_productCategory,iso_exifMapping,formHybridAddDefaultValues,iso_useFieldsForTags,iso_tagFields,iso_addImageSizes,iso_useUploadsAsDownload,iso_creatorFallbackUser,iso_uploadFolder,iso_useFieldDependendUploadFolder;'
                                                      . '{action_legend},formHybridAllowIdAsGetParameter,noIdBehavior,disableSessionCheck,disableAuthorCheck,addUpdateConditions,allowDelete,deactivateTokens;'
-                                                     . '{misc_legend},jumpTo,formHybridSingleSubmission,formHybridAsync,formHybridResetAfterSubmission,formHybridSuccessMessage,formHybridSkipScrollingToSuccessMessage,formHybridCustomSubmit,setPageTitle,addClientsideValidation;'
-                                                     . '{template_legend},formHybridTemplate,modalTpl,customTpl,formHybridCustomSubTemplates;'
+                                                     . '{misc_legend},jumpTo,formHybridSingleSubmission,formHybridAsync,formHybridResetAfterSubmission,formHybridSuccessMessage,formHybridSkipScrollingToSuccessMessage,formHybridCustomSubmit,setPageTitle,addClientsideValidation;' . '{template_legend},formHybridTemplate,modalTpl,customTpl,formHybridCustomSubTemplates;'
                                                      . '{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
 
-$arrDca['palettes']['iso_productlistslick'] =
-    str_replace('iso_description', 'slickConfig,iso_description', $arrDca['palettes']['iso_productlistplus']);
+$arrDca['palettes']['iso_productlistslick'] = str_replace('iso_description', 'slickConfig,iso_description', $arrDca['palettes']['iso_productlistplus']);
 
 $arrDca['palettes']['iso_checkout_plus'] = $arrDca['palettes']['iso_checkout'];
-$arrDca['palettes']['iso_checkout_plus'] =
-    str_replace('iso_order_conditions_position;',
-        'iso_order_conditions_position,productTypeDependantOrderConditions,productDependantOrderConditions,iso_order_conditions_text;',
-        $arrDca['palettes']['iso_checkout_plus']);
+$arrDca['palettes']['iso_checkout_plus'] = str_replace('iso_order_conditions_position;', 'iso_order_conditions_position,productTypeDependantOrderConditions,productDependantOrderConditions,iso_order_conditions_text;', $arrDca['palettes']['iso_checkout_plus']);
 
 
 $arrDca['subpalettes']['iso_useFieldsForTags']                = 'iso_tagField';
@@ -675,7 +662,7 @@ $arrDca['fields']['dependantProducts'] = [
     'sorting'          => true,
     'options_callback' => ['HeimrichHannot\IsotopeBundle\Backend\IsotopePlus', 'getProductLabels'],
     'eval'             => ['maxlength' => 255, 'decodeEntities' => true, 'tl_class' => 'long', 'freeInput' => true, 'multiple' => true],
-    'sql'              => "blob NULL"
+    'sql'              => "blob NULL",
 ];
 
 $arrDca['fields']['iso_order_conditions_text'] = [
@@ -693,48 +680,43 @@ class tl_module_isotope_plus
     {
         return \HeimrichHannot\FormHybrid\FormHelper::getEditableFields($objDc->activeRecord->formHybridDataContainer);
     }
-    
+
     public function modifyPalette($objDc)
     {
         $objModule        = \ModuleModel::findByPk(\Input::get('id'));
         $objDc->objModule = $objModule;
         $arrDca           = &$GLOBALS['TL_DCA']['tl_module'];
-        
+
         switch ($objModule->type) {
             case 'iso_direct_checkout':
                 if ($objModule->iso_direct_checkout_product_mode == 'product_type') {
-                    $arrDca['palettes']['iso_direct_checkout'] = str_replace('iso_direct_checkout_products,',
-                        'iso_direct_checkout_product_types,iso_listingSortField,iso_listingSortDirection,',
-                        $arrDca['palettes']['iso_direct_checkout']);
-                    
+                    $arrDca['palettes']['iso_direct_checkout'] = str_replace('iso_direct_checkout_products,', 'iso_direct_checkout_product_types,iso_listingSortField,iso_listingSortDirection,', $arrDca['palettes']['iso_direct_checkout']);
+
                     // fix field labels
-                    $arrDca['fields']['iso_listingSortField']['label']     = &
-                        $GLOBALS['TL_LANG']['tl_module']['iso_direct_checkout_listingSortField'];
-                    $arrDca['fields']['iso_listingSortDirection']['label'] = &
-                        $GLOBALS['TL_LANG']['tl_module']['iso_direct_checkout_listingSortDirection'];
+                    $arrDca['fields']['iso_listingSortField']['label']     = &$GLOBALS['TL_LANG']['tl_module']['iso_direct_checkout_listingSortField'];
+                    $arrDca['fields']['iso_listingSortDirection']['label'] = &$GLOBALS['TL_LANG']['tl_module']['iso_direct_checkout_listingSortDirection'];
                 }
-                
+
                 $arrDca['fields']['iso_shipping_modules']['inputType']                  = 'select';
                 $arrDca['fields']['iso_shipping_modules']['eval']['includeBlankOption'] = true;
                 $arrDca['fields']['iso_shipping_modules']['eval']['multiple']           = false;
                 $arrDca['fields']['iso_shipping_modules']['eval']['tl_class']           = 'w50';
-                
+
                 $arrDca['fields']['formHybridTemplate']['default'] = 'formhybrid_direct_checkout';
                 break;
-            
+
             case 'iso_product_frontend_creator' :
-                $arrDca['fields']['formHybridDefaultValues']['eval']['columnFields']['field']['options_callback'] =
-                    ['HeimrichHannot\IsotopeBundle\Backend\Callbacks', 'getDefaultValueFields'];
+                $arrDca['fields']['formHybridDefaultValues']['eval']['columnFields']['field']['options_callback'] = ['HeimrichHannot\IsotopeBundle\Backend\Callbacks', 'getDefaultValueFields'];
         }
     }
-    
+
     public static function getProducts()
     {
         $objProducts = \Isotope\Model\Product::findPublished();
-        
+
         $arrProductTypeLabels = [];
         $arrProducts          = [];
-        
+
         while ($objProducts->next()) {
             // check for label cache
             if (isset($arrProductTypeLabels[$objProducts->type])) {
@@ -745,27 +727,27 @@ class tl_module_isotope_plus
                     $arrProductTypeLabels[$objProductType->id] = $objProductType->name;
                 }
             }
-            
+
             $arrProducts[$objProducts->id] = $strProductTypeLabel . ' - ' . $objProducts->name;
         }
-        
+
         asort($arrProducts);
-        
+
         return $arrProducts;
     }
-    
+
     public function getTagFields(\DataContainer $dc)
     {
         $names   = \Contao\Database::getInstance()->getFieldNames('tl_iso_product');
         $arrTags = [];
-        
+
         foreach ($names as $name) {
             if ($GLOBALS['TL_DCA']['tl_iso_product']['fields'][$name]['inputType'] == 'tagsinput') {
                 $arrTags[] = $name;
             }
         }
-        
+
         return $arrTags;
     }
-    
+
 }
