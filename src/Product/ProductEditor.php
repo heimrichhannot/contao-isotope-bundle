@@ -151,6 +151,7 @@ abstract class ProductEditor
         $moveFile = new File($file->path);
 //        $moveFile->close();
         $strTarget = $folder.'/'.$file->name;
+
         $strTarget = System::getContainer()->get('contao.framework')->getAdapter(Files::class)->getUniqueFileNameWithinTarget($strTarget, FormMultiFileUpload::UNIQID_PREFIX);
 
         // move file to upload folder
