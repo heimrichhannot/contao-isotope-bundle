@@ -2,6 +2,8 @@
 
 $arrDca = &$GLOBALS['TL_DCA']['tl_iso_product'];
 
+
+$arrDca['config']['onsubmit_callback'][] = ['huh.isotope.listener.callback.product', 'syncData'];
 /**
  * Labels in Backend
  */

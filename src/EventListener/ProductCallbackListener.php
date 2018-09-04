@@ -13,6 +13,7 @@ use Contao\DataContainer;
 use Contao\Date;
 use HeimrichHannot\IsotopeBundle\Attribute\BookingAttributes;
 use HeimrichHannot\IsotopeBundle\Manager\ProductDataManager;
+use HeimrichHannot\IsotopeBundle\Model\ProductDataModel;
 use HeimrichHannot\IsotopeBundle\Model\ProductModel;
 use HeimrichHannot\RequestBundle\Component\HttpFoundation\Request;
 use HeimrichHannot\UtilsBundle\Container\ContainerUtil;
@@ -113,5 +114,30 @@ class ProductCallbackListener
             'bookings' => $bookings,
             'product' => $product,
         ]);
+    }
+
+    /**
+     * sync data with product data model when adding product in backend cause backend is working not on model object.
+     *
+     * @param $dca
+     */
+    public function syncData($dca)
+    {
+        $data = $dca->activeRecord->row();
+
+        $productDataModel = $this->framework->getAdapter(ProductDataModel::class)->findOneBy('pid', $data['id']);
+
+        if (null === $productDataModel) {
+            $productDataModel = new ProductDataModel();
+        }
+
+        foreach ($data as $field => $value) {
+            if (!array_key_exists($field, $this->productDataManager->getProductDataFields())) {
+                continue;
+            }
+            $productDataModel->{$field} = $value;
+        }
+
+        $productDataModel->save();
     }
 }
