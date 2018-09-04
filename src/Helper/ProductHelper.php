@@ -66,9 +66,11 @@ class ProductHelper
     public function getFileSizeName($file, $size)
     {
         $suffix = '';
-        if ($GLOBALS['TL_LANG']['MSC']['originalSize'] != $size['name']) {
-            $suffix = '_'.$size['size'][0];
-        }
+//        if ($GLOBALS['TL_LANG']['MSC']['originalSize'] != $size['name']) {
+//            $suffix = '_'.$size['size'][0];
+//        }
+
+        $suffix = '_'.$size['size'][0];
 
         return $suffix.'.'.$file->extension;
     }

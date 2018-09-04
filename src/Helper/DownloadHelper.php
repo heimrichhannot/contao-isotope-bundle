@@ -116,7 +116,7 @@ class DownloadHelper
 
                 // get width and height of download
                 if (in_array($objFile->extension, ['jpg', 'jpeg', 'tiff', 'png'], true)) {
-                    $size = getimagesize($objFile->path);
+                    $size = getimagesize(TL_ROOT.DIRECTORY_SEPARATOR.$objFile->path);
                     $download['size'] = sprintf($GLOBALS['TL_LANG']['MSC']['downloadSize'], $size[0], $size[1], $download['filesize']);
                 } else {
                     $download['size'] = sprintf($GLOBALS['TL_LANG']['MSC']['downloadSizePdf'], $download['name'], $download['filesize']);

@@ -13,6 +13,7 @@ use Contao\Controller;
 use Contao\Dbafs;
 use Contao\File;
 use Contao\FilesModel;
+use Contao\Image\ResizeConfiguration;
 use Contao\StringUtil;
 use Contao\System;
 use Ghostscript\Transcoder;
@@ -96,7 +97,7 @@ abstract class ProductEditor
         }
 
         if (!file_exists($path) && !empty($size['size'])) {
-            $image = $container->get('contao.image.image_factory')->create($file->path, [$size['size'][0], $size['size'][1], $size['size'][2]], System::getContainer()->get('huh.utils.container')->getProjectDir().'/'.$path);
+            $image = $container->get('contao.image.image_factory')->create(System::getContainer()->get('huh.utils.container')->getProjectDir().DIRECTORY_SEPARATOR.$file->path, [$size['size'][0], $size['size'][1], $size['size'][2]], System::getContainer()->get('huh.utils.container')->getProjectDir().'/'.$path);
             if (null !== $image) {
                 $path = $image->getPath();
             }
@@ -447,7 +448,7 @@ abstract class ProductEditor
         $suffix = '';
 
         if (!$this->exifData['width'] && !$this->exifData['height']) {
-            $orginalSize = getimagesize($this->file->path);
+            $orginalSize = getimagesize(TL_ROOT.DIRECTORY_SEPARATOR.$this->file->path);
 
             $this->exifData['width'] = $orginalSize[0];
             $this->exifData['height'] = $orginalSize[1];
@@ -462,7 +463,7 @@ abstract class ProductEditor
             'size' => [
                 $this->exifData['width'],
                 $this->exifData['height'],
-                'center-center',
+                ResizeConfiguration::MODE_BOX,
             ],
             'name' => $GLOBALS['TL_LANG']['MSC']['originalSize'].$suffix,
         ];
