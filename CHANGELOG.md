@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.11.3] - 2018-09-04
+
+#### Fixed
+* fixed creation of download items
+
 ## [0.11.2] - 2018-08-29
 
 #### Changed
