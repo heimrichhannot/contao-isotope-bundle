@@ -11,10 +11,9 @@ namespace HeimrichHannot\IsotopeBundle\Controller;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use HeimrichHannot\IsotopeBundle\Attribute\BookingAttributes;
 use HeimrichHannot\IsotopeBundle\Model\ProductModel;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -29,7 +28,6 @@ class BackendController extends AbstractController
 
     /**
      * @Route("/bookinglist", name="huh.isotope.backend.bookinglist")
-     * @Template("@HeimrichHannotContaoIsotope/backend/bookinglist.html.twig")
      *
      * @param Request                  $request
      * @param ContaoFrameworkInterface $contaoFramework
@@ -62,7 +60,6 @@ class BackendController extends AbstractController
 
     /**
      * @Route("/bookingoverview", name="huh.isotope.backend.bookingoverview")
-     * @Template("@HeimrichHannotContaoIsotope/attribute/bookingoverview.html.twig")
      *
      * @param Request                  $request
      * @param ContaoFrameworkInterface $contaoFramework
