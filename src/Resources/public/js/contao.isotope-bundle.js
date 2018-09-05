@@ -5,6 +5,24 @@
             this.initBookingPlan();
             this.initRankingTableSorter();
             this.registerEvents();
+            this.initProductListCaching();
+        },
+        initProductListCaching: function() {
+            var productList = $(document).find('.productListCaching');
+
+            if (productList.data('load')) {
+                $.ajax({
+                    url: window.location.href,
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        buildCache: 1,
+                    },
+                    complete: function(json) {
+                        window.location.reload();
+                    },
+                });
+            }
         },
         registerEvents: function() {
             $(document).keydown(function(e) {

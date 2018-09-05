@@ -9,6 +9,24 @@ let tablesorter = require('tablesorter');
             this.initBookingPlan();
             this.registerEvents();
             this.initRankingTableSorter();
+            this.initProductListCaching();
+        },
+        initProductListCaching: function() {
+            let productList = $(document).find('.productListCaching');
+
+            if (productList.data('load')) {
+                $.ajax({
+                    url: window.location.href,
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        buildCache: 1,
+                    },
+                    complete: function(json) {
+                        window.location.reload();
+                    },
+                });
+            }
         },
         registerEvents: function() {
             $(document).on('change', '.quantity_container input', function() {
