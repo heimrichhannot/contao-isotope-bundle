@@ -100,6 +100,9 @@ class Backend
                 case 'stock':
                     $args[$i] = $product->stock;
                     break;
+                case 'initialStock':
+                    $args[$i] = $product->initialStock;
+                    break;
             }
         }
 

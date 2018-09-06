@@ -159,6 +159,11 @@ class ProductModel extends Standard
         return $this->getProductDataManager()->getProductData($id)->stock;
     }
 
+    public function getInitialStock(int $id)
+    {
+        return $this->getProductDataManager()->getProductData($id)->initialStock;
+    }
+
     /**
      * Return the product data for the current product.
      *

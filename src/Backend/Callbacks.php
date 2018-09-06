@@ -14,6 +14,7 @@ use Contao\FilesModel;
 use Contao\FrontendUser;
 use Contao\StringUtil;
 use Contao\System;
+use HeimrichHannot\IsotopeBundle\Model\ProductDataModel;
 use Isotope\Frontend\ProductAction\Registry;
 use Isotope\Model\Product;
 
@@ -131,5 +132,44 @@ class Callbacks
     public function getLicence($value, DataContainer $dc)
     {
         return $this->getLoadCallbackValueByField('licence', $value, $dc);
+    }
+
+    public function overwriteStockWithProductData($value, $dc)
+    {
+        $activeRecord = $dc->activeRecord;
+
+        $productDataModel = System::getContainer()->get('contao.framework')->getAdapter(ProductDataModel::class)->findOneBy('pid', $activeRecord->id);
+
+        if (null === $productDataModel) {
+            return $value;
+        }
+
+        return $productDataModel->stock;
+    }
+
+    public function overwriteInitialStockWithProductData($value, $dc)
+    {
+        $activeRecord = $dc->activeRecord;
+
+        $productDataModel = System::getContainer()->get('contao.framework')->getAdapter(ProductDataModel::class)->findOneBy('pid', $activeRecord->id);
+
+        if (null === $productDataModel) {
+            return $value;
+        }
+
+        return $productDataModel->initialStock;
+    }
+
+    public function overwriteQuantityWithProductData($value, $dc)
+    {
+        $activeRecord = $dc->activeRecord;
+
+        $productDataModel = System::getContainer()->get('contao.framework')->getAdapter(ProductDataModel::class)->findOneBy('pid', $activeRecord->id);
+
+        if (null === $productDataModel) {
+            return $value;
+        }
+
+        return $productDataModel->setQuantity;
     }
 }
