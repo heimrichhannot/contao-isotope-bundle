@@ -49,25 +49,39 @@ class CheckoutPlus extends Checkout
      */
     protected function compile()
     {
-        parent::compile();
+        $this->showConditions();
 
+        parent::compile();
+    }
+
+    /**
+     * check if conditions should be displayed.
+     */
+    protected function showConditions()
+    {
         if (!$this->iso_order_conditions) {
             return;
+        }
+
+        if ($this->productTypeDependantOrderConditions || $this->productDependantOrderConditions) {
+            $this->showDependantConditions();
         }
 
         if ($this->iso_order_conditions_text) {
             $this->addOrderConditionsText();
         }
+    }
 
-        if (!$this->productTypeDependantOrderConditions && !$this->productDependantOrderConditions) {
-            return;
-        }
-
+    /**
+     * check for field/type dependant order conditions.
+     */
+    protected function showDependantConditions()
+    {
         $dependantTypes = StringUtil::deserialize($this->dependantTypes, true);
         $dependantProducts = StringUtil::deserialize($this->dependantProducts, true);
 
         if (empty($dependantTypes) && empty($dependantProducts)) {
-            return;
+            $this->resetOrderConditions();
         }
 
         $products = Isotope::getCart()->getItems();
@@ -81,8 +95,16 @@ class CheckoutPlus extends Checkout
         }
 
         if (!$showConditionsForm) {
-            $this->removeCoditionsForm();
+            $this->resetOrderConditions();
         }
+    }
+
+    /**
+     * set order conditions to null.
+     */
+    protected function resetOrderConditions()
+    {
+        $this->iso_order_conditions = null;
     }
 
     /**
