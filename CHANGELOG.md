@@ -1,7 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.11.4] - 2018-09-07
+## [0.11.14] - 2018-09-07
+
+#### Fixed
+* changelog
+
+## [0.11.13] - 2018-09-07
 
 #### Fixed
 * reset order condition if field/type dependant condition is not fulfilled
