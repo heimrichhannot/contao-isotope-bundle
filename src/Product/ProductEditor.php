@@ -97,7 +97,7 @@ abstract class ProductEditor
         }
 
         if (!file_exists($path) && !empty($size['size'])) {
-            $image = $container->get('contao.image.image_factory')->create(System::getContainer()->get('huh.utils.container')->getProjectDir().DIRECTORY_SEPARATOR.$file->path, [$size['size'][0], $size['size'][1], $size['size'][2]], System::getContainer()->get('huh.utils.container')->getProjectDir().'/'.$path);
+            $image = $container->get('contao.image.image_factory')->create(System::getContainer()->get('huh.utils.container')->getProjectDir().\DIRECTORY_SEPARATOR.$file->path, [$size['size'][0], $size['size'][1], $size['size'][2]], System::getContainer()->get('huh.utils.container')->getProjectDir().'/'.$path);
             if (null !== $image) {
                 $path = $image->getPath();
             }
@@ -156,12 +156,12 @@ abstract class ProductEditor
         $strTarget = System::getContainer()->get('contao.framework')->getAdapter(Files::class)->getUniqueFileNameWithinTarget($target, FormMultiFileUpload::UNIQID_PREFIX);
 
         if (!$strTarget && Config::get('iso_productFolderFallback')) {
-            $target = System::getContainer()->get('huh.utils.file')->getPathFromUuid(Config::get('iso_productFolderFallback')).DIRECTORY_SEPARATOR.$file->name;
+            $target = System::getContainer()->get('huh.utils.file')->getPathFromUuid(Config::get('iso_productFolderFallback')).\DIRECTORY_SEPARATOR.$file->name;
             $strTarget = System::getContainer()->get('contao.framework')->getAdapter(Files::class)->getUniqueFileNameWithinTarget($target, FormMultiFileUpload::UNIQID_PREFIX);
         }
 
         if (!$strTarget) {
-            $target = TL_ROOT.DIRECTORY_SEPARATOR.'files'.DIRECTORY_SEPARATOR.$file->name;
+            $target = TL_ROOT.\DIRECTORY_SEPARATOR.'files'.\DIRECTORY_SEPARATOR.$file->name;
             $strTarget = System::getContainer()->get('contao.framework')->getAdapter(Files::class)->getUniqueFileNameWithinTarget($target, FormMultiFileUpload::UNIQID_PREFIX);
         }
 
@@ -201,10 +201,10 @@ abstract class ProductEditor
         /** @var Transcoder $transcoder */
         $transcoder = System::getContainer()->get('contao.framework')->getAdapter(Transcoder::class)->create();
 
-        $transcoder->toImage(TL_ROOT.DIRECTORY_SEPARATOR.$file->path, TL_ROOT.DIRECTORY_SEPARATOR.$uploadFolder.'/'.$destinationFileName);
+        $transcoder->toImage(TL_ROOT.\DIRECTORY_SEPARATOR.$file->path, TL_ROOT.\DIRECTORY_SEPARATOR.$uploadFolder.'/'.$destinationFileName);
 
         $search = str_replace('.'.static::$convertFileType, '', $destinationFileName);
-        $files = preg_grep('~^'.$search.'.*\.'.static::$convertFileType.'$~', scandir(TL_ROOT.DIRECTORY_SEPARATOR.$uploadFolder));
+        $files = preg_grep('~^'.$search.'.*\.'.static::$convertFileType.'$~', scandir(TL_ROOT.\DIRECTORY_SEPARATOR.$uploadFolder));
 
         return reset($files);
     }
@@ -448,7 +448,7 @@ abstract class ProductEditor
         $suffix = '';
 
         if (!$this->exifData['width'] && !$this->exifData['height']) {
-            $orginalSize = getimagesize(TL_ROOT.DIRECTORY_SEPARATOR.$this->file->path);
+            $orginalSize = getimagesize(TL_ROOT.\DIRECTORY_SEPARATOR.$this->file->path);
 
             $this->exifData['width'] = $orginalSize[0];
             $this->exifData['height'] = $orginalSize[1];
