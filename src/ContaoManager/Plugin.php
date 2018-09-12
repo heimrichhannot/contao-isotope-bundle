@@ -49,11 +49,11 @@ class Plugin implements BundlePluginInterface, ExtensionPluginInterface, Routing
      */
     public function getExtensionConfig($extensionName, array $extensionConfigs, ContainerBuilder $container)
     {
-        $extensionConfigs = ContainerUtil::mergeConfigFile('huh_list', $extensionName, $extensionConfigs, $container->getParameter('kernel.project_dir').'/vendor/heimrichhannot/contao-isotope-bundle/src/Resources/config/config_list.yml');
+        $extensionConfigs = ContainerUtil::mergeConfigFile('huh_list', $extensionName, $extensionConfigs, __DIR__.'/../Resources/config/config_list.yml');
 
-        $extensionConfigs = ContainerUtil::mergeConfigFile('huh_reader', $extensionName, $extensionConfigs, $container->getParameter('kernel.project_dir').'/vendor/heimrichhannot/contao-isotope-bundle/src/Resources/config/config_reader.yml');
+        $extensionConfigs = ContainerUtil::mergeConfigFile('huh_reader', $extensionName, $extensionConfigs, __DIR__.'/../Resources/config/config_reader.yml');
 
-        return ContainerUtil::mergeConfigFile('huh_encore', $extensionName, $extensionConfigs, $container->getParameter('kernel.project_dir').'/vendor/heimrichhannot/contao-isotope-bundle/src/Resources/config/config_encore.yml');
+        return ContainerUtil::mergeConfigFile('huh_encore', $extensionName, $extensionConfigs, __DIR__.'/../Resources/config/config_encore.yml');
     }
 
     /**
