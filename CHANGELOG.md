@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 ## [0.11.16] - 2018-09-12
 
 #### Fixed
+* tags are now made unique on save
+
+## [0.11.16] - 2018-09-12
+
+#### Fixed
 * correct handling of `uploadedFiles` on upload
 
 ## [0.11.15] - 2018-09-07

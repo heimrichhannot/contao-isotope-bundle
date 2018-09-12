@@ -349,6 +349,8 @@ abstract class ProductEditor
             }
         }
 
+        $tags = array_unique($tags);
+
         // add tag-array to field
         $this->productData[$this->module->iso_tagField] = serialize($tags);
     }
