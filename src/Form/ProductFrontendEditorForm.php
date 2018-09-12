@@ -48,6 +48,10 @@ class ProductFrontendEditorForm extends Form
     {
         $submission = $this->getSubmission();
 
+        if (!is_array($submission->uploadedFiles)) {
+            $submission->uploadedFiles = json_decode($submission->uploadedFiles);
+        }
+
         if (empty($submission->uploadedFiles)) {
             return;
         }

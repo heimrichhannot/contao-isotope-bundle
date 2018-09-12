@@ -35,7 +35,7 @@ class IsotopeImageListConfigElementType implements ConfigElementType
         $data['name'] = $product->name;
         $data['images'] = $product->images;
         $data['src'] = $product->src;
-        $data['uploadedFiles'] = $product->uploadedFiles;
+        $data['uploadedFiles'] = deserialize($product->uploadedFiles, true)[0];
         $data['size'] = $product->size;
 
         $templateData['isotopeImages'] = [];

@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.11.15] - 2018-09-12
+
+#### Fixed
+* correct handling of `uploadedFiles` on upload
+
 ## [0.11.14] - 2018-09-07
 
 #### Fixed

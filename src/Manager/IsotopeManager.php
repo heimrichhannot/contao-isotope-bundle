@@ -255,16 +255,19 @@ class IsotopeManager
         } elseif (null !== $itemData['uploadedFiles']) {
             $imageField = 'uploadedFiles';
             $uploadedFiles = $itemData['uploadedFiles'];
-            if (is_array($upload = unserialize($uploadedFiles))) {
-                $uploadedFiles = $upload[0];
-            }
+
             if (null === $uploadedFiles) {
                 return;
             }
+
+            if (is_array($uploadedFiles)) {
+                $uploadedFiles = $uploadedFiles[0];
+            }
+
             if (\Validator::isUuid($uploadedFiles)) {
                 $imageFile = System::getContainer()->get('contao.framework')->getAdapter(FilesModel::class)->findByUuid($uploadedFiles);
                 if (null === $imageFile
-                    || !file_exists(System::getContainer()->get('huh.utils.container')->getProjectDir().'/'.$imageFile->path)) {
+                    || !file_exists(TL_ROOT.DIRECTORY_SEPARATOR.$imageFile->path)) {
                     return;
                 }
                 $itemData[$imageField] = $imageFile->path;
