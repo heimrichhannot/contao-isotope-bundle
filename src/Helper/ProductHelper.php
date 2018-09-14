@@ -66,11 +66,9 @@ class ProductHelper
     public function getFileSizeName($file, $size)
     {
         $suffix = '';
-//        if ($GLOBALS['TL_LANG']['MSC']['originalSize'] != $size['name']) {
-//            $suffix = '_'.$size['size'][0];
-//        }
-
-        $suffix = '_'.$size['size'][0];
+        if ($GLOBALS['TL_LANG']['MSC']['originalSize'] != $size['name']) {
+            $suffix = '_'.$size['size'][0];
+        }
 
         return $suffix.'.'.$file->extension;
     }
@@ -120,7 +118,6 @@ class ProductHelper
         }
 
         $result = [];
-
         foreach ($products as $product) {
             if (!$product->tag || '' == $product->tag) {
                 continue;
@@ -133,7 +130,9 @@ class ProductHelper
             }
         }
 
-        return array_filter(array_unique($result));
+        $result = array_filter(array_unique($result));
+
+        return $result;
     }
 
     public function getCopyrights()

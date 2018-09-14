@@ -18,7 +18,6 @@ use Contao\StringUtil;
 use Contao\System;
 use Ghostscript\Transcoder;
 use HeimrichHannot\Haste\Dca\General;
-use HeimrichHannot\Haste\Util\FormSubmission;
 use HeimrichHannot\HastePlus\Files;
 use HeimrichHannot\IsotopeBundle\Backend\Callbacks;
 use HeimrichHannot\IsotopeBundle\Model\ProductModel;
@@ -96,7 +95,7 @@ abstract class ProductEditor
             $path = $file->path;
         }
 
-        if (!file_exists($path) && !empty($size['size'])) {
+        if (!file_exists(TL_ROOT.DIRECTORY_SEPARATOR.$path) && !empty($size['size'])) {
             $image = $container->get('contao.image.image_factory')->create(System::getContainer()->get('huh.utils.container')->getProjectDir().\DIRECTORY_SEPARATOR.$file->path, [$size['size'][0], $size['size'][1], $size['size'][2]], System::getContainer()->get('huh.utils.container')->getProjectDir().'/'.$path);
             if (null !== $image) {
                 $path = $image->getPath();
@@ -115,7 +114,7 @@ abstract class ProductEditor
 
         if ('pdf' == $file->extension) {
             $download->download_thumbnail = serialize([$this->getPDFThumbnail($file, $uploadFolder)]);
-        } elseif (strpos(\Config::get('validImageTypes'), $file->extension)) {
+        } elseif (false !== strpos(\Config::get('validImageTypes'), $file->extension)) {
             $download->download_thumbnail = serialize([$file->uuid]);
         }
 
@@ -150,23 +149,27 @@ abstract class ProductEditor
     public function moveFile(FilesModel $file, $folder)
     {
         // create new File to enable moving the pdf to user folder
-        $moveFile = new File($file->path);
+//        $moveFile = new File($file->path);
 //        $moveFile->close();
         $target = $folder.'/'.$file->name;
-        $strTarget = System::getContainer()->get('contao.framework')->getAdapter(Files::class)->getUniqueFileNameWithinTarget($target, FormMultiFileUpload::UNIQID_PREFIX);
 
-        if (!$strTarget && Config::get('iso_productFolderFallback')) {
-            $target = System::getContainer()->get('huh.utils.file')->getPathFromUuid(Config::get('iso_productFolderFallback')).\DIRECTORY_SEPARATOR.$file->name;
-            $strTarget = System::getContainer()->get('contao.framework')->getAdapter(Files::class)->getUniqueFileNameWithinTarget($target, FormMultiFileUpload::UNIQID_PREFIX);
-        }
-
-        if (!$strTarget) {
-            $target = TL_ROOT.\DIRECTORY_SEPARATOR.'files'.\DIRECTORY_SEPARATOR.$file->name;
-            $strTarget = System::getContainer()->get('contao.framework')->getAdapter(Files::class)->getUniqueFileNameWithinTarget($target, FormMultiFileUpload::UNIQID_PREFIX);
-        }
+        $strTarget = $this->getTargetPath($target, $file);
 
         // move file to upload folder
-        $moveFile->renameTo($strTarget);
+//        $start = microtime(true);
+
+        rename(TL_ROOT.DIRECTORY_SEPARATOR.$file->path, TL_ROOT.DIRECTORY_SEPARATOR.$strTarget);
+        $file->path = $strTarget;
+        $file->name = str_replace($folder, '', $strTarget);
+//        $file->name = str_replace('.'.$file->extension)
+        $file->save();
+
+//        echo "<pre>";
+//        var_dump(microtime(true)-$start);
+//        echo "</pre>";
+//        die();
+//
+//        $moveFile->renameTo($strTarget);
     }
 
     /**
@@ -209,6 +212,28 @@ abstract class ProductEditor
         return reset($files);
     }
 
+    protected function getTargetPath($target, $file)
+    {
+        $strTarget = $this->getFilenameWithinTarget($target);
+
+        if (!$strTarget && Config::get('iso_productFolderFallback')) {
+            $target = System::getContainer()->get('huh.utils.file')->getPathFromUuid(Config::get('iso_productFolderFallback')).DIRECTORY_SEPARATOR.$file->name;
+            $strTarget = $this->getFilenameWithinTarget($target);
+        }
+
+        if (!$strTarget) {
+            $target = TL_ROOT.DIRECTORY_SEPARATOR.'files'.DIRECTORY_SEPARATOR.$file->name;
+            $strTarget = $this->getFilenameWithinTarget($target);
+        }
+
+        return $strTarget;
+    }
+
+    protected function getFilenameWithinTarget($target)
+    {
+        return System::getContainer()->get('contao.framework')->getAdapter(Files::class)->getUniqueFileNameWithinTarget($target, FormMultiFileUpload::UNIQID_PREFIX);
+    }
+
     /**
      * @return bool
      */
@@ -233,13 +258,9 @@ abstract class ProductEditor
     protected function prepareBasicData()
     {
         $this->productData['dateAdded'] = $this->submission->dateAdded ? $this->submission->dateAdded : time();
-
         $this->productData['tstamp'] = time();
-
         $this->productData['alias'] = $this->submission->alias ? $this->submission->alias : General::generateAlias('', $this->submission->id, 'tl_iso_product', $this->submission->name);
-
         $this->productData['sku'] = $this->productData['alias'];
-
         $this->productData['addedBy'] = \Contao\Config::get('iso_creatorFallbackMember');
 
         // add user reference to product
@@ -327,15 +348,25 @@ abstract class ProductEditor
         $tags = [];
 
         foreach (StringUtil::deserialize($this->module->iso_tagFields, true) as $tagValueField) {
-            if ('type' == $tagValueField) {
-                $data[$tagValueField] = System::getContainer()->get('contao.framework')->getAdapter(ProductType::class)->findByPk($this->submission->type)->name;
-            }
-
             if ('' == $data[$tagValueField]) {
                 continue;
             }
 
-            $tags[] = FormSubmission::prepareSpecialValueForPrint($data[$tagValueField], $GLOBALS['TL_DCA']['tl_iso_product']['fields'][$tagValueField], 'tl_iso_product', $this->dc);
+            if ('type' == $tagValueField) {
+                $tags[] = System::getContainer()->get('contao.framework')->getAdapter(ProductType::class)->findByPk($this->submission->type)->name;
+                continue;
+            }
+
+            if ('copyright' == $tagValueField) {
+                $tags = array_merge($tags, StringUtil::deserialize($data[$tagValueField], true));
+                continue;
+            }
+
+            if (!($tag = System::getContainer()->get('huh.utils.form')->prepareSpecialValueForOutput($tagValueField, $data[$tagValueField], $this->dc))) {
+                continue;
+            }
+
+            $tags[] = $tag;
         }
 
         // add tags from form-field
@@ -364,7 +395,7 @@ abstract class ProductEditor
             if ($this->productData[$value]) {
                 continue;
             }
-            $this->productData[$value] = $this->submission->$value == null ? '' : $this->submission->$value;
+            $this->productData[$value] = (null === $this->submission->$value) ? '' : $this->submission->$value;
         }
     }
 

@@ -65,7 +65,9 @@ class MultiImageProductEditor extends ProductEditor
     protected function prepareProductImages($uuids)
     {
         foreach ($uuids as $key => $upload) {
-            $file = System::getContainer()->get('contao.framework')->getAdapter(FilesModel::class)->findByUuid($upload);
+            if (null === ($file = System::getContainer()->get('contao.framework')->getAdapter(FilesModel::class)->findByUuid($upload))) {
+                continue;
+            }
 
             $this->moveFile($file, $this->getUploadFolder($this->dc));
 

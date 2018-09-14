@@ -254,18 +254,14 @@ class IsotopeManager
             }
         } elseif (null !== $itemData['uploadedFiles']) {
             $imageField = 'uploadedFiles';
-            $uploadedFiles = $itemData['uploadedFiles'];
+            $uploadedFiles = StringUtil::deserialize($itemData['uploadedFiles'], true);
 
             if (null === $uploadedFiles) {
                 return;
             }
 
-            if (is_array($uploadedFiles)) {
-                $uploadedFiles = $uploadedFiles[0];
-            }
-
-            if (\Validator::isUuid($uploadedFiles)) {
-                $imageFile = System::getContainer()->get('contao.framework')->getAdapter(FilesModel::class)->findByUuid($uploadedFiles);
+            if (\Validator::isUuid($uploadedFiles[0])) {
+                $imageFile = System::getContainer()->get('contao.framework')->getAdapter(FilesModel::class)->findByUuid($uploadedFiles[0]);
                 if (null === $imageFile
                     || !file_exists(TL_ROOT.DIRECTORY_SEPARATOR.$imageFile->path)) {
                     return;
