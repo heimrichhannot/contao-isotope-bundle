@@ -33,9 +33,6 @@
                 </label>
                 <?php endif; ?>
 
-                <?php if ($name == 'tag'): ?>
-                <div class="form-group tagsinput-container">
-                    <?php endif; ?>
                     
                     <?= $objField->parse(); ?>
     
@@ -45,7 +42,7 @@
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($name == 'uploadedFiles' || $name == 'images' || $name == 'uploadedDownloadFiles' || $name == 'tag'): ?>
+                    <?php if ($name == 'uploadedFiles' || $name == 'images' || $name == 'uploadedDownloadFiles'): ?>
                 </div>
             <?php endif; ?>
                 <?php endforeach; ?>

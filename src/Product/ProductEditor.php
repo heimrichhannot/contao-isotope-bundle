@@ -21,7 +21,7 @@ use HeimrichHannot\Haste\Dca\General;
 use HeimrichHannot\HastePlus\Files;
 use HeimrichHannot\IsotopeBundle\Backend\Callbacks;
 use HeimrichHannot\IsotopeBundle\Model\ProductModel;
-use HeimrichHannot\MultiFileUpload\FormMultiFileUpload;
+use HeimrichHannot\MultiFileUploadBundle\Form\FormMultiFileUpload;
 use Isotope\Model\Download;
 use Isotope\Model\ProductType;
 
@@ -163,13 +163,6 @@ abstract class ProductEditor
         $file->name = str_replace($folder, '', $strTarget);
 //        $file->name = str_replace('.'.$file->extension)
         $file->save();
-
-//        echo "<pre>";
-//        var_dump(microtime(true)-$start);
-//        echo "</pre>";
-//        die();
-//
-//        $moveFile->renameTo($strTarget);
     }
 
     /**

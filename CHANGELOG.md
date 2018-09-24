@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.11.18] - 2018-09-24
+
+#### Fixed
+* fixed copying uploadedFiles to target folder
+
 ## [0.11.17] - 2018-09-14
 
 #### Changed
