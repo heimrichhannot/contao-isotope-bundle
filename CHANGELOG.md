@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.11.20] - 2018-09-24
+
+#### Fixed
+* fixed marking of attributes as modified
+
 ## [0.11.18] - 2018-09-24
 
 #### Fixed

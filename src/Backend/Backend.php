@@ -9,6 +9,7 @@
 namespace HeimrichHannot\IsotopeBundle\Backend;
 
 use Contao\FilesModel;
+use Contao\Image\ResizeConfiguration;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Validator;
@@ -42,7 +43,7 @@ class Backend
 
                             $size = @getimagesize(TL_ROOT.'/'.$strImage);
 
-                            $resizeImage = $container->get('contao.image.image_factory')->create($strImage, [50, 50, 'proportional']);
+                            $resizeImage = $container->get('contao.image.image_factory')->create($strImage, [50, 50, ResizeConfiguration::MODE_PROPORTIONAL]);
 
                             $args[$i] = sprintf('<a href="%s" onclick="Backend.openModalImage({\'width\':%s,\'title\':\'%s\',\'url\':\'%s\'});return false"><img src="%s" alt="%s" align="left"></a>', TL_FILES_URL.$strImage, $size[0], str_replace("'", "\\'", $product->name), TL_FILES_URL.$strImage, TL_ASSETS_URL.str_replace(TL_ROOT, '', $resizeImage->getPath()), $image['alt']);
                             break;
@@ -61,7 +62,7 @@ class Backend
                             $args[$i] = '-';
                             break;
                         }
-                        $resizeImage = $container->get('contao.image.image_factory')->create($image->path, [50, 50, 'proportional']);
+                        $resizeImage = $container->get('contao.image.image_factory')->create($image->path, [50, 50, ResizeConfiguration::MODE_PROPORTIONAL]);
 
                         $args[$i] = sprintf('<a href="%s" onclick="Backend.openModalImage({\'width\':%s,\'title\':\'%s\',\'url\':\'%s\'});return false"><img src="%s" alt="%s" align="left"></a>', TL_FILES_URL.$image->path, $size[0], str_replace("'", "\\'", $product->name), TL_FILES_URL.$image->path, TL_ASSETS_URL.str_replace(TL_ROOT, '', $resizeImage->getPath()), $image->alt);
                     } else {

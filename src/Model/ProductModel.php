@@ -11,6 +11,7 @@ namespace HeimrichHannot\IsotopeBundle\Model;
 use Contao\Database;
 use Contao\StringUtil;
 use Contao\System;
+use Isotope\Model\Attribute;
 use Isotope\Model\Product\Standard;
 use Isotope\Model\ProductType;
 
@@ -246,5 +247,37 @@ class ProductModel extends Standard
         }
 
         return parent::save();
+    }
+
+    /**
+     * overwrite because otherwise wrong attributes would be marked as modified.
+     *
+     * @param string $strKey
+     */
+    public function markModified($strKey, string $type = null)
+    {
+        if ($type != $this->getType()->id) {
+            $arrAttributes = (null === ($productType = System::getContainer()->get('contao.framework')->getAdapter(ProductType::class)->findByPk($type))) ? [] : $productType->getAttributes();
+        } else {
+            if ($this->isVariant()) {
+                $arrAttributes = array_diff(
+                    $this->getType()->getVariantAttributes(),
+                    $this->getInheritedFields(),
+                    Attribute::getCustomerDefinedFields()
+                );
+            } else {
+                $arrAttributes = array_diff($this->getType()->getAttributes(), Attribute::getCustomerDefinedFields());
+            }
+        }
+
+        if (!in_array($strKey, $arrAttributes, true)
+            && '' !== (string) $GLOBALS['TL_DCA'][static::$strTable]['fields'][$strKey]['attributes']['legend']
+        ) {
+            return;
+        }
+
+        if (!isset($this->arrModified[$strKey])) {
+            $this->arrModified[$strKey] = $this->arrData[$strKey];
+        }
     }
 }

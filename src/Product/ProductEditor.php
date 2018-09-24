@@ -239,7 +239,7 @@ abstract class ProductEditor
         $this->submission->mergeRow($this->productData);
 
         foreach ($this->productData as $key => $value) {
-            $this->submission->markModified($key);
+            $this->submission->markModified($key, $this->submission->type);
         }
 
         return $this->submission->save();
