@@ -281,11 +281,6 @@ class IsotopeManager
             }
         }
 
-        // handle non existing images (still serialized)
-        if (!is_array($itemData['images'])) {
-            $itemData['images'] = [];
-        }
-
         $templateData[$imageKey] = [];
 
         System::getContainer()->get('huh.utils.image')->addToTemplateData($imageField, 'published', $templateData[$imageKey], $itemData, null, null, null, $imageFile);
