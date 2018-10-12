@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.11.21] - 2018-09-24
+
+#### Fixed
+* unset non existing images from `IsotopeManager::addImageToTemplateData()` 
+
 ## [0.11.20] - 2018-09-24
 
 #### Fixed

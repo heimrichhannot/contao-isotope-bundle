@@ -95,7 +95,7 @@ abstract class ProductEditor
             $path = $file->path;
         }
 
-        if (!file_exists(TL_ROOT.DIRECTORY_SEPARATOR.$path) && !empty($size['size'])) {
+        if (!file_exists(TL_ROOT.\DIRECTORY_SEPARATOR.$path) && !empty($size['size'])) {
             $image = $container->get('contao.image.image_factory')->create(System::getContainer()->get('huh.utils.container')->getProjectDir().\DIRECTORY_SEPARATOR.$file->path, [$size['size'][0], $size['size'][1], $size['size'][2]], System::getContainer()->get('huh.utils.container')->getProjectDir().'/'.$path);
             if (null !== $image) {
                 $path = $image->getPath();
@@ -158,7 +158,7 @@ abstract class ProductEditor
         // move file to upload folder
 //        $start = microtime(true);
 
-        rename(TL_ROOT.DIRECTORY_SEPARATOR.$file->path, TL_ROOT.DIRECTORY_SEPARATOR.$strTarget);
+        rename(TL_ROOT.\DIRECTORY_SEPARATOR.$file->path, TL_ROOT.\DIRECTORY_SEPARATOR.$strTarget);
         $file->path = $strTarget;
         $file->name = str_replace($folder, '', $strTarget);
 //        $file->name = str_replace('.'.$file->extension)
@@ -210,12 +210,12 @@ abstract class ProductEditor
         $strTarget = $this->getFilenameWithinTarget($target);
 
         if (!$strTarget && Config::get('iso_productFolderFallback')) {
-            $target = System::getContainer()->get('huh.utils.file')->getPathFromUuid(Config::get('iso_productFolderFallback')).DIRECTORY_SEPARATOR.$file->name;
+            $target = System::getContainer()->get('huh.utils.file')->getPathFromUuid(Config::get('iso_productFolderFallback')).\DIRECTORY_SEPARATOR.$file->name;
             $strTarget = $this->getFilenameWithinTarget($target);
         }
 
         if (!$strTarget) {
-            $target = TL_ROOT.DIRECTORY_SEPARATOR.'files'.DIRECTORY_SEPARATOR.$file->name;
+            $target = TL_ROOT.\DIRECTORY_SEPARATOR.'files'.\DIRECTORY_SEPARATOR.$file->name;
             $strTarget = $this->getFilenameWithinTarget($target);
         }
 

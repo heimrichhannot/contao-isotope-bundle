@@ -263,7 +263,7 @@ class IsotopeManager
             if (\Validator::isUuid($uploadedFiles[0])) {
                 $imageFile = System::getContainer()->get('contao.framework')->getAdapter(FilesModel::class)->findByUuid($uploadedFiles[0]);
                 if (null === $imageFile
-                    || !file_exists(TL_ROOT.DIRECTORY_SEPARATOR.$imageFile->path)) {
+                    || !file_exists(TL_ROOT.\DIRECTORY_SEPARATOR.$imageFile->path)) {
                     return;
                 }
                 $itemData[$imageField] = $imageFile->path;
@@ -279,6 +279,11 @@ class IsotopeManager
             if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2])) {
                 $itemData['size'] = $imgSize;
             }
+        }
+
+        // handle non existing images (still serialized)
+        if (!is_array($itemData['images'])) {
+            $itemData['images'] = [];
         }
 
         $templateData[$imageKey] = [];
