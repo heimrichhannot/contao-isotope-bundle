@@ -11,7 +11,7 @@
     "heimrichhannot/contao-utils-bundle": "^2.0",
     "heimrichhannot/contao-fieldpalette-bundle": "~0.2||~1.0",
     "heimrichhannot/contao-frontendedit": "^6.0",
-    "contao-components/tablesorter": ">=2.0.5.2",
+    "contao-components/tablesorter": "^2.0.5",
     "heimrichhannot/contao-request-bundle": "^1.0",
     "alchemy/ghostscript": ">=0.4.0",
     "miljar/php-exif": "^v0.6",

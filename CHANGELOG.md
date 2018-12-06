@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.11.23] - 2018-09-24
+
+#### Fixed
+* `contao-components/tablesorter` update fix
+
 ## [0.11.22] - 2018-09-24
 
 #### Fixed
