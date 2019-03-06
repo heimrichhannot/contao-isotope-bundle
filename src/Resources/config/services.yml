@@ -34,21 +34,6 @@ services:
     arguments:
       - '@contao.framework'
 
-# Event Listener
-
-  huh.isotope.listener.hooks.isotope:
-    class: HeimrichHannot\IsotopeBundle\EventListener\IsotopeHookListener
-    arguments: ['@huh.isotope.manager.productdata', '@huh.isotope.manager', '@huh.isotope.attribute.booking', '@huh.request']
-  huh.isotope.listener.hooks:
-    class: HeimrichHannot\IsotopeBundle\EventListener\HookListener
-    arguments: ['@huh.isotope.manager.productdata']
-  huh.isotope.listener.callback.product:
-    class: HeimrichHannot\IsotopeBundle\EventListener\ProductCallbackListener
-    arguments: ['@contao.framework', '@huh.request', '@huh.utils.container', '@huh.isotope.manager.productdata', '@huh.isotope.attribute.booking', '@twig']
-  huh.isotope.listener.callback.productcollection:
-    class: HeimrichHannot\IsotopeBundle\EventListener\ProductCollectionCallbackListener
-    arguments: ['@contao.framework', '@huh.isotope.manager', '@huh.isotope.manager.productdata']
-
 # Attributes
 
   huh.isotope.attribute.stock:

@@ -131,6 +131,11 @@ class CheckoutPlus extends Checkout
     {
         $fields = $this->Template->fields;
 
+        if (empty($fields))
+        {
+            return;
+        }
+
         foreach ($fields as $key => &$orderPart) {
             if (!strpos($orderPart['class'], static::ISO_CHECKOUT_ORDERCONDITIONS)) {
                 continue;

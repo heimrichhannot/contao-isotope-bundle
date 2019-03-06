@@ -13,11 +13,4 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class HeimrichHannotContaoIsotopeBundle extends Bundle
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getContainerExtension()
-    {
-        return new IsotopeExtension();
-    }
 }

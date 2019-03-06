@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.11.24] - 2019-03-06
+
+#### Changed
+* moved listener services to listeners.yml
+* moved service config file registration to Plugin class
+
+#### Fixed
+* warning in CheckoutPlus module
+* fixed non-public listener services for symfony 4 (#3)
+
 ## [0.11.23] - 2018-09-24
 
 #### Fixed
