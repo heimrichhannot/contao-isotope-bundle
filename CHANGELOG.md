@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.11.25] - 2019-03-06
+
+#### Fixed
+* checkout step names not loaded if not xlf (core issue)
+
 ## [0.11.24] - 2019-03-06
 
 #### Changed

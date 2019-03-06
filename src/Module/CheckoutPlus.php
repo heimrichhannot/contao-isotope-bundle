@@ -8,6 +8,7 @@
 
 namespace HeimrichHannot\IsotopeBundle\Module;
 
+use Contao\Controller;
 use Contao\StringUtil;
 use Isotope\Isotope;
 use Isotope\Module\Checkout;
@@ -146,4 +147,12 @@ class CheckoutPlus extends Checkout
 
         $this->Template->fields = $fields;
     }
+
+    protected function generateSteps(array $arrSteps)
+    {
+        Controller::loadLanguageFile('defaults');
+        return parent::generateSteps($arrSteps);
+    }
+
+
 }
