@@ -7,7 +7,7 @@
     "php": "^7.1",
     "contao/core-bundle": "^4.4",
     "isotope/isotope-core": "*",
-    "symfony/framework-bundle": "^3.4",
+    "symfony/framework-bundle": "^3.4||^4.0",
     "heimrichhannot/contao-utils-bundle": "^2.0",
     "heimrichhannot/contao-fieldpalette-bundle": "~0.2||~1.0",
     "heimrichhannot/contao-frontendedit": "^6.0",

@@ -1,21 +1,19 @@
 services:
   _defaults:
     autoconfigure: true
+    public: true
 
   huh.isotope.helper.download:
     class: HeimrichHannot\IsotopeBundle\Helper\DownloadHelper
-    public: true
     arguments: ['@contao.framework', '@huh.request']
   huh.isotope.helper.product:
     class: HeimrichHannot\IsotopeBundle\Helper\ProductHelper
-    public: true
     arguments: ['@contao.framework']
 
 # Manager
 
   huh.isotope.manager:
     class: HeimrichHannot\IsotopeBundle\Manager\IsotopeManager
-    public: true
     arguments:
       - '@huh.isotope.manager.productdata'
       - '@huh.isotope.attribute.stock'
@@ -27,10 +25,8 @@ services:
     arguments: ['@contao.framework']
   huh.isotope.ajax_manager:
     class: HeimrichHannot\IsotopeBundle\Manager\AjaxManager
-    public: true
   huh.isotope.manager.list:
     class: HeimrichHannot\IsotopeBundle\Manager\ProductListManager
-    public: true
     arguments:
       - '@contao.framework'
 
