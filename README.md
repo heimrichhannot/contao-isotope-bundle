@@ -17,6 +17,8 @@ This bundle offers additional functionality for the isotope ecommerce system.
 
 Also read [Contao Isotope_Plus](https://github.com/heimrichhannot/contao-isotope_plus) Documentation for more information about included features.
 
+
+
 ## Install 
 
 ```php
@@ -46,7 +48,12 @@ bookingReservedDates | Reserve date to block booking
 bookingOverview | Displays a calendar containing informations about booked items.
 
 
-
+#### Skip products for shipping price calculation
+You can declare products to be skipped in shipping price calculation at the shipping method configuration. 
+You can only add these products to shipping methods of type `flat`. 
+You can only declar products to be skipped that belong to the product types declared in the shipping method configuration.
+These `flat`-shipping methods need to be add to a shipping method of type `group`.
+The shipping method of type `group` then needs to be chosen as shipping method on the checkout module.
 
 ## Developers
 

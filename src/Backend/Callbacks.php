@@ -17,6 +17,7 @@ use Contao\System;
 use HeimrichHannot\IsotopeBundle\Model\ProductDataModel;
 use Isotope\Frontend\ProductAction\Registry;
 use Isotope\Model\Product;
+use HeimrichHannot\BegBundle\Model\ProductModel;
 
 class Callbacks
 {
@@ -132,6 +133,33 @@ class Callbacks
     public function getLicence($value, DataContainer $dc)
     {
         return $this->getLoadCallbackValueByField('licence', $value, $dc);
+    }
+    
+    
+    /**
+     * @param DataContainer $dc
+     *
+     * @return array
+     */
+    public function getProductsByType(DataContainer $dc)
+    {
+        if (!$dc->activeRecord->product_types) {
+            return [];
+        }
+        
+        $adapter = System::getContainer()->get('contao.framework')->getAdapter(ProductModel::class);
+        $types   = StringUtil::deserialize($dc->activeRecord->product_types, true);
+        $options = [];
+        
+        if (null === ($products = $adapter->findPublishedBy(['tl_iso_product.type IN (?)'], [implode(',', $types)]))) {
+            return $options;
+        }
+        
+        foreach($products as $product) {
+            $options[$product->id] = $product->name;
+        }
+        
+        return $options;
     }
 
     public function overwriteStockWithProductData($value, $dc)

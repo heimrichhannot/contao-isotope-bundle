@@ -264,8 +264,8 @@ class DirectCheckoutForm extends Form
     {
         $blnSubPalette = $blnAddQuantity || (in_array('isotope_subscriptions', \ModuleLoader::getActive(), true) && $blnAddSubscriptionCheckbox);
 
-        $this->setProductCount(count(deserialize($this->iso_direct_checkout_products)));
-        $this->setTypeCount(count(deserialize($this->iso_direct_checkout_product_types)));
+        $this->setProductCount(count(StringUtil::deserialize($this->iso_direct_checkout_products, true)));
+        $this->setTypeCount(count(StringUtil::deserialize($this->iso_direct_checkout_product_types, true)));
 
         if ($this->getProductCount() > 1 || $this->getTypeCount() > 1) {
             // add checkbox

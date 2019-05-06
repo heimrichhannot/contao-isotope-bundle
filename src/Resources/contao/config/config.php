@@ -24,6 +24,7 @@ $GLOBALS['ISO_HOOKS']['generateProduct']['updateTemplateData']                  
 $GLOBALS['TL_HOOKS']['getPageLayout'][]                                          = ['huh.isotope.ajax_manager', 'ajaxActions'];
 $GLOBALS['TL_HOOKS']['loadDataContainer']['huh.isotope.productdata_fields']      = ['huh.isotope.listener.hooks', 'addMetaFields'];
 //$GLOBALS['TL_HOOKS']['parseItems']['addPdfViewerToTemplate']   = ['huh.isotope.helper.product', 'addPdfViewerToTemplate'];
+$GLOBALS['ISO_HOOKS']['preCheckout']['modifyShippingPrice']                      = ['huh.isotope.listener.hooks.isotope', 'modifyShippingPrice'];
 
 /**
  * Frontend modules

@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.11.26] - 2019-05-03
+
+#### Added
+* skip products in calculation of shipping price for grouped shipping methods
+
 ## [0.11.25] - 2019-03-06
 
 #### Fixed
