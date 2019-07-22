@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.12.0] - 2019-07-22
+
+#### Fixed
+* filehandling on creation
+
 ## [0.11.26] - 2019-05-03
 
 #### Added

@@ -34,6 +34,12 @@ class ProductFrontendEditorForm extends Form
         if (null !== ($product = System::getContainer()->get('contao.framework')->getAdapter(ProductModel::class)->findByPk(System::getContainer()->get('huh.request')->getGet('id'))) && 0 != $product->tstamp && !$product->createMultiImageProduct) {
             $arrDca['fields']['uploadedFiles']['eval']['maxFiles'] = 1;
         }
+        
+        if(System::getContainer()->get('huh.request')->hasPost('licence')) {
+           $licence = array_unique(System::getContainer()->get('huh.request')->getPost('licence'));
+    
+            System::getContainer()->get('huh.request')->setPost('licence', $licence);
+        }
 
         // HOOK: send insert ID and user data
         if (isset($GLOBALS['TL_HOOKS']['modifyDCProductEditor']) && is_array($GLOBALS['TL_HOOKS']['modifyDCProductEditor'])) {

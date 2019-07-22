@@ -191,7 +191,7 @@ abstract class ProductEditor
      */
     public function getPreviewFromPdf($file, $uploadFolder)
     {
-        $destinationFileName = 'preview-'.str_replace('.pdf', '', $file->name).'.'.static::$convertFileType;
+        $destinationFileName = 'preview-'.str_replace('.pdf', '', trim($file->name,'/')).'.'.static::$convertFileType;
 
         // ghostscript
         /** @var Transcoder $transcoder */
