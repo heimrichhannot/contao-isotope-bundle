@@ -7,7 +7,9 @@ $arrDca = &$GLOBALS['TL_DCA']['tl_iso_product'];
  * Labels in Backend
  */
 $arrDca['list']['label']['fields']         = ['images', 'uploadedFiles', 'name', 'sku', 'price', 'stock', 'initialStock', 'jumpTo']; // added stock and initialstock to product overview
-$arrDca['list']['label']['label_callback'] = ['HeimrichHannot\IsotopeBundle\Backend\Backend', 'getProductCreatorLabel'];
+$arrDca['list']['label']['label_callback'] = [
+    \HeimrichHannot\IsotopeBundle\DataContainer\IsotopeProductContainer::class, 'onLabelCallback'
+];
 
 //$arrDca['palettes']['default'] = str_replace('type', 'type,name,', $arrDca['palettes']['default']);
 

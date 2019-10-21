@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.13.0] - 2019-10-21
+
+* refactored backend class into datacontainer class
+
 ## [0.12.0] - 2019-07-22
 
 #### Fixed

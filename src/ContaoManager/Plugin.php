@@ -98,5 +98,6 @@ class Plugin implements BundlePluginInterface, ExtensionPluginInterface, Routing
     {
         $loader->load('@HeimrichHannotContaoIsotopeBundle/Resources/config/services.yml');
         $loader->load('@HeimrichHannotContaoIsotopeBundle/Resources/config/listeners.yml');
+        $loader->load('@HeimrichHannotContaoIsotopeBundle/Resources/config/datacontainers.yml');
     }
 }
