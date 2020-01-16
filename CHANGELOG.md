@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.13.1] - 2020-01-16
+
+* fixed hook call in product list
+
 ## [0.13.0] - 2019-10-21
 
 * refactored backend class into datacontainer class

@@ -161,7 +161,7 @@ class ProductListPlus extends ProductList
         if (isset($GLOBALS['ISO_HOOKS']['generateProductList']) && is_array($GLOBALS['ISO_HOOKS']['generateProductList'])) {
             foreach ($GLOBALS['ISO_HOOKS']['generateProductList'] as $callback) {
                 $objCallback = System::importStatic($callback[0]);
-                $buffer = $objCallback->$callback[1]($buffer, $this->products, $this->Template, $this);
+                $buffer = $objCallback->{$callback[1]}($buffer, $this->products, $this->Template, $this);
             }
         }
 

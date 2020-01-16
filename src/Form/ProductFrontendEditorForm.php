@@ -8,6 +8,7 @@
 
 namespace HeimrichHannot\IsotopeBundle\Form;
 
+use Contao\StringUtil;
 use Contao\System;
 use HeimrichHannot\FormHybrid\Form;
 use HeimrichHannot\IsotopeBundle\Model\ProductModel;
@@ -36,9 +37,9 @@ class ProductFrontendEditorForm extends Form
         }
         
         if(System::getContainer()->get('huh.request')->hasPost('licence')) {
-           $licence = array_unique(System::getContainer()->get('huh.request')->getPost('licence'));
+           $licence = array_unique(StringUtil::deserialize(System::getContainer()->get('huh.request')->getPost('licence'), true));
     
-            System::getContainer()->get('huh.request')->setPost('licence', $licence);
+            System::getContainer()->get('huh.request')->setPost('licence', reset($licence));
         }
 
         // HOOK: send insert ID and user data
