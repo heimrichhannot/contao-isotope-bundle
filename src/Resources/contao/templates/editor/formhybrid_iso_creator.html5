@@ -22,31 +22,15 @@
             <?= $this->hidden; ?>
             
             <?php foreach ($this->fields as $name => $objField): ?>
-            <?php if ($name == 'uploadedFiles' || $name == 'images' || $name == 'uploadedDownloadFiles'): ?>
-            <div class="<?= $name ?> multifileupload-field form-group">
-                <label id="lbl_<?= $name ?>" class="control-label" for="ctrl_<?= $name ?>">
-                    <?= $objField->label ?>
-                    <?php if ($objField->mandatory): ?>
-                        <span class="invisible">Pflichtfeld</span>
-                        <span class="mandatory">*</span>
-                    <?php endif; ?>
-                </label>
-                <?php endif; ?>
-
-                    
                     <?= $objField->parse(); ?>
-    
                     <?php if ($name == 'tag'): ?>
                         <div class="btn btn-primary add-trigger">
                             hinzufügen
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($name == 'uploadedFiles' || $name == 'images' || $name == 'uploadedDownloadFiles'): ?>
-                </div>
-            <?php endif; ?>
                 <?php endforeach; ?>
-                <?php endif; ?>
+            <?php endif; ?>
             </div>
     </form>
 </div>

@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.14.0] - 2020-02-25
+
+* added customizable submit label in direct checkout
+
 ## [0.13.1] - 2020-01-16
 
 * fixed hook call in product list
