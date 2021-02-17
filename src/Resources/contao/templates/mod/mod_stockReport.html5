@@ -10,27 +10,28 @@
         <tbody>
         <?php foreach ($this->items as $item): ?>
             <tr>
-                <?php if ($item['type'] == 'category') : ?>
-                    <td colspan="4" class="category"><?= $item['title']; ?></td>
-                <?php else: ?>
-                    <td><?= $item['name']; ?></td>
+                <td colspan="4" class="category"><?= $item['title']; ?></td>
+            </tr>
+            <?php foreach($item['products'] as $product): ?>
+                <tr>
+                    <td><?= $product['name']; ?></td>
                     <td class="center" colspan="3">
                         <div class="progress">
-                            <span class="start"><?= $item['stock']; ?></span>
+                            <span class="start"><?= $product['stock']; ?></span>
                             <div class="progress-bar">
 				  					<span class="progressbar-back-text">
-										<?= $item['stock'] >= 0 ? ($item['stockPercent'] < 1 ? '<1%' : $item['stockPercent'] . '%') : '0%'; ?>
+										<?= $product['stock'] >= 0 ? ($product['stockPercent'] < 1 ? '<1%' : $product['stockPercent'] . '%') : '0%'; ?>
 									</span>
                                 <div class="bar-front-text" style="width: <?= $item['stockPercent'] > 0 ? floor($item['stockPercent']) : 0; ?>%;">
-                                    <span class="progressbar-front-text"><?= $item['stockPercent']; ?>%</span>
+                                    <span class="progressbar-front-text"><?= $product['stockPercent']; ?>%</span>
                                 </div>
-                                <div class="bar <?= $item['stockClass']; ?>" style="width: <?= $item['stockPercent'] > 0 ? floor($item['stockPercent']) : 0; ?>%;"></div>
+                                <div class="bar <?= $product['stockClass']; ?>" style="width: <?= $item['stockPercent'] > 0 ? floor($item['stockPercent']) : 0; ?>%;"></div>
                             </div>
-                            <span class="end"><?= $item['initialStock']; ?></span>
+                            <span class="end"><?= $product['initialStock']; ?></span>
                         </div>
                     </td>
-                <?php endif; ?>
-            </tr>
+                </tr>
+            <?php endforeach; ?>
         <?php endforeach; ?>
         </tbody>
     </table>

@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.15.0] - 2021-02-17
+
+* changed sorting of products to category in `ModuleStockReport`
+
 ## [0.14.0] - 2020-02-25
 
 * added customizable submit label in direct checkout

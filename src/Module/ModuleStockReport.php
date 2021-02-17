@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -54,15 +54,15 @@ class ModuleStockReport extends Module
                 $arrProducts[$category]['title'] = $result->type;
             }
 
-            $arrProducts[$product->id] = $product->row();
-            $arrProducts[$product->id]['stockPercent'] = '-';
-            $arrProducts[$product->id]['stock'] = $product->stock;
-            $arrProducts[$product->id]['initialStock'] = $product->initialStock;
+            $productData = $product->row();
+            $productData['stockPercent'] = '-';
+            $productData['stock'] = $product->stock;
+            $productData['initialStock'] = $product->initialStock;
 
             if ($product->initialStock > 0 && '' !== $product->initialStock) {
                 $percent = floor($product->stock * 100 / $product->initialStock);
 
-                $arrProducts[$product->id]['stockPercent'] = $percent;
+                $productData['stockPercent'] = $percent;
 
                 switch ($percent) {
                     default:
@@ -78,8 +78,10 @@ class ModuleStockReport extends Module
                         $strClass = 'badge-info';
                         break;
                 }
-                $arrProducts[$product->id]['stockClass'] = $strClass;
+                $productData['stockClass'] = $strClass;
             }
+
+            $arrProducts[$category]['products'][$product->id] = $productData;
         }
 
         $this->Template->items = $arrProducts;
