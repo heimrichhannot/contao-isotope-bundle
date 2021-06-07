@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -79,7 +79,7 @@ class SingleImageProductEditor extends ProductEditor
 
         // replace $this->file with the preview image of the pdf
 
-        if (file_exists(TL_ROOT . DIRECTORY_SEPARATOR . $completePath)) {
+        if (file_exists(TL_ROOT.\DIRECTORY_SEPARATOR.$completePath)) {
             $this->file = \Dbafs::addResource(urldecode($completePath));
         }
     }
@@ -109,10 +109,9 @@ class SingleImageProductEditor extends ProductEditor
     protected function prepareProductImages($uuid)
     {
         // need to move file now -> download items would otherwise create different sizes in tmp folder
-        if('pdf' != $this->file->extension && !file_exists(TL_ROOT . DIRECTORY_SEPARATOR . $this->file->path)) {
+        if ('pdf' != $this->file->extension && !file_exists(TL_ROOT.\DIRECTORY_SEPARATOR.$this->file->path)) {
             $this->moveFile($this->file, $this->getUploadFolder($this->dc));
         }
-        
 
         // need to unset callback to prevent moving of file to uploadFolder disregarding field dependend uploadFolder
         unset($GLOBALS['TL_DCA']['tl_iso_product']['config']['onsubmit_callback']['multifileupload_moveFiles']);

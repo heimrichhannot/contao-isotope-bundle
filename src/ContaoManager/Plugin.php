@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -43,9 +43,7 @@ class Plugin implements BundlePluginInterface, ExtensionPluginInterface, Routing
     }
 
     /**
-     * @param string           $extensionName
-     * @param array            $extensionConfigs
-     * @param ContainerBuilder $container
+     * @param string $extensionName
      *
      * @return array
      */
@@ -76,11 +74,9 @@ class Plugin implements BundlePluginInterface, ExtensionPluginInterface, Routing
     /**
      * Returns a collection of routes for this bundle.
      *
-     * @param LoaderResolverInterface $resolver
-     * @param KernelInterface $kernel
+     * @throws \Exception
      *
      * @return RouteCollection|null
-     * @throws \Exception
      */
     public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel)
     {
@@ -90,8 +86,6 @@ class Plugin implements BundlePluginInterface, ExtensionPluginInterface, Routing
     /**
      * Allows a plugin to load container configuration.
      *
-     * @param LoaderInterface $loader
-     * @param array $managerConfig
      * @throws \Exception
      */
     public function registerContainerConfiguration(LoaderInterface $loader, array $managerConfig)

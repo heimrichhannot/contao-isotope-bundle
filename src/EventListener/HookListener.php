@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -20,8 +20,6 @@ class HookListener
 
     /**
      * HookListener constructor.
-     *
-     * @param ProductDataManager $productDataManager
      */
     public function __construct(ProductDataManager $productDataManager)
     {
@@ -32,8 +30,6 @@ class HookListener
      * Add product data fields to the product dca.
      *
      * Hook: loadDataContainer
-     *
-     * @param string $current
      */
     public function addMetaFields(string $current)
     {

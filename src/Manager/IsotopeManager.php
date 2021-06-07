@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -49,12 +49,6 @@ class IsotopeManager
 
     /**
      * IsotopeManager constructor.
-     *
-     * @param ProductDataManager       $productDataManager
-     * @param StockAttribute           $stockAttribute
-     * @param MaxOrderSizeAttribute    $maxOrderSizeAttribute
-     * @param ContainerUtil            $containerUtil
-     * @param ContaoFrameworkInterface $framework
      */
     public function __construct(ProductDataManager $productDataManager, StockAttribute $stockAttribute, MaxOrderSizeAttribute $maxOrderSizeAttribute, ContainerUtil $containerUtil, ContaoFrameworkInterface $framework)
     {
@@ -66,10 +60,8 @@ class IsotopeManager
     }
 
     /**
-     * @param Product               $product
      * @param                       $quantity
      * @param ProductCollectionItem $cartItem
-     * @param bool                  $includeError
      * @param int                   $setQuantity
      *
      * @return array|bool
@@ -114,9 +106,7 @@ class IsotopeManager
      * priorities (first is the most important):
      * product, product type, global shop config.
      *
-     *
-     * @param string $property
-     * @param        $product
+     * @param $product
      *
      * @return mixed
      */
@@ -142,11 +132,9 @@ class IsotopeManager
     /**
      * watch out: also in backend the current set quantity is used.
      *
-     * @param int            $quantity
-     * @param IsotopeProduct $product
-     * @param null           $objCartItem
-     * @param null           $intSetQuantity
-     * @param null           $config
+     * @param null $objCartItem
+     * @param null $intSetQuantity
+     * @param null $config
      *
      * @return int|null
      */
@@ -170,8 +158,7 @@ class IsotopeManager
     }
 
     /**
-     * @param string $property
-     * @param null   $config
+     * @param null $config
      *
      * @return mixed
      */
@@ -189,11 +176,9 @@ class IsotopeManager
      *
      * watch out: also in backend the current set quantity is used.
      *
-     * @param int              $quantity
-     * @param ProductDataModel $product
-     * @param null             $cartItem
-     * @param null             $setQuantity
-     * @param Config           $config
+     * @param null   $cartItem
+     * @param null   $setQuantity
+     * @param Config $config
      *
      * @return int|null
      */
@@ -219,11 +204,6 @@ class IsotopeManager
 
     /**
      * adds the image to the template data.
-     *
-     * @param array  $itemData
-     * @param string $imgSize
-     * @param array  $templateData
-     * @param string $imageKey
      */
     public function addImageToTemplateData(array $itemData, string $imgSize, array &$templateData, string $imageKey = 'image')
     {
@@ -235,7 +215,7 @@ class IsotopeManager
             $imageField = 'images';
             $arrImages = StringUtil::deserialize($itemData['images']);
 
-            if (!is_array($arrImages) || empty($arrImages)) {
+            if (!\is_array($arrImages) || empty($arrImages)) {
                 return;
             }
 
@@ -289,9 +269,8 @@ class IsotopeManager
     /**
      * get the isotope image by product.
      *
-     * @param        $template
-     * @param        $product
-     * @param string $size
+     * @param $template
+     * @param $product
      *
      * @return string
      */
@@ -313,9 +292,6 @@ class IsotopeManager
 
     /**
      * Formats the return message of validateQuantity if an error occurred.
-     *
-     * @param string $errorMessage
-     * @param bool   $includeError
      *
      * @return array|bool
      */

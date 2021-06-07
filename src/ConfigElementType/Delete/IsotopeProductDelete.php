@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -38,7 +38,7 @@ class IsotopeProductDelete extends DefaultDelete
 
     public function delete(ItemInterface $item, ReaderConfigElementModel $readerConfigElement)
     {
-        if (in_array($item->getRawValue('id'), $this->framework->getAdapter(Permission::class)->getUndeletableIds(), true)) {
+        if (\in_array($item->getRawValue('id'), $this->framework->getAdapter(Permission::class)->getUndeletableIds(), true)) {
             return;
         }
 
@@ -84,8 +84,6 @@ class IsotopeProductDelete extends DefaultDelete
 
     /**
      * delete all downloads and files.
-     *
-     * @param \Contao\Model\Collection $downloads
      */
     protected function deleteDownloads(Collection $downloads)
     {
@@ -103,15 +101,13 @@ class IsotopeProductDelete extends DefaultDelete
 
     /**
      * delete images from tl_files.
-     *
-     * @param ItemInterface $item
      */
     protected function deleteProductImages(ItemInterface $item)
     {
         if (null !== $item->getRawValue('images')) {
             $arrImages = StringUtil::deserialize($item->getRawValue('images'));
 
-            if (!is_array($arrImages) || empty($arrImages)) {
+            if (!\is_array($arrImages) || empty($arrImages)) {
                 return;
             }
 
@@ -125,7 +121,7 @@ class IsotopeProductDelete extends DefaultDelete
             }
         } elseif (null !== $item->getRawValue('uploadedFiles')) {
             $uploadedFiles = $item->getRawValue('uploadedFiles');
-            if (is_array($upload = unserialize($uploadedFiles))) {
+            if (\is_array($upload = unserialize($uploadedFiles))) {
                 $uploadedFiles = $upload[0];
             }
             if (\Validator::isUuid($uploadedFiles)) {
@@ -140,8 +136,6 @@ class IsotopeProductDelete extends DefaultDelete
 
     /**
      * deletes all given files.
-     *
-     * @param array $files
      */
     protected function deleteFiles(array $files)
     {

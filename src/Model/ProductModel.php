@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -17,7 +17,6 @@ use Isotope\Model\ProductType;
 
 /**
  * Class ProductModel.
- *
  *
  * @property int    $id
  * @property int    $pid
@@ -97,7 +96,7 @@ class ProductModel extends Standard
 
     public function __set($key, $value)
     {
-        if (array_key_exists($key, $this->getProductDataManager()->getProductDataFields()) && null !== $this->getProductData()) {
+        if (\array_key_exists($key, $this->getProductDataManager()->getProductDataFields()) && null !== $this->getProductData()) {
             $this->getProductData()->$key = $value;
             $this->productDataChanged = true;
         }
@@ -110,7 +109,7 @@ class ProductModel extends Standard
 
     public function __get($key)
     {
-        if (array_key_exists($key, $this->getProductDataManager()->getProductDataFields()) && null !== $this->getProductData()) {
+        if (\array_key_exists($key, $this->getProductDataManager()->getProductDataFields()) && null !== $this->getProductData()) {
             return $this->getProductData()->$key;
         }
 
@@ -119,7 +118,7 @@ class ProductModel extends Standard
 
     public function __isset($key)
     {
-        if (array_key_exists($key, $this->getProductDataManager()->getProductDataFields())) {
+        if (\array_key_exists($key, $this->getProductDataManager()->getProductDataFields())) {
             return true;
         }
 
@@ -209,8 +208,6 @@ class ProductModel extends Standard
     }
 
     /**
-     * @param array $data
-     *
      * @return Standard
      */
     public function setRow(array $data)
@@ -270,7 +267,7 @@ class ProductModel extends Standard
             }
         }
 
-        if (!in_array($strKey, $arrAttributes, true)
+        if (!\in_array($strKey, $arrAttributes, true)
             && '' !== (string) $GLOBALS['TL_DCA'][static::$strTable]['fields'][$strKey]['attributes']['legend']
         ) {
             return;

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -75,7 +75,7 @@ class BookingAttributes
         $blockedDates = $this->getBlockedDatesWithoutSelf($product, $quantity, $item);
         $productDates = $this->getRange($item->bookingStart, $item->bookingStop, $product->bookingBlock);
 
-        if (count(array_diff($blockedDates, $productDates)) == count($blockedDates)) {
+        if (\count(array_diff($blockedDates, $productDates)) == \count($blockedDates)) {
             return true;
         }
 
@@ -102,7 +102,6 @@ class BookingAttributes
 
     /**
      * @param IsotopeProduct $product
-     * @param int            $quantity
      *
      * @return array
      */
@@ -118,11 +117,6 @@ class BookingAttributes
 
     /**
      * Returns a list of orders for given products for requested day.
-     *
-     * @param ProductModel $product
-     * @param int          $day
-     * @param int          $month
-     * @param int          $year
      *
      * @return Collection|array|ProductCollection[]|null
      */
@@ -147,10 +141,6 @@ class BookingAttributes
      * Return a list with number of bookings per day.
      *
      * Includes reservations an blocked days.
-     *
-     * @param ProductModel $product
-     * @param int          $month
-     * @param int          $year
      *
      * @return array
      */
@@ -232,10 +222,6 @@ class BookingAttributes
      * if the product has a bookingBlock it as to be added to the bookingStop and subtracted from the bookingStart
      * bookingBlock means that the product will be blocked for a certain amount of days after it's booking.
      *
-     * @param int    $start
-     * @param int    $stop
-     * @param string $blocking
-     *
      * @return array
      */
     public function getRange(int $start, int $stop, string $blocking = '')
@@ -249,8 +235,6 @@ class BookingAttributes
     /**
      * Split up booking date string to two seperate timestamps.
      *
-     * @param string $booking
-     *
      * @return array
      */
     public function splitUpBookingDates(string $booking)
@@ -261,11 +245,6 @@ class BookingAttributes
     }
 
     /**
-     * @param ProductModel $product
-     * @param int          $startDate
-     * @param int          $endDate
-     * @param bool         $ignoreBlocking
-     *
      * @return Collection|ProductCollectionItemModel[]|null
      */
     protected function getBookedItemsInTimeRange(ProductModel $product, int $startDate, int $endDate, bool $ignoreBlocking = false)
@@ -291,8 +270,7 @@ class BookingAttributes
     /**
      * get the booking dates for a product from collectionItems.
      *
-     * @param            $product
-     * @param Collection $collectionItems
+     * @param $product
      *
      * @return array
      */
@@ -351,9 +329,6 @@ class BookingAttributes
     /**
      * merge reserved dates into booking array.
      *
-     * @param array $bookings
-     * @param array $reservedDates
-     *
      * @return array
      */
     protected function mergeBookedWithReserved(array $bookings, array $reservedDates)
@@ -367,10 +342,6 @@ class BookingAttributes
 
     /**
      * get the final locked days for this product.
-     *
-     * @param array $bookings
-     * @param int   $stock
-     * @param int   $quantity
      *
      * @return array
      */

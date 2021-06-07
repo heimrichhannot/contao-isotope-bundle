@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -20,8 +20,6 @@ class RequestCacheOrFilter
 {
     /**
      * Generate query string for native filters.
-     *
-     * @param array $filters
      *
      * @return array
      */
@@ -75,7 +73,7 @@ class RequestCacheOrFilter
 
             $strTemp = '';
             $arrTemp = $arrWhere;
-            if (in_array('tl_iso_product.shipping_exempt = ?', $arrTemp, true)) {
+            if (\in_array('tl_iso_product.shipping_exempt = ?', $arrTemp, true)) {
                 $strTemp = 'tl_iso_product.shipping_exempt = ? AND ';
                 unset($arrTemp[array_search('tl_iso_product.shipping_exempt = ?', $arrTemp, true)]);
             }

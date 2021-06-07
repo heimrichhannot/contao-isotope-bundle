@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -111,16 +111,12 @@ class CheckoutPlus extends Checkout
     /**
      * check if cart products fit the conditions to display the conditional form.
      *
-     * @param array  $products
-     * @param string $attribute
-     * @param array  $dependencies
-     *
      * @return bool
      */
     protected function checkFormCondition(array $products, string $attribute, array $dependencies)
     {
         foreach ($products as $product) {
-            if (in_array($product->getProduct()->{$attribute}, $dependencies, true)) {
+            if (\in_array($product->getProduct()->{$attribute}, $dependencies, true)) {
                 return true;
             }
         }
@@ -132,8 +128,7 @@ class CheckoutPlus extends Checkout
     {
         $fields = $this->Template->fields;
 
-        if (empty($fields))
-        {
+        if (empty($fields)) {
             return;
         }
 
@@ -151,8 +146,7 @@ class CheckoutPlus extends Checkout
     protected function generateSteps(array $arrSteps)
     {
         Controller::loadLanguageFile('defaults');
+
         return parent::generateSteps($arrSteps);
     }
-
-
 }

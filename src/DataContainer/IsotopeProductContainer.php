@@ -1,16 +1,12 @@
 <?php
-/**
- * Contao Open Source CMS
+
+/*
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
- * Copyright (c) 2019 Heimrich & Hannot GmbH
- *
- * @author  Thomas Körner <t.koerner@heimrich-hannot.de>
- * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @license LGPL-3.0-or-later
  */
 
-
 namespace HeimrichHannot\IsotopeBundle\DataContainer;
-
 
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\DC_Table;
@@ -41,10 +37,11 @@ class IsotopeProductContainer
     }
 
     /**
-     * @param array $row Current list element data
-     * @param string $label
+     * @param array                   $row   Current list element data
+     * @param string                  $label
      * @param DC_ProductData|DC_Table $dc
-     * @param array $args Backend list arguments
+     * @param array                   $args  Backend list arguments
+     *
      * @return mixed
      */
     public function onLabelCallback($row, $label, $dc, $args)
@@ -56,7 +53,7 @@ class IsotopeProductContainer
                     $images = StringUtil::deserialize($row['images']);
                     $args[$index] = '&nbsp;';
 
-                    if (is_array($images) && !empty($images)) {
+                    if (\is_array($images) && !empty($images)) {
                         foreach ($images as $image) {
                             $strImage = 'isotope/'.strtolower(substr($image['src'], 0, 1)).'/'.$image['src'];
 
@@ -71,7 +68,7 @@ class IsotopeProductContainer
                     break;
                 case 'uploadedFiles':
                     $uploadedFiles = StringUtil::deserialize($row['uploadedFiles']);
-                    if (!is_array($uploadedFiles) || empty($uploadedFiles)) {
+                    if (!\is_array($uploadedFiles) || empty($uploadedFiles)) {
                         $args[$index] = '-';
                         break;
                     }
@@ -105,12 +102,10 @@ class IsotopeProductContainer
                     $price = ProductPrice::findPrimaryByProductId($row['id']);
 
                     if ($price) {
-                        /** @var \Isotope\Model\TaxClass $objTax */
-                        try
-                        {
+                        /* @var \Isotope\Model\TaxClass $objTax */
+                        try {
                             $objTax = $price->getRelated('tax_class');
-                        } catch (\Exception $e)
-                        {
+                        } catch (\Exception $e) {
                             break;
                         }
                         $strTax = (null === $objTax ? '' : ' ('.$objTax->getName().')');
@@ -136,7 +131,7 @@ class IsotopeProductContainer
     protected function createImageWithModalForList(string $imagePath, string $name, string $alt)
     {
         if (!is_file(TL_ROOT.'/'.$imagePath)) {
-            throw new FileNotFoundException("Image file does not exist!");
+            throw new FileNotFoundException('Image file does not exist!');
         }
 
         $size = @getimagesize(TL_ROOT.'/'.$imagePath);

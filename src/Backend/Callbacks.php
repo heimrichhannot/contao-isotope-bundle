@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -14,10 +14,10 @@ use Contao\FilesModel;
 use Contao\FrontendUser;
 use Contao\StringUtil;
 use Contao\System;
+use HeimrichHannot\BegBundle\Model\ProductModel;
 use HeimrichHannot\IsotopeBundle\Model\ProductDataModel;
 use Isotope\Frontend\ProductAction\Registry;
 use Isotope\Model\Product;
-use HeimrichHannot\BegBundle\Model\ProductModel;
 
 class Callbacks
 {
@@ -36,7 +36,7 @@ class Callbacks
 
         $arrFields = $GLOBALS['TL_DCA'][static::$strProductTable]['fields'];
 
-        if (!is_array($arrFields) || empty($arrFields)) {
+        if (!\is_array($arrFields) || empty($arrFields)) {
             return $arrOptions;
         }
 
@@ -134,11 +134,8 @@ class Callbacks
     {
         return $this->getLoadCallbackValueByField('licence', $value, $dc);
     }
-    
-    
+
     /**
-     * @param DataContainer $dc
-     *
      * @return array
      */
     public function getProductsByType(DataContainer $dc)
@@ -146,19 +143,19 @@ class Callbacks
         if (!$dc->activeRecord->product_types) {
             return [];
         }
-        
+
         $adapter = System::getContainer()->get('contao.framework')->getAdapter(ProductModel::class);
-        $types   = StringUtil::deserialize($dc->activeRecord->product_types, true);
+        $types = StringUtil::deserialize($dc->activeRecord->product_types, true);
         $options = [];
-        
+
         if (null === ($products = $adapter->findPublishedBy(['tl_iso_product.type IN (?)'], [implode(',', $types)]))) {
             return $options;
         }
-        
-        foreach($products as $product) {
+
+        foreach ($products as $product) {
             $options[$product->id] = $product->name;
         }
-        
+
         return $options;
     }
 

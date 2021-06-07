@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -111,7 +111,7 @@ class ProductFilterPlus extends ProductFilter
         $this->Template->hasSearch = false;
         $this->Template->hasAutocomplete = ($this->iso_searchAutocomplete) ? true : false;
 
-        if (is_array($this->iso_searchFields) && count($this->iso_searchFields)) { // Can't use empty() because its an object property (using __get)
+        if (\is_array($this->iso_searchFields) && \count($this->iso_searchFields)) { // Can't use empty() because its an object property (using __get)
             if ('' != $this->request->getGet('keywords') && $GLOBALS['TL_LANG']['MSC']['defaultSearchText'] != $this->request->getGet('keywords')) {
                 // Redirect to search result page if one is set (see #1068)
                 if (!$this->blnUpdateCache && $this->jumpTo != $objPage->id && null !== $this->objModel->getRelated('jumpTo')) {
@@ -147,14 +147,14 @@ class ProductFilterPlus extends ProductFilter
     {
         $this->Template->hasSorting = false;
 
-        if (is_array($this->iso_sortingFields) && count($this->iso_sortingFields)) {    // Can't use empty() because its an object property (using __get)
+        if (\is_array($this->iso_sortingFields) && \count($this->iso_sortingFields)) {    // Can't use empty() because its an object property (using __get)
             $arrOptions = [];
 
             // Cache new request value
             // @todo should support multiple sorting fields
             list($sortingField, $sortingDirection) = explode(':', $this->request->getPost('sorting'));
 
-            if ($this->blnUpdateCache && in_array($sortingField, $this->iso_sortingFields, true)) {
+            if ($this->blnUpdateCache && \in_array($sortingField, $this->iso_sortingFields, true)) {
                 Isotope::getRequestCache()->setSortingForModule($sortingField, ('DESC' == $sortingDirection ? Sort::descending() : Sort::ascending()), $this->id);
             } elseif (array_diff(array_keys(Isotope::getRequestCache()->getSortingsForModules([$this->id])), $this->iso_sortingFields)) {
                 // Request cache contains wrong value, delete it!
@@ -210,7 +210,7 @@ class ProductFilterPlus extends ProductFilter
     {
         $this->Template->hasFilters = false;
 
-        if (is_array($this->iso_filterFields) && count($this->iso_filterFields)) {
+        if (\is_array($this->iso_filterFields) && \count($this->iso_filterFields)) {
             return;
         }
         // Can't use empty() because its an object property (using __get)
@@ -233,7 +233,7 @@ class ProductFilterPlus extends ProductFilter
                 $values[] = StringUtil::deserialize($objValues->$field, false);
             }
 
-            if ($this->blnUpdateCache && in_array($input[$field], $values, true)) {
+            if ($this->blnUpdateCache && \in_array($input[$field], $values, true)) {
                 Isotope::getRequestCache()->setFilterForModule($field, Filter::attribute($field)->isEqualTo($input[$field]), $this->id);
             } elseif ($this->blnUpdateCache && '' == $input[$field]) {
                 Isotope::getRequestCache()->removeFilterForModule($field, $this->id);
@@ -251,7 +251,7 @@ class ProductFilterPlus extends ProductFilter
                 }
 
                 $data = $GLOBALS['TL_DCA']['tl_iso_product']['fields'][$field];
-                if (is_array($GLOBALS['ISO_ATTR'][$data['inputType']]['callback']) && !empty($GLOBALS['ISO_ATTR'][$data['inputType']]['callback'])) {
+                if (\is_array($GLOBALS['ISO_ATTR'][$data['inputType']]['callback']) && !empty($GLOBALS['ISO_ATTR'][$data['inputType']]['callback'])) {
                     foreach ($GLOBALS['ISO_ATTR'][$data['inputType']]['callback'] as $callback) {
                         $objCallback = System::importStatic($callback[0]);
                         $data = $objCallback->{$callback[1]}($field, $data, $this);
@@ -273,7 +273,7 @@ class ProductFilterPlus extends ProductFilter
                 }
 
                 // Must have options to apply the filter
-                if (!is_array($widget['options'])) {
+                if (!\is_array($widget['options'])) {
                     continue;
                 }
 
@@ -282,7 +282,7 @@ class ProductFilterPlus extends ProductFilter
                         $widget['blankOptionLabel'] = $option['label'];
                         unset($widget['options'][$k]);
                         continue;
-                    } elseif (!in_array($option['value'], $values, true) || '-' == $option['value']) {
+                    } elseif (!\in_array($option['value'], $values, true) || '-' == $option['value']) {
                         // @deprecated IsotopeAttributeWithOptions::getOptionsForProductFilter already checks this
                         unset($widget['options'][$k]);
                         continue;
@@ -292,7 +292,7 @@ class ProductFilterPlus extends ProductFilter
                 }
 
                 // Hide fields with just one option (if enabled)
-                if ($this->iso_filterHideSingle && count($widget['options']) < 2) {
+                if ($this->iso_filterHideSingle && \count($widget['options']) < 2) {
                     continue;
                 }
 
@@ -301,7 +301,7 @@ class ProductFilterPlus extends ProductFilter
         }
 
         // !HOOK: alter the filters
-        if (isset($GLOBALS['ISO_HOOKS']['generateFilters']) && is_array($GLOBALS['ISO_HOOKS']['generateFilters'])) {
+        if (isset($GLOBALS['ISO_HOOKS']['generateFilters']) && \is_array($GLOBALS['ISO_HOOKS']['generateFilters'])) {
             foreach ($GLOBALS['ISO_HOOKS']['generateFilters'] as $callback) {
                 $objCallback = System::importStatic($callback[0]);
                 $filters = $objCallback->$callback[1]($filters);

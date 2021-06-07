@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -40,8 +40,6 @@ class ProductDataManager
     /**
      * Returns all product data fields.
      *
-     * @param bool $useCache
-     *
      * @return array
      */
     public function getProductDataFields(bool $useCache = true)
@@ -77,7 +75,7 @@ class ProductDataManager
     {
         $pid = is_numeric($product) ? (int) $product : (int) $product->id;
 
-        if (array_key_exists($pid, $this->productDataModelCache)) {
+        if (\array_key_exists($pid, $this->productDataModelCache)) {
             return $this->productDataModelCache[$pid];
         }
 

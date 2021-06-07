@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -143,7 +143,7 @@ class DirectCheckoutForm extends Form
         foreach ($arrAddressFields as $strName => $arrAddressField) {
             $arrData = $GLOBALS['TL_DCA']['tl_iso_address']['fields'][$strName];
 
-            if (!is_array($arrData) || 'disabled' == $arrAddressField['billing']) {
+            if (!\is_array($arrData) || 'disabled' == $arrAddressField['billing']) {
                 continue;
             }
 
@@ -196,7 +196,7 @@ class DirectCheckoutForm extends Form
         foreach ($arrAddressFields as $strName => $arrAddressField) {
             $arrData = $GLOBALS['TL_DCA']['tl_iso_address']['fields'][$strName];
 
-            if (!is_array($arrData) || 'disabled' == $arrAddressField['shipping']) {
+            if (!\is_array($arrData) || 'disabled' == $arrAddressField['shipping']) {
                 continue;
             }
 
@@ -245,7 +245,7 @@ class DirectCheckoutForm extends Form
     {
         $strFields = '';
 
-        if (!is_array($arrFields)) {
+        if (!\is_array($arrFields)) {
             if ($arrFields && !preg_match("~\b ".$arrFields."\b~", $this->dca['palettes']['default'])) {
                 $strFields .= ','.$arrFields;
             }
@@ -262,10 +262,10 @@ class DirectCheckoutForm extends Form
 
     protected function addProductFields($objProduct, $blnAddQuantity, $blnAddSubscriptionCheckbox, &$arrDca)
     {
-        $blnSubPalette = $blnAddQuantity || (in_array('isotope_subscriptions', \ModuleLoader::getActive(), true) && $blnAddSubscriptionCheckbox);
+        $blnSubPalette = $blnAddQuantity || (\in_array('isotope_subscriptions', \ModuleLoader::getActive(), true) && $blnAddSubscriptionCheckbox);
 
-        $this->setProductCount(count(StringUtil::deserialize($this->iso_direct_checkout_products, true)));
-        $this->setTypeCount(count(StringUtil::deserialize($this->iso_direct_checkout_product_types, true)));
+        $this->setProductCount(\count(StringUtil::deserialize($this->iso_direct_checkout_products, true)));
+        $this->setTypeCount(\count(StringUtil::deserialize($this->iso_direct_checkout_product_types, true)));
 
         if ($this->getProductCount() > 1 || $this->getTypeCount() > 1) {
             // add checkbox
@@ -287,7 +287,7 @@ class DirectCheckoutForm extends Form
                 $arrDca['subpalettes']['product_'.$objProduct->id] = 'quantity_'.$objProduct->id;
             }
 
-            if (in_array('isotope_subscriptions', ModuleLoader::getActive(), true) && $blnAddSubscriptionCheckbox) {
+            if (\in_array('isotope_subscriptions', ModuleLoader::getActive(), true) && $blnAddSubscriptionCheckbox) {
                 $arrDca['subpalettes']['product_'.$objProduct->id] .= ',subscribeToProduct_'.$objProduct->id;
             }
         }
@@ -302,7 +302,7 @@ class DirectCheckoutForm extends Form
             $this->addFieldsToDefaultPalette('quantity_'.$objProduct->id);
         }
 
-        if (in_array('isotope_subscriptions', ModuleLoader::getActive(), true) && $blnAddSubscriptionCheckbox) {
+        if (\in_array('isotope_subscriptions', ModuleLoader::getActive(), true) && $blnAddSubscriptionCheckbox) {
             $this->addEditableField('subscribeToProduct_'.$objProduct->id, [
                 'label' => ' ',
                 'inputType' => 'checkbox',
@@ -436,7 +436,7 @@ class DirectCheckoutForm extends Form
         $objOrder->email_data = $this->getNotificationTokensFromSteps($arrSteps, $objOrder);
 
         // !HOOK: pre-process checkout
-        if (isset($GLOBALS['ISO_HOOKS']['preCheckout']) && is_array($GLOBALS['ISO_HOOKS']['preCheckout'])) {
+        if (isset($GLOBALS['ISO_HOOKS']['preCheckout']) && \is_array($GLOBALS['ISO_HOOKS']['preCheckout'])) {
             foreach ($GLOBALS['ISO_HOOKS']['preCheckout'] as $callback) {
                 $this->import($callback[0]);
 
@@ -452,7 +452,7 @@ class DirectCheckoutForm extends Form
         $objOrder->checkout();
         $objOrder->complete();
 
-        if (is_array($this->dca['config']['onsubmit_callback'])) {
+        if (\is_array($this->dca['config']['onsubmit_callback'])) {
             foreach ($this->dca['config']['onsubmit_callback'] as $key => $callback) {
                 if ('Isotope\Backend\ProductCollection\Callback' == $callback[0] && 'executeSaveHook' == $callback[1]) {
                     unset($this->dca['config']['onsubmit_callback'][$key]);
@@ -468,7 +468,7 @@ class DirectCheckoutForm extends Form
 
     protected function transformIsotopeErrorMessages()
     {
-        if (is_array($_SESSION['ISO_ERROR'])) {
+        if (\is_array($_SESSION['ISO_ERROR'])) {
             if (!empty($_SESSION['ISO_ERROR'])) {
                 // no redirect!
                 $this->jumpTo = null;

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -141,8 +141,6 @@ class ProductHelper
     }
 
     /**
-     * @param FilesModel $file
-     *
      * @return mixed|string
      */
     public function getFileNameFromFile(FilesModel $file)
@@ -172,7 +170,7 @@ class ProductHelper
 
     protected function prepareKeywords($arrExifData)
     {
-        if (is_array($arrExifData[\PHPExif\Exif::KEYWORDS])) {
+        if (\is_array($arrExifData[\PHPExif\Exif::KEYWORDS])) {
             $strKeywords = implode(', ', $arrExifData[\PHPExif\Exif::KEYWORDS]);
         }
 

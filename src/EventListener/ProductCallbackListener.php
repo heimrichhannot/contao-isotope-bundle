@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -55,9 +55,6 @@ class ProductCallbackListener
         $this->twig = $twig;
     }
 
-    /**
-     * @param DataContainer $dc
-     */
     public function updateRelevance(DataContainer $dc)
     {
         if ($this->containerUtil->isBackend()) {
@@ -75,8 +72,7 @@ class ProductCallbackListener
      * Save Product data fields to product data table
      * Contao: onsave_callbak.
      *
-     * @param               $value
-     * @param DataContainer $dc
+     * @param $value
      *
      * @return mixed
      */
@@ -85,7 +81,7 @@ class ProductCallbackListener
         if (!$dc->table === ProductModel::getTable()) {
             return $value;
         }
-        if (!array_key_exists($field = $dc->field, $this->productDataManager->getProductDataFields())) {
+        if (!\array_key_exists($field = $dc->field, $this->productDataManager->getProductDataFields())) {
             return $value;
         }
         $productData = $this->productDataManager->getProductData($dc->id);
@@ -98,8 +94,6 @@ class ProductCallbackListener
 
     /**
      * Generates an overview of bookings for product.
-     *
-     * @param array $attributes
      *
      * @return string An Html-Code
      */

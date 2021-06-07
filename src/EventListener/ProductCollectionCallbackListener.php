@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -42,8 +42,6 @@ class ProductCollectionCallbackListener
 
     /**
      * increase stock after deleting an order.
-     *
-     * @param DataContainer $dc
      */
     public function increaseStock(DataContainer $dc)
     {
@@ -59,7 +57,7 @@ class ProductCollectionCallbackListener
         $config = $order->getRelated('config_id');
         // if the order had already been set to a stock increasing state,
         // the stock doesn't need to be increased again
-        if (in_array($order->order_status, StringUtil::deserialize($config->stockIncreaseOrderStates, true), true)) {
+        if (\in_array($order->order_status, StringUtil::deserialize($config->stockIncreaseOrderStates, true), true)) {
             return;
         }
 

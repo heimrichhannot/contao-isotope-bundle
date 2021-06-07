@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -44,7 +44,7 @@ abstract class ProductEditor
     {
         $this->module = $module;
         $this->submission = $submission;
-        $this->imageCount = count($submission->uploadedFiles);
+        $this->imageCount = \count($submission->uploadedFiles);
         $this->originalName = $submission->name;
         $this->dc = $dc;
     }
@@ -191,7 +191,7 @@ abstract class ProductEditor
      */
     public function getPreviewFromPdf($file, $uploadFolder)
     {
-        $destinationFileName = 'preview-'.str_replace('.pdf', '', trim($file->name,'/')).'.'.static::$convertFileType;
+        $destinationFileName = 'preview-'.str_replace('.pdf', '', trim($file->name, '/')).'.'.static::$convertFileType;
 
         // ghostscript
         /** @var Transcoder $transcoder */
@@ -314,7 +314,7 @@ abstract class ProductEditor
 
                 // Hook : handle exif tags
                 if (isset($GLOBALS['TL_HOOKS']['creatorProduct']['handleExifTags'])
-                    && is_array($GLOBALS['TL_HOOKS']['creatorProduct']['handleExifTags'])) {
+                    && \is_array($GLOBALS['TL_HOOKS']['creatorProduct']['handleExifTags'])) {
                     foreach ($GLOBALS['TL_HOOKS']['creatorProduct']['handleExifTags'] as $arrCallback) {
                         $objClass = System::getContainer()->get('contao.framework')->getAdapter(Controller::class)->importStatic($arrCallback[0]);
                         $strValue = $objClass->{$arrCallback[1]}($mapping['exifTag'], $mapping, $strValue);
@@ -366,7 +366,7 @@ abstract class ProductEditor
         $tags = array_merge(StringUtil::deserialize($this->submission->{$this->module->iso_tagField}, true), $tags);
 
         // Hook : modify the product data
-        if (isset($GLOBALS['TL_HOOKS']['creatorProduct']['modifyTagData']) && is_array($GLOBALS['TL_HOOKS']['creatorProduct']['modifyTagData'])) {
+        if (isset($GLOBALS['TL_HOOKS']['creatorProduct']['modifyTagData']) && \is_array($GLOBALS['TL_HOOKS']['creatorProduct']['modifyTagData'])) {
             foreach ($GLOBALS['TL_HOOKS']['creatorProduct']['modifyTagData'] as $arrCallback) {
                 $objClass = \Controller::importStatic($arrCallback[0]);
                 $tags = $objClass->{$arrCallback[1]}($tags, $this);
@@ -402,7 +402,7 @@ abstract class ProductEditor
     protected function modifyData()
     {
         // Hook : modify the product data
-        if (isset($GLOBALS['TL_HOOKS']['editProduct_modifyData']) && is_array($GLOBALS['TL_HOOKS']['editProduct_modifyData'])) {
+        if (isset($GLOBALS['TL_HOOKS']['editProduct_modifyData']) && \is_array($GLOBALS['TL_HOOKS']['editProduct_modifyData'])) {
             foreach ($GLOBALS['TL_HOOKS']['editProduct_modifyData'] as $arrCallback) {
                 $objClass = \Controller::importStatic($arrCallback[0]);
                 list($this->module, $this->productData, $this->submission) = $objClass->{$arrCallback[1]}($this->module, $this->productData, $this->submission);
@@ -441,7 +441,7 @@ abstract class ProductEditor
         $defaultValues = StringUtil::deserialize($this->module->formHybridDefaultValues, true);
 
         foreach ($defaultValues as $value) {
-            if (!array_key_exists($value['field'], $dcaFields)) {
+            if (!\array_key_exists($value['field'], $dcaFields)) {
                 continue;
             }
 

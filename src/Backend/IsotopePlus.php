@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -42,7 +42,7 @@ class IsotopePlus extends \Isotope\Isotope
      */
     public function hookReplaceDynamicScriptTags($strBuffer)
     {
-        if (!is_array($GLOBALS['TL_JAVASCRIPT'])) {
+        if (!\is_array($GLOBALS['TL_JAVASCRIPT'])) {
             return $strBuffer;
         }
 
@@ -76,8 +76,7 @@ class IsotopePlus extends \Isotope\Isotope
     }
 
     /**
-     * @param Order $order
-     * @param bool  $isPostCheckout
+     * @param bool $isPostCheckout
      *
      * @return bool
      */
@@ -127,9 +126,8 @@ class IsotopePlus extends \Isotope\Isotope
     }
 
     /**
-     * @param                   $objProduct
-     * @param                   $intQuantity
-     * @param ProductCollection $objProductCollection
+     * @param $objProduct
+     * @param $intQuantity
      *
      * @return int
      */
@@ -194,8 +192,6 @@ class IsotopePlus extends \Isotope\Isotope
     }
 
     /**
-     * @param array $buttons
-     *
      * @return array
      */
     public function addDownloadSingleProductButton(array $buttons)
@@ -211,8 +207,7 @@ class IsotopePlus extends \Isotope\Isotope
     /**
      * Currently only works for products containing one single download.
      *
-     * @param IsotopeProduct $product
-     * @param array          $arrConfig
+     * @param array $arrConfig
      */
     public function downloadSingleProduct(IsotopeProduct $product)
     {
@@ -293,8 +288,8 @@ class IsotopePlus extends \Isotope\Isotope
 
             $objProduct = $objItem->getProduct();
 
-            return in_array($strAttribute, $objProduct->getAttributes(), true)
-                   || in_array($strAttribute, $objProduct->getVariantAttributes(), true);
+            return \in_array($strAttribute, $objProduct->getAttributes(), true)
+                   || \in_array($strAttribute, $objProduct->getVariantAttributes(), true);
         };
 
         $template->generateAttribute = function (
@@ -338,7 +333,7 @@ class IsotopePlus extends \Isotope\Isotope
 
         // !HOOK: allow overriding of the template
         if (isset($GLOBALS['ISO_HOOKS']['addCollectionToTemplate'])
-            && is_array($GLOBALS['ISO_HOOKS']['addCollectionToTemplate'])) {
+            && \is_array($GLOBALS['ISO_HOOKS']['addCollectionToTemplate'])) {
             foreach ($GLOBALS['ISO_HOOKS']['addCollectionToTemplate'] as $callback) {
                 $objCallback = \System::importStatic($callback[0]);
                 $objCallback->$callback[1]($template, $arrItems, $order);
@@ -387,7 +382,7 @@ class IsotopePlus extends \Isotope\Isotope
         $arrStockIncreaseOrderStates = StringUtil::deserialize($objConfig->stockIncreaseOrderStates, true);
 
         // e.g. new -> cancelled => increase the stock based on the order item's setQuantity-values (no validation required, of course)
-        if (!in_array($order->order_status, $arrStockIncreaseOrderStates, true) && in_array($newsStatus->id, $arrStockIncreaseOrderStates, true)) {
+        if (!\in_array($order->order_status, $arrStockIncreaseOrderStates, true) && \in_array($newsStatus->id, $arrStockIncreaseOrderStates, true)) {
             foreach ($order->getItems() as $objItem) {
                 if (null !== ($objProduct = $objItem->getProduct())) {
                     $intTotalQuantity = $this->getTotalStockQuantity($objItem->quantity, $objProduct, null, $objItem->setQuantity);
@@ -399,7 +394,7 @@ class IsotopePlus extends \Isotope\Isotope
                 }
             }
         } // e.g. cancelled -> new => decrease the stock after validation
-        elseif (in_array($order->order_status, $arrStockIncreaseOrderStates, true) && !in_array($newsStatus->id, $arrStockIncreaseOrderStates, true)) {
+        elseif (\in_array($order->order_status, $arrStockIncreaseOrderStates, true) && !\in_array($newsStatus->id, $arrStockIncreaseOrderStates, true)) {
             foreach ($order->getItems() as $objItem) {
                 if (null !== ($objProduct = $objItem->getProduct())) {
                     $blnSkipValidation = $this->getOverridableStockProperty('skipStockValidation', $objProduct);
@@ -440,7 +435,7 @@ class IsotopePlus extends \Isotope\Isotope
 
         if ($product->uploadedFiles) {
             // main image
-            if (is_array($uploadedFiles = unserialize($product->uploadedFiles))) {
+            if (\is_array($uploadedFiles = unserialize($product->uploadedFiles))) {
                 $product->uploadedFiles = $uploadedFiles[0];
             }
 
@@ -472,7 +467,7 @@ class IsotopePlus extends \Isotope\Isotope
 
         $return = [];
         foreach ($userGroups as $group) {
-            if (array_key_exists($group, $mediathekGroups)) {
+            if (\array_key_exists($group, $mediathekGroups)) {
                 $return[] = $group;
             }
         }
@@ -529,8 +524,8 @@ class IsotopePlus extends \Isotope\Isotope
         foreach ($actions as $action) {
             $arrButtons[$action->getName()] = [
                 'label' => $action->getLabel($objProduct),
-                'callback' => [get_class($action), 'handleSubmit'],
-                'class' => ($objProduct instanceof IsotopeProduct && is_callable([$action, 'getClasses']) ? $action->getClasses($objProduct) : ''),
+                'callback' => [\get_class($action), 'handleSubmit'],
+                'class' => ($objProduct instanceof IsotopeProduct && \is_callable([$action, 'getClasses']) ? $action->getClasses($objProduct) : ''),
             ];
         }
 
@@ -610,7 +605,7 @@ class IsotopePlus extends \Isotope\Isotope
         RowClass::withKey('rowClass')->addCount('row_')->addFirstLast('row_')->addEvenOdd('row_')->applyTo($arrItems);
 
         $template->items = $arrItems;
-        $template->total_tax_ids = count(array_unique($taxIds));
+        $template->total_tax_ids = \count(array_unique($taxIds));
 
         return $arrItems;
     }

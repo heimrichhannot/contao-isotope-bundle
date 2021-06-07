@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -149,7 +149,7 @@ class ProductListPlus extends ProductList
         if ($this->cacheProducts && null !== ($cache = $this->framework->getAdapter(ProductCache::class)->findByUniqid($this->getCacheKey()))) {
             $this->getProductsFromCache($cache);
         }
-        if (!is_array($this->products)) {
+        if (!\is_array($this->products)) {
             $this->getProducts($pageId, $where, $values, $sorting, $categories);
         }
 
@@ -158,7 +158,7 @@ class ProductListPlus extends ProductList
         $buffer = $this->parseProducts();
 
         // HOOK: to add any product field or attribute to mod_iso_productlist template
-        if (isset($GLOBALS['ISO_HOOKS']['generateProductList']) && is_array($GLOBALS['ISO_HOOKS']['generateProductList'])) {
+        if (isset($GLOBALS['ISO_HOOKS']['generateProductList']) && \is_array($GLOBALS['ISO_HOOKS']['generateProductList'])) {
             foreach ($GLOBALS['ISO_HOOKS']['generateProductList'] as $callback) {
                 $objCallback = System::importStatic($callback[0]);
                 $buffer = $objCallback->{$callback[1]}($buffer, $this->products, $this->Template, $this);
@@ -199,11 +199,7 @@ class ProductListPlus extends ProductList
     }
 
     /**
-     * @param int    $pageId
-     * @param string $where
-     * @param array  $values
      * @param string $sorting
-     * @param array  $categories
      */
     protected function getProducts(int $pageId, string $where, array $values, $sorting, array $categories)
     {
@@ -268,8 +264,6 @@ class ProductListPlus extends ProductList
 
     /**
      * get cached products.
-     *
-     * @param ProductCache $cache
      */
     protected function getProductsFromCache(ProductCache $cache)
     {
@@ -286,7 +280,7 @@ class ProductListPlus extends ProductList
             $this->products = (null === $this->products) ? [] : $this->products->getModels();
 
             // Cache is wrong, drop everything and run fetchProducts()
-            if (count($this->products) != count($cacheIds)) {
+            if (\count($this->products) != \count($cacheIds)) {
                 $this->cacheIds = null;
                 $this->products = null;
             }

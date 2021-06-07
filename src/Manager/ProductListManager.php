@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -30,12 +30,6 @@ class ProductListManager
 
     /**
      * count the requested products.
-     *
-     * @param string $where
-     * @param array  $values
-     * @param Module $module
-     *
-     * @return int
      */
     public function countProducts(string $where, array $values, Module $module, $categories): int
     {
@@ -45,13 +39,10 @@ class ProductListManager
     /**
      * Get the requested products.
      *
-     * @param null   $cacheIds
-     * @param int    $offset
-     * @param int    $limit
-     * @param string $where
-     * @param array  $values
-     * @param mixed  $sorting
-     * @param Module $module
+     * @param null  $cacheIds
+     * @param int   $offset
+     * @param int   $limit
+     * @param mixed $sorting
      *
      * @return array|\Contao\Model[]|\Model[]
      */
@@ -59,7 +50,7 @@ class ProductListManager
     {
         $options = [];
 
-        if (is_string($sorting)) {
+        if (\is_string($sorting)) {
             $options['order'] = $sorting;
         }
 
@@ -78,11 +69,7 @@ class ProductListManager
     }
 
     /**
-     * @param string $where
-     * @param null   $cacheIds
-     * @param Module $module
-     *
-     * @return array
+     * @param null $cacheIds
      */
     protected function getColumns(string $where, $cacheIds, Module $module, array $categories): array
     {
@@ -92,7 +79,7 @@ class ProductListManager
             $columns[] = 'c.page_id IN ('.implode(',', $categories).')';
         }
 
-        if (!empty($cacheIds) && is_array($cacheIds)) {
+        if (!empty($cacheIds) && \is_array($cacheIds)) {
             $columns[] = Product::getTable().'.id IN ('.implode(',', $cacheIds).')';
         }
 

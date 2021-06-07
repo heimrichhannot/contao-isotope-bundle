@@ -1,4 +1,6 @@
-# Contao Isotope Bundle
+> This repo is abandoned -> use [https://github.com/heimrichhannot/contao-isotope-extension-bundle](https://github.com/heimrichhannot/contao-isotope-extension-bundle) instead.
+
+# [Abandoned!!] Contao Isotope Bundle
 
 [![](https://img.shields.io/packagist/v/heimrichhannot/contao-isotope-bundle.svg)](https://packagist.org/packages/heimrichhannot/contao-isotope-bundle)
 [![](https://img.shields.io/packagist/dt/heimrichhannot/contao-isotope-bundle.svg)](https://packagist.org/packages/heimrichhannot/contao-isotope-bundle)

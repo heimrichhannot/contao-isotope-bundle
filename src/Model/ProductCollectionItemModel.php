@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -13,7 +13,6 @@ use Isotope\Model\ProductCollectionItem;
 
 /**
  * Class ProductCollectionItemModel.
- *
  *
  * @property int $bookingStart
  * @property int $bookingStop
@@ -93,9 +92,6 @@ class ProductCollectionItemModel extends ProductCollectionItem
         return $this->bookingStart;
     }
 
-    /**
-     * @param int $bookingStart
-     */
     public function setBookingStart(int $bookingStart)
     {
         $this->bookingStart = $bookingStart;
@@ -109,9 +105,6 @@ class ProductCollectionItemModel extends ProductCollectionItem
         return $this->bookingStop;
     }
 
-    /**
-     * @param int $bookingStop
-     */
     public function setBookingStop(int $bookingStop)
     {
         $this->bookingStop = $bookingStop;

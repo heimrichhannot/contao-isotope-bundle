@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -29,11 +29,6 @@ class BackendController extends AbstractController
     /**
      * @Route("/bookinglist", name="huh.isotope.backend.bookinglist")
      *
-     * @param Request                  $request
-     * @param ContaoFrameworkInterface $contaoFramework
-     * @param BookingAttributes        $bookingAttributes
-     * @param TranslatorInterface      $translator
-     *
      * @return array
      */
     public function bookingListAction(Request $request, ContaoFrameworkInterface $contaoFramework, BookingAttributes $bookingAttributes, TranslatorInterface $translator)
@@ -60,11 +55,6 @@ class BackendController extends AbstractController
 
     /**
      * @Route("/bookingoverview", name="huh.isotope.backend.bookingoverview")
-     *
-     * @param Request                  $request
-     * @param ContaoFrameworkInterface $contaoFramework
-     * @param BookingAttributes        $bookingAttributes
-     * @param TranslatorInterface      $translator
      *
      * @return array
      */

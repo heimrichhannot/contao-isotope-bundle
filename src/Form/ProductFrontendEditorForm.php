@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -35,15 +35,15 @@ class ProductFrontendEditorForm extends Form
         if (null !== ($product = System::getContainer()->get('contao.framework')->getAdapter(ProductModel::class)->findByPk(System::getContainer()->get('huh.request')->getGet('id'))) && 0 != $product->tstamp && !$product->createMultiImageProduct) {
             $arrDca['fields']['uploadedFiles']['eval']['maxFiles'] = 1;
         }
-        
-        if(System::getContainer()->get('huh.request')->hasPost('licence')) {
-           $licence = array_unique(StringUtil::deserialize(System::getContainer()->get('huh.request')->getPost('licence'), true));
-    
+
+        if (System::getContainer()->get('huh.request')->hasPost('licence')) {
+            $licence = array_unique(StringUtil::deserialize(System::getContainer()->get('huh.request')->getPost('licence'), true));
+
             System::getContainer()->get('huh.request')->setPost('licence', reset($licence));
         }
 
         // HOOK: send insert ID and user data
-        if (isset($GLOBALS['TL_HOOKS']['modifyDCProductEditor']) && is_array($GLOBALS['TL_HOOKS']['modifyDCProductEditor'])) {
+        if (isset($GLOBALS['TL_HOOKS']['modifyDCProductEditor']) && \is_array($GLOBALS['TL_HOOKS']['modifyDCProductEditor'])) {
             foreach ($GLOBALS['TL_HOOKS']['modifyDCProductEditor'] as $callback) {
                 $this->import($callback[0]);
                 $this->{$callback[0]}->{$callback[1]}($arrDca, $this->objModule);
@@ -55,7 +55,7 @@ class ProductFrontendEditorForm extends Form
     {
         $submission = $this->getSubmission();
 
-        if (!is_array($submission->uploadedFiles)) {
+        if (!\is_array($submission->uploadedFiles)) {
             $submission->uploadedFiles = json_decode($submission->uploadedFiles);
         }
 

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -63,7 +63,7 @@ abstract class TestCaseEnvironment extends ContaoTestCase
     public function createRouterMock()
     {
         $router = $this->createMock(RouterInterface::class);
-        $router->method('generate')->with('contao_backend', $this->anything())->will($this->returnCallback(function ($route, $params = []) {
+        $router->method('generate')->with('contao_backend', $this->anything())->willReturnCallback(function ($route, $params = []) {
             $url = '/contao';
             if (!empty($params)) {
                 $count = 0;
@@ -75,7 +75,7 @@ abstract class TestCaseEnvironment extends ContaoTestCase
             }
 
             return $url;
-        }));
+        });
 
         return $router;
     }

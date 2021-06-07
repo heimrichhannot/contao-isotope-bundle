@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -103,7 +103,7 @@ class DownloadHelper
                 $download['class'] = 'isotope-download isotope-download-file';
 
                 // add thumbnail
-                if (in_array($objFile->extension, ['jpg', 'jpeg', 'tiff', 'png', 'pdf'], true)) {
+                if (\in_array($objFile->extension, ['jpg', 'jpeg', 'tiff', 'png', 'pdf'], true)) {
                     $thumbnails = [];
                     foreach (StringUtil::deserialize($downloadFile->download_thumbnail, true) as $thumbnail) {
                         $thumbnail = $this->framework->getAdapter(FilesModel::class)->findByUuid($thumbnail);
@@ -115,7 +115,7 @@ class DownloadHelper
                 }
 
                 // get width and height of download
-                if (in_array($objFile->extension, ['jpg', 'jpeg', 'tiff', 'png'], true)) {
+                if (\in_array($objFile->extension, ['jpg', 'jpeg', 'tiff', 'png'], true)) {
                     $size = getimagesize(TL_ROOT.\DIRECTORY_SEPARATOR.$objFile->path);
                     $download['size'] = sprintf($GLOBALS['TL_LANG']['MSC']['downloadSize'], $size[0], $size[1], $download['filesize']);
                 } else {

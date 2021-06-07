@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -53,12 +53,9 @@ class IsotopeHookListener
     /**
      * Add booking information to Cart Item.
      *
-     *
      * ['ISO_HOOKS']['postAddProductToCollection']
      *
      * @param ProductCollectionItem|ProductCollectionItemModel $item
-     * @param int                                              $quantity
-     * @param ProductCollection                                $collection
      */
     public function addBookingInformationToItem(ProductCollectionItem &$item, int $quantity, ProductCollection $collection)
     {
@@ -119,7 +116,6 @@ class IsotopeHookListener
 
     /**
      * @param Order $order
-     * @param bool  $isPostCheckout
      *
      * @return bool
      */
@@ -168,7 +164,7 @@ class IsotopeHookListener
 
         return true;
     }
-    
+
     /**
      * @param $order
      * @param $module
@@ -178,81 +174,71 @@ class IsotopeHookListener
     public function modifyShippingPrice($order, $module)
     {
         $shippingMethodId = $module->getModel()->iso_shipping_modules;
-        
+
         if (null === ($method = System::getContainer()->get('contao.framework')->getAdapter(Shipping::class)->findByPk($shippingMethodId))) {
             return null;
         }
-        
+
         if ('group' != $method->type) {
             return;
         }
-        
+
         $groupMethodIds = StringUtil::deserialize($method->group_methods, true);
         if (null === ($groupMethods =
                 System::getContainer()->get('contao.framework')->getAdapter(Shipping::class)->findMultipleByIds($groupMethodIds))) {
             return;
         }
-        
-        if(null === ($shippingMethod = $this->getCurrentShippingMethod($groupMethods, $order))) {
+
+        if (null === ($shippingMethod = $this->getCurrentShippingMethod($groupMethods, $order))) {
             return;
         }
-        
+
         $order->setShippingMethod($shippingMethod);
     }
-    
-    
+
     /**
-     * @param Collection $groupMethods
-     * @param Order      $order
-     *
      * @return mixed
      */
     protected function getCurrentShippingMethod(Collection $groupMethods, Order $order)
     {
         $quantity = $this->getQuantityBySkipProducts($groupMethods, $order);
-        
+
         foreach ($groupMethods as $method) {
             if (!$this->isCurrentShippingMethod($quantity, $method)) {
                 continue;
             }
-            
+
             return $method;
         }
-        
+
         return null;
     }
-    
+
     /**
-     * @param Collection $methods
-     * @param Order      $order
-     *
      * @return int|null
      */
     protected function getQuantityBySkipProducts(Collection $methods, Order $order)
     {
         $currentQuantity = $this->getItemQuantity($order);
-        $skipItems       = $this->getSkipItems($methods, $currentQuantity);
-        
+        $skipItems = $this->getSkipItems($methods, $currentQuantity);
+
         if (null === $skipItems) {
             return null;
         }
-        
+
         $items = $order->getItems();
         foreach ($items as $item) {
-            if (!in_array($item->product_id, $skipItems)) {
+            if (!\in_array($item->product_id, $skipItems, true)) {
                 continue;
             }
-            
+
             $currentQuantity -= $item->quantity;
         }
-        
+
         return $currentQuantity;
     }
-    
+
     /**
-     * @param Collection $methods
-     * @param int        $quantity
-     *
      * @return array|null
      */
     protected function getSkipItems(Collection $methods, int $quantity)
@@ -261,21 +247,18 @@ class IsotopeHookListener
             if (!$this->isCurrentShippingMethod($quantity, $method)) {
                 continue;
             }
-            
+
             $skipItems = StringUtil::deserialize($method->skipProducts, true);
-            if(!empty($skipItems)) {
+            if (!empty($skipItems)) {
                 return $skipItems;
             }
         }
-        
+
         return null;
     }
-    
+
     /**
-     * check for suitable method boundaries
-     *
-     * @param int      $quantity
-     * @param Shipping $method
+     * check for suitable method boundaries.
      *
      * @return bool
      */
@@ -284,25 +267,22 @@ class IsotopeHookListener
         if ($quantity >= $method->minimum_quantity && $quantity <= $method->maximum_quantity) {
             return true;
         }
-        
+
         return false;
     }
-    
-    
+
     /**
-     * @param Order $order
-     *
      * @return int
      */
     protected function getItemQuantity(Order $order)
     {
         $quantity = 0;
-        $items    = $order->getItems();
-        
+        $items = $order->getItems();
+
         foreach ($items as $item) {
             $quantity += $item->quantity;
         }
-        
+
         return $quantity;
     }
 }
